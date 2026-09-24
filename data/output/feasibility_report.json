@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T15:05:21",
+  "generated_at": "2026-09-24T15:09:04",
   "inputs": {
     "f9_rows": 131587,
     "f9_unique_eins": 131027,
@@ -54,6 +54,13 @@
     "net_assets_eoy": 1.0
   },
   "full_990_with_mission_text": 57091,
+  "mission_text_chars": {
+    "mean": 154.98164334133227,
+    "50%": 122.0,
+    "95%": 407.0,
+    "max": 1000.0
+  },
+  "mission_text_total_chars": 8848057,
   "top_categories_matched": {
     "Human Services": 13569,
     "Recreation & Sports": 12594,

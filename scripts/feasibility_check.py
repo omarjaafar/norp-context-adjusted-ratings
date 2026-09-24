@@ -89,6 +89,13 @@ def main():
         "field_fill_rates_all_matched": fill_rates(matched),
         "field_fill_rates_full_990_only": fill_rates(full990),
         "full_990_with_mission_text": int(full990[FIELDS["mission"]].notna().sum()),
+        # sizing input for the LLM mission-classification cost estimate
+        "mission_text_chars": {
+            k: float(v)
+            for k, v in full990[FIELDS["mission"]].dropna().str.len()
+            .describe(percentiles=[0.5, 0.95])[["mean", "50%", "95%", "max"]].items()
+        },
+        "mission_text_total_chars": int(full990[FIELDS["mission"]].dropna().str.len().sum()),
         "top_categories_matched": matched["CATEGORY"].value_counts().head(10).to_dict(),
     }
 
