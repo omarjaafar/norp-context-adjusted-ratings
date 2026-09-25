@@ -1,0 +1,162 @@
+{
+  "generated_at": "2026-09-25T16:03:18",
+  "base_url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1",
+  "tables": {
+    "F9-P01-T00-SUMMARY": {
+      "2018": {
+        "exists": true,
+        "size_mb": 229.6,
+        "n_columns": 57,
+        "wanted_columns_present": {
+          "F9_01_REV_TOT_CY": true,
+          "F9_01_EXP_TOT_CY": true,
+          "F9_01_EXP_FUNDR_TOT_CY": true
+        }
+      },
+      "2019": {
+        "exists": true,
+        "size_mb": 239.2,
+        "n_columns": 57,
+        "wanted_columns_present": {
+          "F9_01_REV_TOT_CY": true,
+          "F9_01_EXP_TOT_CY": true,
+          "F9_01_EXP_FUNDR_TOT_CY": true
+        }
+      },
+      "2020": {
+        "exists": true,
+        "size_mb": 283.5,
+        "n_columns": 57,
+        "wanted_columns_present": {
+          "F9_01_REV_TOT_CY": true,
+          "F9_01_EXP_TOT_CY": true,
+          "F9_01_EXP_FUNDR_TOT_CY": true
+        }
+      },
+      "2021": {
+        "exists": true,
+        "size_mb": 291.2,
+        "n_columns": 57,
+        "wanted_columns_present": {
+          "F9_01_REV_TOT_CY": true,
+          "F9_01_EXP_TOT_CY": true,
+          "F9_01_EXP_FUNDR_TOT_CY": true
+        }
+      },
+      "2022": {
+        "exists": true,
+        "size_mb": 300.1,
+        "n_columns": 57,
+        "wanted_columns_present": {
+          "F9_01_REV_TOT_CY": true,
+          "F9_01_EXP_TOT_CY": true,
+          "F9_01_EXP_FUNDR_TOT_CY": true
+        }
+      }
+    },
+    "F9-P09-T00-EXPENSES": {
+      "2018": {
+        "exists": true,
+        "size_mb": 248.7,
+        "n_columns": 137,
+        "wanted_columns_present": {
+          "F9_09_EXP_TOT_TOT": true,
+          "F9_09_EXP_TOT_PROG": true,
+          "F9_09_EXP_TOT_MGMT": true,
+          "F9_09_EXP_TOT_FUNDR": true
+        }
+      },
+      "2019": {
+        "exists": true,
+        "size_mb": 258.5,
+        "n_columns": 137,
+        "wanted_columns_present": {
+          "F9_09_EXP_TOT_TOT": true,
+          "F9_09_EXP_TOT_PROG": true,
+          "F9_09_EXP_TOT_MGMT": true,
+          "F9_09_EXP_TOT_FUNDR": true
+        }
+      },
+      "2020": {
+        "exists": true,
+        "size_mb": 304.9,
+        "n_columns": 137,
+        "wanted_columns_present": {
+          "F9_09_EXP_TOT_TOT": true,
+          "F9_09_EXP_TOT_PROG": true,
+          "F9_09_EXP_TOT_MGMT": true,
+          "F9_09_EXP_TOT_FUNDR": true
+        }
+      },
+      "2021": {
+        "exists": true,
+        "size_mb": 314.6,
+        "n_columns": 137,
+        "wanted_columns_present": {
+          "F9_09_EXP_TOT_TOT": true,
+          "F9_09_EXP_TOT_PROG": true,
+          "F9_09_EXP_TOT_MGMT": true,
+          "F9_09_EXP_TOT_FUNDR": true
+        }
+      },
+      "2022": {
+        "exists": true,
+        "size_mb": 323.7,
+        "n_columns": 137,
+        "wanted_columns_present": {
+          "F9_09_EXP_TOT_TOT": true,
+          "F9_09_EXP_TOT_PROG": true,
+          "F9_09_EXP_TOT_MGMT": true,
+          "F9_09_EXP_TOT_FUNDR": true
+        }
+      }
+    },
+    "F9-P10-T00-BALANCE-SHEET": {
+      "2018": {
+        "exists": true,
+        "size_mb": 237.3,
+        "n_columns": 95,
+        "wanted_columns_present": {
+          "F9_10_ASSET_TOT_EOY": true,
+          "F9_10_LIAB_TOT_EOY": true
+        }
+      },
+      "2019": {
+        "exists": true,
+        "size_mb": 243.9,
+        "n_columns": 93,
+        "wanted_columns_present": {
+          "F9_10_ASSET_TOT_EOY": true,
+          "F9_10_LIAB_TOT_EOY": true
+        }
+      },
+      "2020": {
+        "exists": true,
+        "size_mb": 287.9,
+        "n_columns": 93,
+        "wanted_columns_present": {
+          "F9_10_ASSET_TOT_EOY": true,
+          "F9_10_LIAB_TOT_EOY": true
+        }
+      },
+      "2021": {
+        "exists": true,
+        "size_mb": 298.8,
+        "n_columns": 93,
+        "wanted_columns_present": {
+          "F9_10_ASSET_TOT_EOY": true,
+          "F9_10_LIAB_TOT_EOY": true
+        }
+      },
+      "2022": {
+        "exists": true,
+        "size_mb": 306.5,
+        "n_columns": 93,
+        "wanted_columns_present": {
+          "F9_10_ASSET_TOT_EOY": true,
+          "F9_10_LIAB_TOT_EOY": true
+        }
+      }
+    }
+  }
+}

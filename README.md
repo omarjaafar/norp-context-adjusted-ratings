@@ -1,70 +1,69 @@
-# NORP Context-Adjusted Nonprofit Ratings
+# NORP Finance Theory Lab
 
 CS 4220/6235, Fall 2026, Group 17. Omar Jaafar and Vien Tran.
 
-**Question:** Do standard financial-ratio ratings of nonprofits systematically penalize organizations that operate in high-need communities?
+A **human-directed theory-testing pipeline for nonprofit finance**, built for the NORP (Non-profit Organization Research Panel) structured project. A researcher states a theory in plain language. The pipeline finds the data, tests the theory, drills into what holds up, and reports what survives a deterministic statistical gate, including theories that fail or come back reversed.
 
-Common rating approaches score nonprofits on ratios like fundraising cost share, program revenue share, and reserves. The NORP research statement argues these ratios ignore context: a food bank in a high-poverty rural county faces a harder environment than one in a wealthy suburb. This project measures how much that matters.
+**Flagship case study:** do standard financial-ratio ratings (Charity Navigator-style) unfairly penalize nonprofits in high-need counties, and do those ratings predict anything about how organizations actually do later?
 
-## Plan (summary)
-
-This is a **human-directed agentic hypothesis-testing pipeline**, following NORP's Fall 2026 direction. We supply the theory, agents plan the tests and drill into the results, and a deterministic statistical gate decides what counts.
+## Design
 
 ```
-hypothesis ─► Planner (LLM) ─► test specs (JSON, schema-checked)
+"theory" ─► Planner (LLM) ─► hypotheses as schema-checked JSON
                                    │
                                    ▼
-              Executor (Python): naive ratios · multilevel model · value-added · rank shift
+            Data Scout (LLM) ─► fields from the data catalog (contracts enforced)
                                    │
                                    ▼
-              Validator (Python): state-stratified permutation · BH-FDR · effect-size floor
-                                   │
-                    survivors ─► drill-down (state / sector / size) ─► back to Executor
+            Executor (Python) ─► panel + method library
+                                 (correlation · fixed effects · multilevel · lagged outcomes)
                                    │
                                    ▼
-              Findings report (LLM narrates Python numbers only; failures reported too)
+            Validator (Python) ─► permutation · BH-FDR · effect-size floor ·
+                                  confounder controls · held-out-year replication
+                                   │  verdict: supported / weak / unsupported / reversed
+                    survivors ─► drill-down (state / sector / size) ─► Executor
+                                   │
+                                   ▼
+            Reporter ─► findings (LLM narrates Python-computed numbers only)
 ```
 
-1. **Naive rating.** Score each nonprofit on standard ratio metrics built from its IRS Form 990 Part I, which is the input a ratio-based rater would use.
-2. **Context-adjusted rating.** Fit a multilevel model: organizations nested in counties, counties nested in states. It predicts each organization's expected performance from county conditions (poverty, income, unemployment, housing burden, food desert share). Value-added = observed − expected.
-3. **Rank-shift test.** Test whether organizations in high-need counties move up systematically after adjustment. A null result is a valid finding.
-4. **Planner and drill-down.** The Planner agent expands the hypothesis into variations: by sector, by ratio, by need dimension, and by mission type. It can only reference real columns, and it can never compute or override a statistic.
-5. **Mission-type classification.** An LLM labels each 990 mission statement as *direct service* or *systemic/advocacy*. We validate the labels against a hand-labeled sample.
+The LLM never computes a statistic and cannot override the Validator.
+
+## Deliverables (end of semester)
+
+1. **Theory Lab pipeline** as shown above, runnable as `theorylab test "<theory>"`.
+2. **Theory benchmark:** about 20 theories, including positive controls (known answers) and negative controls (placebos). We report the plan validity rate, the control recovery rate, and the false-positive rate.
+3. **Flagship deep dive:**
+   - Charity Navigator financial metrics from 990 Parts I/IX/X, 2018–2022.
+   - Naive vs context-adjusted ratings from a multilevel model.
+   - Do low-rated organizations in poor counties actually do worse later?
+4. **Reproducibility:**
+   - Offline replay from committed extracts and a hash-checked LLM cache.
+   - A live re-acquisition path.
+   - A verification script.
 
 ## Data
 
-All inputs come from the NORP structured project (NORP Metabase, `norpp.cc.gatech.edu`):
-
-| File | Rows | Role |
+| Source | What | Where |
 |---|---|---|
-| `F9_P01_T00_SUMMARY_2022.csv` | 131,587 | IRS 990 / 990EZ / 990PF Part I summary financials and mission text |
-| `NGOs_with_categories` (4 gzip parts) | 3,420,024 | EIN → county, state, NTEE category |
-| `nccs_crosswalk_economic.csv` | 3,142 | County income, poverty, unemployment |
-| `disadvantaged_communities.csv` | 72,742 | Tract-level housing burden, food desert, DAC status |
-| `Poverty_Rates_2023.csv` | 2,998 | County poverty rate |
-| `county_fips_lookup.csv` | 3,076 | County name → FIPS |
+| NCCS 990 efile, Parts I / IX / X, 2018–2022 | Financials, functional expenses, balance sheet | [nccs.urban.org](https://nccs.urban.org/nccs/catalogs/catalog-efile.html) |
+| NORP Metabase | NGO table (3.42M orgs with county), 2022 Part I extract, county economics, poverty, tract-level need | norpp.cc.gatech.edu |
+| IRS | Business Master File, auto-revocation list | irs.gov |
 
-Raw data is not committed yet. Committing it (within GitHub's 100 MB file limit) is a Checkpoint 2 milestone.
+## Checkpoint 1 evidence
 
-## Checkpoint 1 feasibility evidence
-
-`scripts/feasibility_check.py` produced [`data/output/feasibility_report.json`](data/output/feasibility_report.json). Key numbers:
-
-- 127,477 of 131,027 unique 990 EINs (97.3%) match the NGO table and therefore a county.
-- 57,116 of the matched organizations are full-990 filers. Nearly every Part I field is present for them, and 57,091 have mission text.
-- Matched filers cover 3,032 distinct counties (median 12 filers per county, 1,719 counties with 10 or more), which is enough for a county-level random effect.
-- 990EZ filers lack fundraising expense, contributions, and mission text in this extract, so the core analysis uses full-990 filers.
+- `scripts/feasibility_check.py` → [`data/output/feasibility_report.json`](data/output/feasibility_report.json)
+  - 127,477 of 131,027 unique 2022 990 EINs (97.3%) join to a county through the NORP NGO table.
+  - 57,116 of them are full-990 filers across 3,032 counties.
+- `scripts/probe_nccs_efile.py` → [`data/output/nccs_efile_probe.json`](data/output/nccs_efile_probe.json)
+  - NCCS Parts I, IX, and X exist for every year 2018–2022 with the columns we need.
+  - Files are 230–324 MB per table-year, so CP2 commits column-subset extracts.
 
 To reproduce:
 
 ```bash
 pip install -r requirements.txt
+python scripts/probe_nccs_efile.py                                  # needs internet only
 python scripts/feasibility_check.py --data-dir <path to NORP data/raw>
-```
-
-## Layout
-
-```
-scripts/feasibility_check.py      # CP1: data coverage and join check
-data/output/feasibility_report.json
 ```
