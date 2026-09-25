@@ -8,10 +8,28 @@ Common rating approaches score nonprofits on ratios like fundraising cost share,
 
 ## Plan (summary)
 
+This is a **human-directed agentic hypothesis-testing pipeline**, following NORP's Fall 2026 direction. We supply the theory, agents plan the tests and drill into the results, and a deterministic statistical gate decides what counts.
+
+```
+hypothesis ─► Planner (LLM) ─► test specs (JSON, schema-checked)
+                                   │
+                                   ▼
+              Executor (Python): naive ratios · multilevel model · value-added · rank shift
+                                   │
+                                   ▼
+              Validator (Python): state-stratified permutation · BH-FDR · effect-size floor
+                                   │
+                    survivors ─► drill-down (state / sector / size) ─► back to Executor
+                                   │
+                                   ▼
+              Findings report (LLM narrates Python numbers only; failures reported too)
+```
+
 1. **Naive rating.** Score each nonprofit on standard ratio metrics built from its IRS Form 990 Part I, which is the input a ratio-based rater would use.
-2. **Context-adjusted rating.** Fit a multilevel model: organizations nested in counties, counties nested in states. It predicts each organization's expected performance from county socioeconomic conditions (poverty, income, unemployment, housing burden, food desert share). Value-added = observed − expected.
-3. **Rank-shift test.** Test whether organizations in high-need counties move up systematically when context is accounted for. A null result is a valid finding.
-4. **Mission-type classification (LLM, advisory).** An LLM labels each 990 mission statement as *direct service* or *systemic/advocacy*, which lets us check whether the adjustment differs by organization type. We validate the labels against a hand-labeled sample. All statistics are computed in Python and never by the LLM.
+2. **Context-adjusted rating.** Fit a multilevel model: organizations nested in counties, counties nested in states. It predicts each organization's expected performance from county conditions (poverty, income, unemployment, housing burden, food desert share). Value-added = observed − expected.
+3. **Rank-shift test.** Test whether organizations in high-need counties move up systematically after adjustment. A null result is a valid finding.
+4. **Planner and drill-down.** The Planner agent expands the hypothesis into variations: by sector, by ratio, by need dimension, and by mission type. It can only reference real columns, and it can never compute or override a statistic.
+5. **Mission-type classification.** An LLM labels each 990 mission statement as *direct service* or *systemic/advocacy*. We validate the labels against a hand-labeled sample.
 
 ## Data
 
