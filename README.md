@@ -66,6 +66,8 @@ python scripts/feasibility_check.py --data-dir <path to NORP data/raw>
 
 ## Checkpoint 2: data layer and catalog
 
+> **Built on the TA's `ai-suggestions/cp2` code.** The commit "Import TA ai-suggestions/cp2 branch unchanged" adds it as provided. Our fixes and additions are in the commits after it.
+
 | Piece | Code | Output |
 |---|---|---|
 | Data catalog with contracts (keys, fields, expected rows) | `catalog/catalog.yaml`, `theorylab/catalog.py` | — |
