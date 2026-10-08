@@ -63,3 +63,42 @@ pip install -r requirements.txt
 python scripts/probe_nccs_efile.py                                  # needs internet only
 python scripts/feasibility_check.py --data-dir <path to NORP data/raw>
 ```
+
+## Checkpoint 2: data layer and catalog
+
+| Piece | Code | Output |
+|---|---|---|
+| Data catalog with contracts (keys, fields, expected rows) | `catalog/catalog.yaml`, `theorylab/catalog.py` | — |
+| Slim NCCS extracts, Parts I/IX/X 2018–2022, hash manifest (Assumption 3) | `scripts/build_nccs_extracts.py` | `data/extracts/nccs/*.csv.gz`, `data/extracts/nccs/MANIFEST.json` |
+| EIN → county crosswalk incl. FL and CT, per-year match rate (Assumption 4) | `theorylab/crosswalk.py`, `scripts/build_crosswalk.py` | `data/derived/ein_county_crosswalk.csv.gz`, `data/output/crosswalk_report.json` |
+| County need table (ACS 5-year 2018–2022) | `theorylab/need.py`, `scripts/build_county_need.py` | `data/derived/county_need.csv`, `data/output/county_need_report.json` |
+| Organization-year panel with join log | `theorylab/panel.py`, `scripts/build_panel.py` | `data/derived/org_year_panel.csv.gz` (git-ignored), `data/output/panel_join_log.json` |
+| Financial ratio library | `theorylab/ratios.py` | — |
+| Unit tests | `tests/` | — |
+
+Build order:
+
+```bash
+pip install -r requirements.txt
+pytest                                                              # unit tests, no data needed
+python scripts/build_nccs_extracts.py                               # ~4 GB download into data/raw/nccs (ignored)
+python scripts/build_crosswalk.py --norp-raw-dir <path to NORP data/raw>
+python scripts/build_county_need.py                                 # Census API; set CENSUS_API_KEY if rate-limited
+python scripts/build_panel.py
+```
+
+Notes:
+
+- Every statistic and ratio is computed by pandas. The catalog lists the only fields
+  the Data Scout (CP4) may request.
+- NCCS columns marked `verified` in the catalog were confirmed by the CP1 probe. The
+  others use the same names as the NORP 2022 extract (`F9 01 Rev Contr Tot Cy` →
+  `F9_01_REV_CONTR_TOT_CY`). The extract script stops and prints the real header if
+  any are missing.
+- `expected_rows` for the NCCS tables are sanity bounds. Tighten them to the counts in
+  `MANIFEST.json` after the first extract run.
+- County names resolve against the Census 2020 county file, not the NORP
+  `county_fips_lookup` table, which has no Florida rows. Connecticut legacy counties map to
+  09001–09015 and planning regions to 09110–09190. The 2022 ACS reports Connecticut by
+  planning region, so 2022 need joins for legacy-county Connecticut EINs show up as misses
+  in `panel_join_log.json` rather than being silently dropped.

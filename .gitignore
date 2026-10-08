@@ -5,3 +5,6 @@ __pycache__/
 data/raw/
 .DS_Store
 ~$*
+
+# CP2: rebuilt from committed extracts by scripts/build_panel.py
+data/derived/org_year_panel.csv.gz

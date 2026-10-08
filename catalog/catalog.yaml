@@ -1,0 +1,154 @@
+# Theory Lab data catalog (Checkpoint 2).
+#
+# Every source the pipeline may read is listed here with its data contract:
+#   origin_kind / origin : where it comes from (url, NORP raw file, or Census API)
+#   keys                 : canonical key name -> raw column
+#   fields               : raw numeric column -> canonical name
+#   attributes           : raw text column -> canonical name
+#   expected_rows        : [min, max] rows per file (per year for yearly sources)
+#   extract              : committed slim extract (yearly sources), relative to the repo root
+#   verified             : raw columns confirmed to exist by a committed probe
+#                          (data/output/nccs_efile_probe.json); the rest follow the same
+#                          naming as the NORP 2022 extract and are checked at extract time.
+#
+# The Data Scout (CP4) may only request canonical names listed here.
+
+version: 1
+
+sources:
+  nccs_p01:
+    description: NCCS 990 efile Part I (summary), one row per filing
+    origin_kind: url
+    origin: https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P01-T00-SUMMARY-{year}.CSV
+    years: [2018, 2019, 2020, 2021, 2022]
+    keys:
+      ein: ORG_EIN
+      tax_year: TAX_YEAR
+    fields:
+      F9_01_REV_TOT_CY: revenue_total
+      F9_01_EXP_TOT_CY: expenses_total
+      F9_01_EXP_FUNDR_TOT_CY: fundraising_expense_p01
+      F9_01_REV_CONTR_TOT_CY: contributions
+      F9_01_REV_PROG_TOT_CY: program_revenue
+      F9_01_EXP_SAL_ETC_CY: salaries
+      F9_01_NAFB_TOT_BOY: net_assets_boy
+      F9_01_NAFB_TOT_EOY: net_assets_eoy
+    attributes: {}
+    verified: [F9_01_REV_TOT_CY, F9_01_EXP_TOT_CY, F9_01_EXP_FUNDR_TOT_CY]
+    # Sanity bounds until the first extract measures the real counts (see MANIFEST.json).
+    expected_rows: [100000, 1000000]
+    extract: data/extracts/nccs/F9-P01-T00-SUMMARY-{year}.csv.gz
+
+  nccs_p09:
+    description: NCCS 990 efile Part IX (functional expenses), one row per filing
+    origin_kind: url
+    origin: https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P09-T00-EXPENSES-{year}.CSV
+    years: [2018, 2019, 2020, 2021, 2022]
+    keys:
+      ein: ORG_EIN
+      tax_year: TAX_YEAR
+    fields:
+      F9_09_EXP_TOT_TOT: p09_total_expense
+      F9_09_EXP_TOT_PROG: p09_program_expense
+      F9_09_EXP_TOT_MGMT: p09_management_expense
+      F9_09_EXP_TOT_FUNDR: p09_fundraising_expense
+    attributes: {}
+    verified: [F9_09_EXP_TOT_TOT, F9_09_EXP_TOT_PROG, F9_09_EXP_TOT_MGMT, F9_09_EXP_TOT_FUNDR]
+    expected_rows: [100000, 1000000]
+    extract: data/extracts/nccs/F9-P09-T00-EXPENSES-{year}.csv.gz
+
+  nccs_p10:
+    description: NCCS 990 efile Part X (balance sheet), one row per filing
+    origin_kind: url
+    origin: https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P10-T00-BALANCE-SHEET-{year}.CSV
+    years: [2018, 2019, 2020, 2021, 2022]
+    keys:
+      ein: ORG_EIN
+      tax_year: TAX_YEAR
+    fields:
+      F9_10_ASSET_TOT_EOY: total_assets_eoy
+      F9_10_LIAB_TOT_EOY: total_liabilities_eoy
+    attributes: {}
+    verified: [F9_10_ASSET_TOT_EOY, F9_10_LIAB_TOT_EOY]
+    expected_rows: [100000, 1000000]
+    extract: data/extracts/nccs/F9-P10-T00-BALANCE-SHEET-{year}.csv.gz
+
+  norp_ngo:
+    description: NORP NGO table (organizations with state, county and category)
+    origin_kind: norp_raw
+    origin: ngos_full/NGOs_with_categories.part*.csv.gz
+    years: []
+    keys:
+      ein: EIN
+    fields: {}
+    attributes:
+      STATE: state
+      COUNTY: county_name
+      CATEGORY: category
+    verified: [EIN, STATE, COUNTY, CATEGORY]
+    # Row count measured by scripts/feasibility_check.py (feasibility_report.json -> inputs.ngo_rows).
+    expected_rows: [3420024, 3420024]
+    extract: null
+
+  norp_f9_2022:
+    description: NORP Metabase 990 Part I extract, tax year 2022 (990 and 990EZ)
+    origin_kind: norp_raw
+    origin: F9_P01_T00_SUMMARY_2022.csv
+    years: []
+    keys:
+      ein: Org Ein
+      tax_year: Tax Year
+    fields:
+      F9 01 Rev Tot Cy: revenue_total
+      F9 01 Exp Tot Cy: expenses_total
+      F9 01 Exp Fundr Tot Cy: fundraising_expense_p01
+      F9 01 Rev Contr Tot Cy: contributions
+      F9 01 Rev Prog Tot Cy: program_revenue
+      F9 01 Exp Sal Etc Cy: salaries
+      F9 01 Nafb Tot Boy: net_assets_boy
+      F9 01 Nafb Tot Eoy: net_assets_eoy
+    attributes:
+      Return Type: return_type
+    verified: [Org Ein, Tax Year, Return Type, F9 01 Rev Tot Cy, F9 01 Exp Tot Cy,
+               F9 01 Exp Fundr Tot Cy, F9 01 Rev Contr Tot Cy, F9 01 Rev Prog Tot Cy,
+               F9 01 Exp Sal Etc Cy, F9 01 Nafb Tot Boy, F9 01 Nafb Tot Eoy]
+    # Row count measured by scripts/feasibility_check.py (inputs.f9_rows).
+    expected_rows: [131587, 131587]
+    extract: null
+
+  census_counties:
+    description: Census Bureau 2020 county FIPS reference (all states incl. FL; CT legacy counties)
+    origin_kind: url
+    origin: https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt
+    years: []
+    keys:
+      statefp: STATEFP
+      countyfp: COUNTYFP
+    fields: {}
+    attributes:
+      STATE: state
+      COUNTYNAME: county_name
+    verified: []
+    expected_rows: [3140, 3300]
+    extract: data/reference/national_county2020.txt
+
+  acs_county:
+    description: ACS 5-year county estimates (need indicators), one row per county per year
+    origin_kind: census_api
+    origin: https://api.census.gov/data/{year}/acs/acs5
+    years: [2018, 2019, 2020, 2021, 2022]
+    keys:
+      statefp: state
+      countyfp: county
+    fields:
+      B01003_001E: population
+      B19013_001E: median_household_income
+      B17001_001E: poverty_universe
+      B17001_002E: below_poverty
+      B23025_003E: civilian_labor_force
+      B23025_005E: unemployed
+    attributes:
+      NAME: acs_county_name
+    verified: []
+    expected_rows: [3140, 3240]
+    extract: data/derived/county_need.csv
