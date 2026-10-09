@@ -31,12 +31,12 @@ def _p01(src):
         ("", "2019", "1", "1", "1", "1", "1", "1", "1", "1"),                     # no EIN
     ]
     # RETURN_TYPE, RETURN_AMENDED_X, RETURN_TIME_STAMP
-    meta = [("990", None, "2019-05-01T10:00:00-05:00"),
-            ("990", None, "2020-05-01T10:00:00-05:00"),
-            ("990", None, "2021-05-01T10:00:00-05:00"),
-            ("990", "X", "2021-09-01T10:00:00-05:00"),
-            ("990EZ", None, "2020-04-01T10:00:00-05:00"),
-            ("990", None, "2020-04-01T10:00:00-05:00")]
+    meta = [("990", "FALSE", "2019-05-01T10:00:00-05:00"),
+            ("990", "FALSE", "2020-05-01T10:00:00-05:00"),
+            ("990", "FALSE", "2021-05-01T10:00:00-05:00"),
+            ("990", "TRUE", "2021-09-01T10:00:00-05:00"),
+            ("990EZ", "FALSE", "2020-04-01T10:00:00-05:00"),
+            ("990", "FALSE", "2020-04-01T10:00:00-05:00")]
     return _frame(src, rows, meta)
 
 
@@ -75,6 +75,7 @@ def test_prepare_part_dedupes_and_drops_missing_keys(catalog):
     assert {k: log[k] for k in ("rows_in", "dropped_missing_keys", "dropped_duplicate_keys", "rows_out")}         == {"rows_in": 6, "dropped_missing_keys": 1, "dropped_duplicate_keys": 1, "rows_out": 4}
     assert log["duplicate_resolution"]["duplicate_key_groups"] == 1
     assert log["duplicate_resolution"]["kept_rows_marked_amended"] == 1
+    assert log["duplicate_resolution"]["groups_distinct_timestamps"] == 1
     row = part[(part["ein"] == "120000001") & (part["tax_year"] == 2020)].iloc[0]
     assert row["revenue_total"] == 999.0
     # filing metadata is dropped unless asked for
@@ -89,10 +90,10 @@ def test_prepare_part_latest_timestamp_beats_file_order(catalog):
             ("120000009", "2021", "100", "1", "1", "1", "1", "1", "1", "1"),   # original
             ("120000010", "2021", "7", "1", "1", "1", "1", "1", "1", "1"),     # no timestamp
             ("120000010", "2021", "8", "1", "1", "1", "1", "1", "1", "1")]
-    meta = [("990", "X", "2022-11-01T09:00:00-05:00"),
-            ("990", None, "2022-05-01T09:00:00-05:00"),
-            ("990", None, None),
-            ("990", None, "2022-05-01T09:00:00-05:00")]
+    meta = [("990", "TRUE", "2022-11-01T09:00:00-05:00"),
+            ("990", "FALSE", "2022-05-01T09:00:00-05:00"),
+            ("990", "FALSE", None),
+            ("990", "FALSE", "2022-05-01T09:00:00-05:00")]
     part, log = prepare_part(_frame(src, rows, meta), src, keep_meta=("return_type",))
     by_ein = part.set_index("ein")["revenue_total"]
     assert by_ein["120000009"] == 500.0

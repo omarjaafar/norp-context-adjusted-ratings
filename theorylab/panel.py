@@ -62,11 +62,19 @@ def prepare_part(raw: pd.DataFrame, source: Source, keep_meta=()):
     }
     if meta:
         winners = kept.loc[kept.set_index(KEYS).index.isin(dup_groups.set_index(KEYS).index)]
+        # NCCS writes RETURN_AMENDED_X as the text "TRUE"/"FALSE", never blank.
         amended = winners.get("return_amended")
+        n_amended = (int(amended.astype("string").str.strip().str.upper().eq("TRUE").sum())
+                     if amended is not None else 0)
+        # Groups whose filings share one timestamp are the same return listed twice,
+        # so which copy is kept does not matter; the rest are genuine re-filings.
+        ts_per_group = dup_groups.groupby(KEYS)["_ts"].nunique(dropna=False)
         log["duplicate_resolution"] = {
             "rule": "latest RETURN_TIME_STAMP wins; missing timestamp ranks lowest; ties by file order",
-            "duplicate_key_groups": int(dup_groups.drop_duplicates(KEYS).shape[0]),
-            "kept_rows_marked_amended": int(amended.notna().sum()) if amended is not None else 0,
+            "duplicate_key_groups": int(len(ts_per_group)),
+            "groups_same_timestamp": int((ts_per_group == 1).sum()),
+            "groups_distinct_timestamps": int((ts_per_group > 1).sum()),
+            "kept_rows_marked_amended": n_amended,
             "rows_missing_timestamp": int(ts.isna().sum()),
         }
     out = (kept.sort_values("_pos", kind="stable")
