@@ -9,11 +9,15 @@ each file is under GitHub's 100 MB limit (Assumption 3).
 Usage:
     python scripts/build_nccs_extracts.py                       # all sources, all years
     python scripts/build_nccs_extracts.py --sources nccs_p09 --years 2021 2022
+    python scripts/build_nccs_extracts.py --raw-dir D:/nccs_raw    # keep the ~4 GB of raw
+                                                                   # downloads out of the repo
+                                                                   # folder (e.g. off OneDrive)
 """
 
 from __future__ import annotations
 
 import argparse
+import os
 import datetime
 import hashlib
 import json
@@ -29,7 +33,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from theorylab.catalog import REPO_ROOT, check_contract, load_catalog, missing_columns  # noqa: E402
 
 NCCS_SOURCES = ("nccs_p01", "nccs_p09", "nccs_p10")
-RAW_DIR = REPO_ROOT / "data" / "raw" / "nccs"
+# Raw downloads; override with --raw-dir or NCCS_RAW_DIR (the repo may live in a synced folder).
+RAW_DIR = Path(os.environ.get("NCCS_RAW_DIR", REPO_ROOT / "data" / "raw" / "nccs"))
 MANIFEST = REPO_ROOT / "data" / "extracts" / "nccs" / "MANIFEST.json"
 GITHUB_LIMIT_BYTES = 100 * 1024 * 1024
 
@@ -54,9 +59,9 @@ def download(url: str, dest: Path) -> str:
     return "downloaded"
 
 
-def extract_one(source, year: int) -> dict:
+def extract_one(source, year: int, raw_dir: Path = RAW_DIR) -> dict:
     url = source.origin_for(year)
-    raw_path = RAW_DIR / url.rsplit("/", 1)[-1]
+    raw_path = raw_dir / url.rsplit("/", 1)[-1]
     status = download(url, raw_path)
 
     header = list(pd.read_csv(raw_path, nrows=0, dtype=str).columns)
@@ -96,6 +101,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--sources", nargs="+", default=list(NCCS_SOURCES), choices=NCCS_SOURCES)
     ap.add_argument("--years", nargs="+", type=int)
+    ap.add_argument("--raw-dir", type=Path, default=RAW_DIR,
+                    help="where full NCCS CSVs are downloaded (default: data/raw/nccs or $NCCS_RAW_DIR)")
     args = ap.parse_args()
 
     catalog = load_catalog()
@@ -110,7 +117,7 @@ def main() -> int:
             if year not in source.years:
                 print(f"skip {name} {year}: not in catalog years {source.years}")
                 continue
-            entry = extract_one(source, year)
+            entry = extract_one(source, year, args.raw_dir)
             previous[(name, year)] = entry
             print(name, year, entry.get("rows"), entry.get("size_mb"), entry.get("error", "ok"))
 
