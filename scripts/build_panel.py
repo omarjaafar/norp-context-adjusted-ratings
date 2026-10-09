@@ -68,7 +68,7 @@ def main() -> int:
         "generated_at": datetime.datetime.now().isoformat(timespec="seconds"),
         "parts": part_logs,
         **log,
-        "panel": {"path": str(PANEL.relative_to(REPO_ROOT)), "rows": int(len(panel)),
+        "panel": {"path": PANEL.relative_to(REPO_ROOT).as_posix(), "rows": int(len(panel)),
                   "columns": list(panel.columns),
                   "size_mb": round(PANEL.stat().st_size / 1e6, 2)},
         "assumption_4": assumption_4_check(log),

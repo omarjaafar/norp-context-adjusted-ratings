@@ -89,7 +89,7 @@ def main() -> int:
         "reference": {"source": census_src.origin_for(), "contract": ref_contract},
         "ngo_table": {"parts_read": len(parts), "contract": ngo_contract},
         "crosswalk": diagnostics,
-        "output": {"path": str(OUT.relative_to(REPO_ROOT)), "scope": scope,
+        "output": {"path": OUT.relative_to(REPO_ROOT).as_posix(), "scope": scope,
                    "rows": int(len(xw_out)), "size_mb": round(OUT.stat().st_size / 1e6, 2)},
         "nccs_p01_match_rate_by_extract_year": per_year,
         "florida_resolved_share": diagnostics["resolved_share_by_state"].get("FL"),

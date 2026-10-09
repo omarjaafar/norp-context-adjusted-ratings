@@ -62,7 +62,7 @@ def main() -> int:
     ct = need[need["county_fips"].str.startswith("09")]
     report = {
         "generated_at": datetime.datetime.now().isoformat(timespec="seconds"),
-        "output": str(out.relative_to(REPO_ROOT)),
+        "output": out.relative_to(REPO_ROOT).as_posix(),
         "contracts": contracts,
         "rows_by_year": {str(k): int(v) for k, v in need.groupby("acs_year").size().items()},
         "null_rates": {c: round(float(need[c].isna().mean()), 4)

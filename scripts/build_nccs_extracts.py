@@ -87,7 +87,7 @@ def extract_one(source, year: int, raw_dir: Path = RAW_DIR) -> dict:
         "url": url,
         "status": status,
         "raw_bytes": raw_path.stat().st_size,
-        "path": str(out.relative_to(REPO_ROOT)),
+        "path": out.relative_to(REPO_ROOT).as_posix(),
         "rows": contract["rows"],
         "bytes": size,
         "size_mb": round(size / 1e6, 2),
