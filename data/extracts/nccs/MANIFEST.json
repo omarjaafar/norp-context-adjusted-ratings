@@ -1,0 +1,474 @@
+{
+  "generated_at": "2026-10-09T16:33:41",
+  "github_limit_bytes": 104857600,
+  "files": [
+    {
+      "source": "nccs_p01",
+      "year": 2018,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P01-T00-SUMMARY-2018.CSV",
+      "status": "downloaded",
+      "raw_bytes": 229552252,
+      "path": "data\\extracts\\nccs\\F9-P01-T00-SUMMARY-2018.csv.gz",
+      "rows": 419877,
+      "bytes": 14839607,
+      "size_mb": 14.84,
+      "sha256": "f39c979902211976f6805a1e2d85f81351d80576e69ee1c3fb2c8753d5f8cd21",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p01-2018",
+        "rows": 419877,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 15180,
+        "fill_rates": {
+          "revenue_total": 0.9962,
+          "expenses_total": 0.9935,
+          "fundraising_expense_p01": 0.6465,
+          "contributions": 0.6465,
+          "program_revenue": 0.8192,
+          "salaries": 0.7555,
+          "net_assets_boy": 0.9748,
+          "net_assets_eoy": 0.9945
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p01",
+      "year": 2019,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P01-T00-SUMMARY-2019.CSV",
+      "status": "downloaded",
+      "raw_bytes": 239248439,
+      "path": "data\\extracts\\nccs\\F9-P01-T00-SUMMARY-2019.csv.gz",
+      "rows": 436289,
+      "bytes": 15446137,
+      "size_mb": 15.45,
+      "sha256": "fd98651c8a6e650638444c261af351eb4cb06465faf071a9da2c13aee2e83d3f",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p01-2019",
+        "rows": 436289,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 5560,
+        "fill_rates": {
+          "revenue_total": 0.9962,
+          "expenses_total": 0.9932,
+          "fundraising_expense_p01": 0.6521,
+          "contributions": 0.6521,
+          "program_revenue": 0.8217,
+          "salaries": 0.7619,
+          "net_assets_boy": 0.9733,
+          "net_assets_eoy": 0.9944
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p01",
+      "year": 2020,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P01-T00-SUMMARY-2020.CSV",
+      "status": "downloaded",
+      "raw_bytes": 283473349,
+      "path": "data\\extracts\\nccs\\F9-P01-T00-SUMMARY-2020.csv.gz",
+      "rows": 514469,
+      "bytes": 18165944,
+      "size_mb": 18.17,
+      "sha256": "56a6a2ed48990c5613784ac9da8af29ce85a9978bdf9a99dba0deb9dddae9121",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p01-2020",
+        "rows": 514469,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 32048,
+        "fill_rates": {
+          "revenue_total": 0.9953,
+          "expenses_total": 0.9928,
+          "fundraising_expense_p01": 0.6682,
+          "contributions": 0.6682,
+          "program_revenue": 0.8247,
+          "salaries": 0.7791,
+          "net_assets_boy": 0.9735,
+          "net_assets_eoy": 0.9945
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p01",
+      "year": 2021,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P01-T00-SUMMARY-2021.CSV",
+      "status": "downloaded",
+      "raw_bytes": 291239560,
+      "path": "data\\extracts\\nccs\\F9-P01-T00-SUMMARY-2021.csv.gz",
+      "rows": 537670,
+      "bytes": 18754099,
+      "size_mb": 18.75,
+      "sha256": "3e763fc99dc0f533b462fe4c968a9fa7d598ffc92a017f5df3a6f6b65bbe6405",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p01-2021",
+        "rows": 537670,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 8071,
+        "fill_rates": {
+          "revenue_total": 0.9949,
+          "expenses_total": 0.9918,
+          "fundraising_expense_p01": 0.6259,
+          "contributions": 0.6259,
+          "program_revenue": 0.8129,
+          "salaries": 0.7643,
+          "net_assets_boy": 0.9689,
+          "net_assets_eoy": 0.9939
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p01",
+      "year": 2022,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P01-T00-SUMMARY-2022.CSV",
+      "status": "downloaded",
+      "raw_bytes": 300076556,
+      "path": "data\\extracts\\nccs\\F9-P01-T00-SUMMARY-2022.csv.gz",
+      "rows": 551869,
+      "bytes": 19091072,
+      "size_mb": 19.09,
+      "sha256": "646ec191ded90685f08cc4764487a4f84efa4475fed0d4a34c909defe1b2153c",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p01-2022",
+        "rows": 551869,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 8571,
+        "fill_rates": {
+          "revenue_total": 0.9952,
+          "expenses_total": 0.9918,
+          "fundraising_expense_p01": 0.6306,
+          "contributions": 0.6306,
+          "program_revenue": 0.8182,
+          "salaries": 0.7675,
+          "net_assets_boy": 0.9667,
+          "net_assets_eoy": 0.9937
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p09",
+      "year": 2018,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P09-T00-EXPENSES-2018.CSV",
+      "status": "downloaded",
+      "raw_bytes": 248708501,
+      "path": "data\\extracts\\nccs\\F9-P09-T00-EXPENSES-2018.csv.gz",
+      "rows": 364285,
+      "bytes": 7907339,
+      "size_mb": 7.91,
+      "sha256": "3543dce1bd0c583fd9aae8e514d61a7492eace493ae7fb381c7f7dd72889364b",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p09-2018",
+        "rows": 364285,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 12574,
+        "fill_rates": {
+          "p09_total_expense": 0.7451,
+          "p09_program_expense": 0.6976,
+          "p09_management_expense": 0.6961,
+          "p09_fundraising_expense": 0.6932
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p09",
+      "year": 2019,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P09-T00-EXPENSES-2019.CSV",
+      "status": "downloaded",
+      "raw_bytes": 258467690,
+      "path": "data\\extracts\\nccs\\F9-P09-T00-EXPENSES-2019.csv.gz",
+      "rows": 378623,
+      "bytes": 8259645,
+      "size_mb": 8.26,
+      "sha256": "db953906d72b05928cc4be9264ae783e2d7d5c1fe1e13519fe1cf97c21149206",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p09-2019",
+        "rows": 378623,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 4999,
+        "fill_rates": {
+          "p09_total_expense": 0.7514,
+          "p09_program_expense": 0.7049,
+          "p09_management_expense": 0.7034,
+          "p09_fundraising_expense": 0.7006
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p09",
+      "year": 2020,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P09-T00-EXPENSES-2020.CSV",
+      "status": "downloaded",
+      "raw_bytes": 304867481,
+      "path": "data\\extracts\\nccs\\F9-P09-T00-EXPENSES-2020.csv.gz",
+      "rows": 448048,
+      "bytes": 9754123,
+      "size_mb": 9.75,
+      "sha256": "85d67dd0766e1d24bd71ae26581c0200650d3496a7f5b054e914dfe852a71fa9",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p09-2020",
+        "rows": 448048,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 30746,
+        "fill_rates": {
+          "p09_total_expense": 0.7673,
+          "p09_program_expense": 0.7245,
+          "p09_management_expense": 0.7227,
+          "p09_fundraising_expense": 0.7198
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p09",
+      "year": 2021,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P09-T00-EXPENSES-2021.CSV",
+      "status": "downloaded",
+      "raw_bytes": 314584267,
+      "path": "data\\extracts\\nccs\\F9-P09-T00-EXPENSES-2021.csv.gz",
+      "rows": 464734,
+      "bytes": 9948720,
+      "size_mb": 9.95,
+      "sha256": "04afc700c3687a68aae6aeb672bf6acfc8acd52c3df41437b64e763872180996",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p09-2021",
+        "rows": 464734,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 7175,
+        "fill_rates": {
+          "p09_total_expense": 0.7241,
+          "p09_program_expense": 0.682,
+          "p09_management_expense": 0.6801,
+          "p09_fundraising_expense": 0.6774
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p09",
+      "year": 2022,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P09-T00-EXPENSES-2022.CSV",
+      "status": "downloaded",
+      "raw_bytes": 323685674,
+      "path": "data\\extracts\\nccs\\F9-P09-T00-EXPENSES-2022.csv.gz",
+      "rows": 477675,
+      "bytes": 10279923,
+      "size_mb": 10.28,
+      "sha256": "92da65a0c384e00302fc3142d0c86f614d837de0e57abf043a9433309a7b228e",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p09-2022",
+        "rows": 477675,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 7631,
+        "fill_rates": {
+          "p09_total_expense": 0.7286,
+          "p09_program_expense": 0.6874,
+          "p09_management_expense": 0.6856,
+          "p09_fundraising_expense": 0.683
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p10",
+      "year": 2018,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P10-T00-BALANCE-SHEET-2018.CSV",
+      "status": "downloaded",
+      "raw_bytes": 237332445,
+      "path": "data\\extracts\\nccs\\F9-P10-T00-BALANCE-SHEET-2018.csv.gz",
+      "rows": 420826,
+      "bytes": 8109861,
+      "size_mb": 8.11,
+      "sha256": "3723760303d1327931658b27019161904c57e9c59a022a15fb7ff959228ddda5",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p10-2018",
+        "rows": 420826,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 15257,
+        "fill_rates": {
+          "total_assets_eoy": 1.0,
+          "total_liabilities_eoy": 0.8474
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p10",
+      "year": 2019,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P10-T00-BALANCE-SHEET-2019.CSV",
+      "status": "downloaded",
+      "raw_bytes": 243881147,
+      "path": "data\\extracts\\nccs\\F9-P10-T00-BALANCE-SHEET-2019.csv.gz",
+      "rows": 437203,
+      "bytes": 8456137,
+      "size_mb": 8.46,
+      "sha256": "23cc6af70afbc2a3b1587e784bdcec9d5675c4adb3db226bd53ea5f3481b3f35",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p10-2019",
+        "rows": 437203,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 5584,
+        "fill_rates": {
+          "total_assets_eoy": 1.0,
+          "total_liabilities_eoy": 0.8525
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p10",
+      "year": 2020,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P10-T00-BALANCE-SHEET-2020.CSV",
+      "status": "downloaded",
+      "raw_bytes": 287935438,
+      "path": "data\\extracts\\nccs\\F9-P10-T00-BALANCE-SHEET-2020.csv.gz",
+      "rows": 515679,
+      "bytes": 9945330,
+      "size_mb": 9.95,
+      "sha256": "663044bcc12e937bbdbd2137c4e03f342a80ce48429d405e8cddd076878621ed",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p10-2020",
+        "rows": 515679,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 32072,
+        "fill_rates": {
+          "total_assets_eoy": 1.0,
+          "total_liabilities_eoy": 0.8634
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p10",
+      "year": 2021,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P10-T00-BALANCE-SHEET-2021.CSV",
+      "status": "downloaded",
+      "raw_bytes": 298829061,
+      "path": "data\\extracts\\nccs\\F9-P10-T00-BALANCE-SHEET-2021.csv.gz",
+      "rows": 539238,
+      "bytes": 10370097,
+      "size_mb": 10.37,
+      "sha256": "3dce224808921d4476e350786ab0b8f7ab978f50427f959bd97e672ad792ce80",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p10-2021",
+        "rows": 539238,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 8101,
+        "fill_rates": {
+          "total_assets_eoy": 1.0,
+          "total_liabilities_eoy": 0.849
+        },
+        "violations": []
+      }
+    },
+    {
+      "source": "nccs_p10",
+      "year": 2022,
+      "url": "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/F9-P10-T00-BALANCE-SHEET-2022.CSV",
+      "status": "downloaded",
+      "raw_bytes": 306528596,
+      "path": "data\\extracts\\nccs\\F9-P10-T00-BALANCE-SHEET-2022.csv.gz",
+      "rows": 553554,
+      "bytes": 10641139,
+      "size_mb": 10.64,
+      "sha256": "27467e257489556d35638b2c24d65dafe76964f671fafba477871ccfd34b5ab6",
+      "under_github_limit": true,
+      "contract": {
+        "label": "nccs_p10-2022",
+        "rows": 553554,
+        "expected_rows": [
+          100000,
+          1000000
+        ],
+        "null_key_rows": 0,
+        "duplicate_key_rows": 8625,
+        "fill_rates": {
+          "total_assets_eoy": 1.0,
+          "total_liabilities_eoy": 0.8493
+        },
+        "violations": []
+      }
+    }
+  ],
+  "assumption_3": {
+    "statement": "column-subset extracts fit under 100 MB per file",
+    "files_measured": 15,
+    "max_size_mb": 19.09,
+    "all_under_limit": true
+  },
+  "contract_violations": [],
+  "errors": []
+}
