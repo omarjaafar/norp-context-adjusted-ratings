@@ -1,0 +1,294 @@
+{
+  "generated_at": "2026-10-09T16:51:43",
+  "reference": {
+    "source": "https://www2.census.gov/geo/docs/reference/codes2020/national_county2020.txt",
+    "contract": {
+      "label": "census_counties",
+      "rows": 3235,
+      "expected_rows": [
+        3140,
+        3300
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "state": 1.0,
+        "county_name": 1.0
+      },
+      "violations": []
+    }
+  },
+  "ngo_table": {
+    "parts_read": 4,
+    "contract": {
+      "label": "norp_ngo",
+      "rows": 3420024,
+      "expected_rows": [
+        3420024,
+        3420024
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "state": 1.0,
+        "county_name": 1.0,
+        "category": 1.0
+      },
+      "violations": []
+    }
+  },
+  "crosswalk": {
+    "ngo_rows": 3420024,
+    "rows_with_valid_ein": 3420024,
+    "unique_eins": 3420024,
+    "eins_with_conflicting_counties": 0,
+    "eins_resolved": 3418331,
+    "resolved_share": 0.9995,
+    "method_counts": {
+      "name": 3376603,
+      "ct_planning_region": 41728,
+      "unresolved": 1693
+    },
+    "resolved_share_by_state": {
+      "AK": 0.9927,
+      "AL": 0.9996,
+      "AR": 0.9978,
+      "AZ": 0.9994,
+      "CA": 0.9994,
+      "CO": 0.9999,
+      "CT": 0.9997,
+      "DC": 0.9994,
+      "DE": 0.9992,
+      "FL": 0.9991,
+      "GA": 0.9998,
+      "HI": 0.9977,
+      "IA": 0.9999,
+      "ID": 0.9992,
+      "IL": 0.9995,
+      "IN": 0.9999,
+      "KS": 0.9993,
+      "KY": 0.9999,
+      "LA": 0.9999,
+      "MA": 0.9992,
+      "MD": 0.9996,
+      "ME": 0.9987,
+      "MI": 0.9995,
+      "MN": 0.9994,
+      "MO": 0.9996,
+      "MS": 0.9995,
+      "MT": 0.9971,
+      "NC": 0.9995,
+      "ND": 0.9992,
+      "NE": 0.9994,
+      "NH": 0.9996,
+      "NJ": 0.9997,
+      "NM": 0.9998,
+      "NV": 0.9998,
+      "NY": 0.9997,
+      "OH": 0.9994,
+      "OK": 0.9998,
+      "OR": 0.9997,
+      "PA": 0.9998,
+      "RI": 0.9994,
+      "SC": 0.9999,
+      "SD": 0.9992,
+      "TN": 0.9997,
+      "TX": 0.9997,
+      "UT": 0.9998,
+      "VA": 0.9998,
+      "VT": 0.9993,
+      "WA": 0.9992,
+      "WI": 0.9997,
+      "WV": 0.9996,
+      "WY": 0.9997
+    },
+    "reference_collisions": [],
+    "top_unresolved_pairs": [
+      {
+        "state": "CA",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 189
+      },
+      {
+        "state": "FL",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 159
+      },
+      {
+        "state": "OH",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 76
+      },
+      {
+        "state": "AK",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 75
+      },
+      {
+        "state": "TX",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 71
+      },
+      {
+        "state": "IL",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 61
+      },
+      {
+        "state": "WA",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 56
+      },
+      {
+        "state": "AR",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 55
+      },
+      {
+        "state": "MA",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 52
+      },
+      {
+        "state": "NY",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 51
+      },
+      {
+        "state": "MT",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 51
+      },
+      {
+        "state": "MI",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 44
+      },
+      {
+        "state": "NC",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 43
+      },
+      {
+        "state": "MN",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 36
+      },
+      {
+        "state": "HI",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 36
+      },
+      {
+        "state": "MO",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 26
+      },
+      {
+        "state": "AZ",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 25
+      },
+      {
+        "state": "ME",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 21
+      },
+      {
+        "state": "KS",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 21
+      },
+      {
+        "state": "WI",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 15
+      },
+      {
+        "state": "MD",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 14
+      },
+      {
+        "state": "TN",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 13
+      },
+      {
+        "state": "AL",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 12
+      },
+      {
+        "state": "PA",
+        "county_name": "Nan",
+        "method": "unresolved",
+        "eins": 11
+      },
+      {
+        "state": "NE",
+        "county_name": "Bon Homme County",
+        "method": "unresolved",
+        "eins": 10
+      }
+    ]
+  },
+  "output": {
+    "path": "data/derived/ein_county_crosswalk.csv.gz",
+    "scope": "EINs that appear in the committed NCCS Part I extracts",
+    "rows": 612230,
+    "size_mb": 6.34
+  },
+  "nccs_p01_match_rate_by_extract_year": {
+    "2018": {
+      "unique_eins": 404697,
+      "with_county": 398925,
+      "match_rate": 0.9857
+    },
+    "2019": {
+      "unique_eins": 430729,
+      "with_county": 424377,
+      "match_rate": 0.9853
+    },
+    "2020": {
+      "unique_eins": 482421,
+      "with_county": 474051,
+      "match_rate": 0.9827
+    },
+    "2021": {
+      "unique_eins": 529599,
+      "with_county": 518912,
+      "match_rate": 0.9798
+    },
+    "2022": {
+      "unique_eins": 543298,
+      "with_county": 530589,
+      "match_rate": 0.9766
+    }
+  },
+  "florida_resolved_share": 0.9991,
+  "connecticut_resolved_share": 0.9997
+}
