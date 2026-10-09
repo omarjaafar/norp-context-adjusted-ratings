@@ -10,6 +10,16 @@ def catalog():
     return load_catalog()
 
 
+def _frame(src, rows, meta=None):
+    """Build a raw extract: data columns from rows, filing metadata from meta (or blanks)."""
+    meta_cols = list(src.filing_meta or {})
+    data_cols = [c for c in src.columns() if c not in meta_cols]
+    df = pd.DataFrame(rows, columns=data_cols)
+    for i, col in enumerate(meta_cols):
+        df[col] = [m[i] for m in meta] if meta else None
+    return df[src.columns()]
+
+
 def _p01(src):
     rows = [
         # ein, tax_year, rev, exp, fundr, contr, prog, sal, na_boy, na_eoy
@@ -20,19 +30,26 @@ def _p01(src):
         ("120000002", "2019", "200", "250", "0", "200", "0", "10", "50", "0"),
         ("", "2019", "1", "1", "1", "1", "1", "1", "1", "1"),                     # no EIN
     ]
-    return pd.DataFrame(rows, columns=src.columns())
+    # RETURN_TYPE, RETURN_AMENDED_X, RETURN_TIME_STAMP
+    meta = [("990", None, "2019-05-01T10:00:00-05:00"),
+            ("990", None, "2020-05-01T10:00:00-05:00"),
+            ("990", None, "2021-05-01T10:00:00-05:00"),
+            ("990", "X", "2021-09-01T10:00:00-05:00"),
+            ("990EZ", None, "2020-04-01T10:00:00-05:00"),
+            ("990", None, "2020-04-01T10:00:00-05:00")]
+    return _frame(src, rows, meta)
 
 
 def _p09(src):
     rows = [("120000001", "2018", "90", "72", "13.5", "4.5"),
             ("120000001", "2019", "100", "80", "15", "5"),
             ("120000002", "2019", "250", "200", "50", "0")]
-    return pd.DataFrame(rows, columns=src.columns())
+    return _frame(src, rows)
 
 
 def _p10(src):
     rows = [("120000001", "2019", "400", "100")]
-    return pd.DataFrame(rows, columns=src.columns())
+    return _frame(src, rows)
 
 
 def test_catalog_loads_and_names_are_canonical(catalog):
@@ -55,9 +72,33 @@ def test_check_contract_reports_and_raises(catalog):
 
 def test_prepare_part_dedupes_and_drops_missing_keys(catalog):
     part, log = prepare_part(_p01(catalog["nccs_p01"]), catalog["nccs_p01"])
-    assert log == {"rows_in": 6, "dropped_missing_keys": 1, "dropped_duplicate_keys": 1, "rows_out": 4}
+    assert {k: log[k] for k in ("rows_in", "dropped_missing_keys", "dropped_duplicate_keys", "rows_out")}         == {"rows_in": 6, "dropped_missing_keys": 1, "dropped_duplicate_keys": 1, "rows_out": 4}
+    assert log["duplicate_resolution"]["duplicate_key_groups"] == 1
+    assert log["duplicate_resolution"]["kept_rows_marked_amended"] == 1
     row = part[(part["ein"] == "120000001") & (part["tax_year"] == 2020)].iloc[0]
     assert row["revenue_total"] == 999.0
+    # filing metadata is dropped unless asked for
+    assert "return_time_stamp" not in part.columns and "return_type" not in part.columns
+
+
+def test_prepare_part_latest_timestamp_beats_file_order(catalog):
+    """The amended return is listed FIRST in the file; the TA rule (last row) would pick
+    the original. The timestamp rule picks the later, amended filing."""
+    src = catalog["nccs_p01"]
+    rows = [("120000009", "2021", "500", "1", "1", "1", "1", "1", "1", "1"),   # amended
+            ("120000009", "2021", "100", "1", "1", "1", "1", "1", "1", "1"),   # original
+            ("120000010", "2021", "7", "1", "1", "1", "1", "1", "1", "1"),     # no timestamp
+            ("120000010", "2021", "8", "1", "1", "1", "1", "1", "1", "1")]
+    meta = [("990", "X", "2022-11-01T09:00:00-05:00"),
+            ("990", None, "2022-05-01T09:00:00-05:00"),
+            ("990", None, None),
+            ("990", None, "2022-05-01T09:00:00-05:00")]
+    part, log = prepare_part(_frame(src, rows, meta), src, keep_meta=("return_type",))
+    by_ein = part.set_index("ein")["revenue_total"]
+    assert by_ein["120000009"] == 500.0
+    assert by_ein["120000010"] == 8.0  # a timestamped filing beats one with none
+    assert log["duplicate_resolution"]["rows_missing_timestamp"] == 1
+    assert list(part["return_type"]) == ["990", "990"]
 
 
 def test_build_panel_joins_and_logs(catalog):

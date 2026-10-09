@@ -32,7 +32,7 @@ PANEL = REPO_ROOT / "data" / "derived" / "org_year_panel.csv.gz"
 LOG = REPO_ROOT / "data" / "output" / "panel_join_log.json"
 
 
-def load_source(source):
+def load_source(source, keep_meta=()):
     frames, files = [], {}
     for year in source.years:
         path = source.extract_path(year)
@@ -44,7 +44,7 @@ def load_source(source):
         frames.append(df)
     if not frames:
         raise FileNotFoundError(f"no extracts for {source.name}; run build_nccs_extracts.py first")
-    prepared, log = prepare_part(pd.concat(frames, ignore_index=True), source)
+    prepared, log = prepare_part(pd.concat(frames, ignore_index=True), source, keep_meta=keep_meta)
     log["extract_rows_by_year"] = files
     return prepared, log
 
@@ -53,7 +53,8 @@ def main() -> int:
     catalog = load_catalog()
     parts, part_logs = {}, {}
     for name in ("nccs_p01", "nccs_p09", "nccs_p10"):
-        parts[name], part_logs[name] = load_source(catalog[name])
+        keep = ("return_type",) if name == "nccs_p01" else ()
+        parts[name], part_logs[name] = load_source(catalog[name], keep_meta=keep)
 
     crosswalk = pd.read_csv(CROSSWALK, dtype=str)
     need = pd.read_csv(catalog["acs_county"].extract_path(), dtype={"county_fips": str})

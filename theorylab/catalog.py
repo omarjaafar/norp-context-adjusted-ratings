@@ -38,14 +38,17 @@ class Source:
     verified: tuple
     expected_rows: tuple
     extract: str | None
+    filing_meta: dict = None  # raw filing-metadata column -> canonical name (optional)
 
     def columns(self) -> list:
         """Raw columns this source must provide, in a stable order."""
-        cols = list(self.keys.values()) + list(self.fields) + list(self.attributes)
+        cols = (list(self.keys.values()) + list(self.fields) + list(self.attributes)
+                + list(self.filing_meta or {}))
         return list(dict.fromkeys(cols))
 
     def canonical_names(self) -> list:
-        return list(self.keys) + list(self.fields.values()) + list(self.attributes.values())
+        return (list(self.keys) + list(self.fields.values()) + list(self.attributes.values())
+                + list((self.filing_meta or {}).values()))
 
     def origin_for(self, year: int | None = None) -> str:
         return self.origin.format(year=year) if year is not None else self.origin
@@ -78,6 +81,7 @@ def _parse_source(name: str, raw: dict) -> Source:
         verified=tuple(raw["verified"] or []),
         expected_rows=(int(rows[0]), int(rows[1])),
         extract=raw["extract"],
+        filing_meta=dict(raw.get("filing_meta") or {}),
     )
     names = src.canonical_names()
     dupes = sorted({n for n in names if names.count(n) > 1})

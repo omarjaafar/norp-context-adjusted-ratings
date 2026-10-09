@@ -8,6 +8,10 @@ later years). This script checks, without downloading full files, that each
 table/year exists on the NCCS efile bucket, how large it is, and which of the
 columns we plan to use are present.
 
+CP2: the wanted columns now come from catalog/catalog.yaml (every contracted
+column of nccs_p01 / nccs_p09 / nccs_p10), so the probe verifies the whole
+data contract, not just the CP1 subset.
+
 Writes data/output/nccs_efile_probe.json.
 
 Usage:
@@ -16,18 +20,31 @@ Usage:
 
 import datetime
 import json
+import sys
 import urllib.request
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from theorylab.catalog import load_catalog  # noqa: E402
+
 BASE = "https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1"
 YEARS = range(2018, 2023)
-TABLES = {
-    "F9-P01-T00-SUMMARY": ["F9_01_REV_TOT_CY", "F9_01_EXP_TOT_CY", "F9_01_EXP_FUNDR_TOT_CY"],
-    "F9-P09-T00-EXPENSES": ["F9_09_EXP_TOT_TOT", "F9_09_EXP_TOT_PROG",
-                            "F9_09_EXP_TOT_MGMT", "F9_09_EXP_TOT_FUNDR"],
-    "F9-P10-T00-BALANCE-SHEET": ["F9_10_ASSET_TOT_EOY", "F9_10_LIAB_TOT_EOY"],
-}
-HEADER_BYTES = 20000
+CATALOG_SOURCES = ("nccs_p01", "nccs_p09", "nccs_p10")
+
+
+def wanted_columns():
+    """{table name: contracted raw columns}, read from the catalog."""
+    catalog = load_catalog()
+    out = {}
+    for name in CATALOG_SOURCES:
+        src = catalog[name]
+        table = src.origin.rsplit("/", 1)[-1].replace("-{year}.CSV", "")
+        out[table] = src.columns()
+    return out
+
+
+HEADER_BYTES = 60000
 
 
 def probe(url, wanted):
@@ -51,12 +68,13 @@ def probe(url, wanted):
 def main():
     out = {"generated_at": datetime.datetime.now().isoformat(timespec="seconds"),
            "base_url": BASE, "tables": {}}
-    for table, wanted in TABLES.items():
+    for table, wanted in wanted_columns().items():
         out["tables"][table] = {}
         for y in YEARS:
             res = probe(f"{BASE}/{table}-{y}.CSV", wanted)
             out["tables"][table][str(y)] = res
-            print(table, y, res.get("size_mb"), res.get("exists"))
+            missing = [c for c, ok in res.get("wanted_columns_present", {}).items() if not ok]
+            print(table, y, res.get("size_mb"), res.get("exists"), "missing:", missing or "none")
     path = Path("data/output/nccs_efile_probe.json")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(out, indent=2), encoding="utf-8")

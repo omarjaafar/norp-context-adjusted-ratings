@@ -16,12 +16,15 @@ from theorylab.ratios import add_ratios, add_revenue_growth
 KEYS = ["ein", "tax_year"]
 
 
-def prepare_part(raw: pd.DataFrame, source: Source):
+def prepare_part(raw: pd.DataFrame, source: Source, keep_meta=()):
     """Raw NCCS extract -> canonical columns, one row per (ein, tax_year).
 
-    Rows without a usable EIN or tax year are dropped; for repeated
-    (ein, tax_year) pairs (amended or duplicate filings) the last row in file
-    order is kept. Returns (frame, log).
+    Rows without a usable EIN or tax year are dropped. For repeated
+    (ein, tax_year) pairs the filing with the latest RETURN_TIME_STAMP is kept,
+    since an amended or corrected return is filed after the one it replaces;
+    rows with no parseable timestamp rank lowest, and exact ties fall back to
+    file order. (The TA version kept the last row in file order.) Filing-metadata
+    columns are dropped unless named in keep_meta. Returns (frame, log).
     """
     missing = missing_columns(raw.columns, source)
     if missing:
@@ -34,18 +37,41 @@ def prepare_part(raw: pd.DataFrame, source: Source):
         out[name] = pd.to_numeric(raw[col], errors="coerce").astype("float64")
     for col, name in source.attributes.items():
         out[name] = raw[col]
+    meta = source.filing_meta or {}
+    for col, name in meta.items():
+        out[name] = raw[col]
 
     rows_in = len(out)
     out = out.dropna(subset=KEYS)
     rows_with_keys = len(out)
-    dup = out.duplicated(KEYS, keep="last")
-    out = out.loc[~dup].reset_index(drop=True)
+
+    if "return_time_stamp" in out.columns:
+        ts = pd.to_datetime(out["return_time_stamp"], errors="coerce", utc=True)
+    else:
+        ts = pd.Series(pd.NaT, index=out.index, dtype="datetime64[ns, UTC]")
+    order = (out.assign(_ts=ts, _pos=range(len(out)))
+             .sort_values(["_ts", "_pos"], na_position="first", kind="stable"))
+    dup_mask = order.duplicated(KEYS, keep="last")
+    dup_groups = order.loc[order.duplicated(KEYS, keep=False)]
+    kept = order.loc[~dup_mask]
     log = {
         "rows_in": int(rows_in),
         "dropped_missing_keys": int(rows_in - rows_with_keys),
-        "dropped_duplicate_keys": int(dup.sum()),
-        "rows_out": int(len(out)),
+        "dropped_duplicate_keys": int(dup_mask.sum()),
+        "rows_out": int(len(kept)),
     }
+    if meta:
+        winners = kept.loc[kept.set_index(KEYS).index.isin(dup_groups.set_index(KEYS).index)]
+        amended = winners.get("return_amended")
+        log["duplicate_resolution"] = {
+            "rule": "latest RETURN_TIME_STAMP wins; missing timestamp ranks lowest; ties by file order",
+            "duplicate_key_groups": int(dup_groups.drop_duplicates(KEYS).shape[0]),
+            "kept_rows_marked_amended": int(amended.notna().sum()) if amended is not None else 0,
+            "rows_missing_timestamp": int(ts.isna().sum()),
+        }
+    out = (kept.sort_values("_pos", kind="stable")
+           .drop(columns=["_ts", "_pos"] + [n for n in meta.values() if n not in keep_meta])
+           .reset_index(drop=True))
     return out, log
 
 

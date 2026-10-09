@@ -7,6 +7,8 @@
 #   attributes           : raw text column -> canonical name
 #   expected_rows        : [min, max] rows per file (per year for yearly sources)
 #   extract              : committed slim extract (yearly sources), relative to the repo root
+#   filing_meta          : optional raw column -> canonical name; filing metadata used
+#                          to choose one filing per key (amended / timestamp / form type)
 #   verified             : raw columns confirmed to exist by a committed probe
 #                          (data/output/nccs_efile_probe.json); the rest follow the same
 #                          naming as the NORP 2022 extract and are checked at extract time.
@@ -34,7 +36,15 @@ sources:
       F9_01_NAFB_TOT_BOY: net_assets_boy
       F9_01_NAFB_TOT_EOY: net_assets_eoy
     attributes: {}
-    verified: [F9_01_REV_TOT_CY, F9_01_EXP_TOT_CY, F9_01_EXP_FUNDR_TOT_CY]
+    # Filing metadata: used to pick one filing per (ein, tax_year), not carried as data.
+    filing_meta:
+      RETURN_TYPE: return_type
+      RETURN_AMENDED_X: return_amended
+      RETURN_TIME_STAMP: return_time_stamp
+    # All verified against the 2018-2022 headers by scripts/probe_nccs_efile.py (CP2).
+    verified: [F9_01_REV_TOT_CY, F9_01_EXP_TOT_CY, F9_01_EXP_FUNDR_TOT_CY, F9_01_REV_CONTR_TOT_CY,
+               F9_01_REV_PROG_TOT_CY, F9_01_EXP_SAL_ETC_CY, F9_01_NAFB_TOT_BOY, F9_01_NAFB_TOT_EOY,
+               RETURN_TYPE, RETURN_AMENDED_X, RETURN_TIME_STAMP]
     # Sanity bounds until the first extract measures the real counts (see MANIFEST.json).
     expected_rows: [100000, 1000000]
     extract: data/extracts/nccs/F9-P01-T00-SUMMARY-{year}.csv.gz
@@ -53,7 +63,12 @@ sources:
       F9_09_EXP_TOT_MGMT: p09_management_expense
       F9_09_EXP_TOT_FUNDR: p09_fundraising_expense
     attributes: {}
-    verified: [F9_09_EXP_TOT_TOT, F9_09_EXP_TOT_PROG, F9_09_EXP_TOT_MGMT, F9_09_EXP_TOT_FUNDR]
+    # Filing metadata: used to pick one filing per (ein, tax_year), not carried as data.
+    filing_meta:
+      RETURN_TYPE: return_type
+      RETURN_AMENDED_X: return_amended
+      RETURN_TIME_STAMP: return_time_stamp
+    verified: [RETURN_TYPE, RETURN_AMENDED_X, RETURN_TIME_STAMP, F9_09_EXP_TOT_TOT, F9_09_EXP_TOT_PROG, F9_09_EXP_TOT_MGMT, F9_09_EXP_TOT_FUNDR]
     expected_rows: [100000, 1000000]
     extract: data/extracts/nccs/F9-P09-T00-EXPENSES-{year}.csv.gz
 
@@ -69,7 +84,12 @@ sources:
       F9_10_ASSET_TOT_EOY: total_assets_eoy
       F9_10_LIAB_TOT_EOY: total_liabilities_eoy
     attributes: {}
-    verified: [F9_10_ASSET_TOT_EOY, F9_10_LIAB_TOT_EOY]
+    # Filing metadata: used to pick one filing per (ein, tax_year), not carried as data.
+    filing_meta:
+      RETURN_TYPE: return_type
+      RETURN_AMENDED_X: return_amended
+      RETURN_TIME_STAMP: return_time_stamp
+    verified: [RETURN_TYPE, RETURN_AMENDED_X, RETURN_TIME_STAMP, F9_10_ASSET_TOT_EOY, F9_10_LIAB_TOT_EOY]
     expected_rows: [100000, 1000000]
     extract: data/extracts/nccs/F9-P10-T00-BALANCE-SHEET-{year}.csv.gz
 
