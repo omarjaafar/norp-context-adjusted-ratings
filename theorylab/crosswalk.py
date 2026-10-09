@@ -147,10 +147,14 @@ def build_ein_crosswalk(ngo: pd.DataFrame, ref: pd.DataFrame, ein_col: str = "EI
     df = df.sort_values("_unresolved", kind="stable").drop_duplicates("ein", keep="first")
     xw = df.drop(columns="_unresolved").reset_index(drop=True)
 
-    unresolved = pairs[pairs["county_fips"].isna()].merge(
-        df.loc[df["county_fips"].isna()].groupby(["state", "county_name"], dropna=False)
-        .size().rename("eins").reset_index(),
-        on=["state", "county_name"], how="inner")
+    # groupby turns an all-null county_name key into float64, which pandas then
+    # refuses to merge with the object column in `pairs`; pin both sides to object.
+    unresolved_counts = (df.loc[df["county_fips"].isna()]
+                         .groupby(["state", "county_name"], dropna=False)
+                         .size().rename("eins").reset_index()
+                         .astype({"county_name": "object"}))
+    unresolved = (pairs[pairs["county_fips"].isna()].astype({"county_name": "object"})
+                  .merge(unresolved_counts, on=["state", "county_name"], how="inner"))
     top_unresolved = unresolved.sort_values("eins", ascending=False).head(25)
 
     by_state = xw.groupby("state", dropna=False)["county_fips"].apply(lambda s: s.notna().mean())
