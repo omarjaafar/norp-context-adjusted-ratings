@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-24T15:09:04",
+  "generated_at": "2026-10-09T16:24:32",
   "inputs": {
     "f9_rows": 131587,
     "f9_unique_eins": 131027,
@@ -38,6 +38,15 @@
     "volunteers": 0.2803,
     "net_assets_boy": 0.946,
     "net_assets_eoy": 0.9839
+  },
+  "join_full_990_only": {
+    "filers": 57116,
+    "distinct_counties": 2798,
+    "median_filers_per_county": 6.0,
+    "mean_filers_per_county": 20.41,
+    "counties_with_1_filer": 371,
+    "counties_with_5plus_filers": 1676,
+    "counties_with_10plus_filers": 1061
   },
   "field_fill_rates_full_990_only": {
     "mission": 0.9996,

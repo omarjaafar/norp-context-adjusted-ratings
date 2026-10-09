@@ -44,6 +44,19 @@ def fill_rates(df):
     return {k: round(float(df[c].notna().mean()), 4) for k, c in FIELDS.items()}
 
 
+def county_group_stats(df):
+    per = df.groupby("county_key").size()
+    return {
+        "filers": int(len(df)),
+        "distinct_counties": int(per.size),
+        "median_filers_per_county": float(per.median()),
+        "mean_filers_per_county": round(float(per.mean()), 2),
+        "counties_with_1_filer": int((per == 1).sum()),
+        "counties_with_5plus_filers": int((per >= 5).sum()),
+        "counties_with_10plus_filers": int((per >= 10).sum()),
+    }
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-dir", required=True)
@@ -87,6 +100,9 @@ def main():
             "median_filers_per_county": float(per_county.median()),
         },
         "field_fill_rates_all_matched": fill_rates(matched),
+        # CP2 (feedback on Assumption 5): the multilevel model uses full-990 filers only,
+        # so group sizes must be measured on them, not on all matched filers.
+        "join_full_990_only": county_group_stats(full990),
         "field_fill_rates_full_990_only": fill_rates(full990),
         "full_990_with_mission_text": int(full990[FIELDS["mission"]].notna().sum()),
         # sizing input for the LLM mission-classification cost estimate
@@ -102,7 +118,7 @@ def main():
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(json.dumps(report["join"], indent=2))
+    print(json.dumps({"join": report["join"], "join_full_990_only": report["join_full_990_only"]}, indent=2))
 
 
 if __name__ == "__main__":
