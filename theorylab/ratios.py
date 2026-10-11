@@ -10,6 +10,24 @@ Ratios follow the nonprofit-finance literature the plan cites:
 - Tuckman & Chang (1991) vulnerability indicators: equity ratio, revenue
   concentration, administrative cost ratio, operating margin;
 - liabilities-to-assets (Part X) and year-over-year revenue growth.
+
+Audit of the TA formulas (CP2). Checked against the sources above:
+- Expense shares were 0 for filers that left the Part IX functional columns
+  empty (only 501(c)(3) and 501(c)(4) organizations must fill them). A blank
+  split is not a 0% program ratio, so shares and fundraising efficiency are
+  now NaN unless the split adds up to total expenses (functional_split_reported).
+- Impossible values are NaN, not kept: an expense share outside 0-1, or a
+  negative fundraising expense or liabilities figure.
+- Tuckman & Chang's four indicators match as coded. Two caveats: revenue
+  concentration uses three sources (contributions, program revenue, other),
+  fewer than their breakdown, so it understates concentration inside "other";
+  and the administrative ratio divides by total expenses, where some later
+  replications divide by total revenue.
+- operating_margin and equity_ratio may be negative; that is real (a deficit,
+  negative net assets), so they are kept.
+
+standard_rating() is the context-blind rating the ratings-fairness theory
+tests. Its definition and the reasons for it are in docs/ratings_theory.md.
 """
 
 from __future__ import annotations
@@ -29,6 +47,19 @@ RATIO_COLUMNS = (
     "liabilities_to_assets", "revenue_concentration",
 )
 
+# Part IX columns B-D must add up to column A within this share of the total.
+SPLIT_TOLERANCE = 0.01
+
+# Standard rating: ratio -> (value that scores 0, value that scores 10); linear in between.
+RATING_ANCHORS = {
+    "program_expense_ratio": (0.65, 0.85),
+    "admin_expense_ratio": (0.35, 0.15),
+    "fundraising_efficiency": (0.35, 0.10),
+    "liabilities_to_assets": (1.00, 0.00),
+}
+RATING_MIN_COMPONENTS = 3
+RATING_COLUMNS = ("standard_rating", "rating_components")
+
 
 def safe_ratio(num, den, positive_den: bool = True) -> pd.Series:
     """num / den as float; NaN where den is missing, zero, or (by default) negative."""
@@ -36,6 +67,28 @@ def safe_ratio(num, den, positive_den: bool = True) -> pd.Series:
     den = pd.to_numeric(den, errors="coerce").astype("float64")
     den = den.where(den > 0) if positive_den else den.where(den != 0)
     return num / den
+
+
+def _num(s) -> pd.Series:
+    return pd.to_numeric(s, errors="coerce").astype("float64")
+
+
+def functional_split_reported(total, program, management, fundraising) -> pd.Series:
+    """True where Part IX program + management + fundraising add up to total expenses.
+
+    A blank column counts as 0, so a filer with no fundraising still passes.
+    False when total is missing or not positive, or when the three are off
+    from the total by more than SPLIT_TOLERANCE (most often all three empty).
+    """
+    total = _num(total)
+    parts = _num(program).fillna(0) + _num(management).fillna(0) + _num(fundraising).fillna(0)
+    return (total > 0) & ((parts - total).abs() <= SPLIT_TOLERANCE * total)
+
+
+def _share(part: pd.Series, total) -> pd.Series:
+    """part / total, NaN outside 0-1 (a share of expenses cannot be negative or exceed 1)."""
+    r = safe_ratio(part, total)
+    return r.where((r >= 0) & (r <= 1))
 
 
 def revenue_concentration(contributions, program_revenue, revenue_total) -> pd.Series:
@@ -61,18 +114,61 @@ def add_ratios(df: pd.DataFrame) -> pd.DataFrame:
     if missing:
         raise KeyError(f"add_ratios needs columns {missing}")
     out = df.copy()
-    out["program_expense_ratio"] = safe_ratio(out["p09_program_expense"], out["p09_total_expense"])
-    out["admin_expense_ratio"] = safe_ratio(out["p09_management_expense"], out["p09_total_expense"])
-    out["fundraising_expense_ratio"] = safe_ratio(out["p09_fundraising_expense"], out["p09_total_expense"])
+    total = out["p09_total_expense"]
+    split = functional_split_reported(total, out["p09_program_expense"],
+                                      out["p09_management_expense"], out["p09_fundraising_expense"])
+    program = _num(out["p09_program_expense"]).fillna(0).where(split)
+    management = _num(out["p09_management_expense"]).fillna(0).where(split)
+    fundraising = _num(out["p09_fundraising_expense"]).fillna(0).where(split)
+    out["program_expense_ratio"] = _share(program, total)
+    out["admin_expense_ratio"] = _share(management, total)
+    out["fundraising_expense_ratio"] = _share(fundraising, total)
     # cost of raising one dollar of contributions
-    out["fundraising_efficiency"] = safe_ratio(out["p09_fundraising_expense"], out["contributions"])
-    rev = pd.to_numeric(out["revenue_total"], errors="coerce").astype("float64")
-    exp = pd.to_numeric(out["expenses_total"], errors="coerce").astype("float64")
+    out["fundraising_efficiency"] = safe_ratio(fundraising.where(fundraising >= 0),
+                                               out["contributions"])
+    rev = _num(out["revenue_total"])
+    exp = _num(out["expenses_total"])
     out["operating_margin"] = safe_ratio(rev - exp, rev)
     out["equity_ratio"] = safe_ratio(out["net_assets_eoy"], rev)
-    out["liabilities_to_assets"] = safe_ratio(out["total_liabilities_eoy"], out["total_assets_eoy"])
+    liabilities = _num(out["total_liabilities_eoy"])
+    out["liabilities_to_assets"] = safe_ratio(liabilities.where(liabilities >= 0),
+                                              out["total_assets_eoy"])
     out["revenue_concentration"] = revenue_concentration(
         out["contributions"], out["program_revenue"], out["revenue_total"])
+    return add_standard_rating(out)
+
+
+def rating_scores(df: pd.DataFrame, anchors: dict = RATING_ANCHORS) -> pd.DataFrame:
+    """Score each rated ratio from 0 to 10 against fixed anchors.
+
+    A ratio at or beyond its zero anchor scores 0, at or beyond its full
+    anchor scores 10, and in between the score is linear. A missing ratio has
+    a missing score. Columns are named score_<ratio>.
+    """
+    scores = {}
+    for ratio, (zero, full) in anchors.items():
+        value = _num(df[ratio])
+        scores[f"score_{ratio}"] = ((value - zero) / (full - zero)).clip(0, 1) * 10
+    return pd.DataFrame(scores, index=df.index)
+
+
+def standard_rating(df: pd.DataFrame, anchors: dict = RATING_ANCHORS,
+                    min_components: int = RATING_MIN_COMPONENTS) -> pd.Series:
+    """Context-blind 0-10 rating: the plain mean of the available ratio scores.
+
+    NaN when fewer than min_components of the ratios are defined. The rating
+    never looks at where an organization is or whom it serves; that is the
+    point of it (docs/ratings_theory.md).
+    """
+    scores = rating_scores(df, anchors)
+    return scores.mean(axis=1).where(scores.notna().sum(axis=1) >= min_components)
+
+
+def add_standard_rating(df: pd.DataFrame) -> pd.DataFrame:
+    """Add standard_rating and rating_components (how many ratios it averages)."""
+    out = df.copy()
+    out["standard_rating"] = standard_rating(out)
+    out["rating_components"] = rating_scores(out).notna().sum(axis=1)
     return out
 
 
