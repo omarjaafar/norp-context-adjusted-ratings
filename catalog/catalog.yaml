@@ -173,6 +173,45 @@ sources:
     expected_rows: [3140, 3240]
     extract: data/derived/county_need.csv
 
+  acs_ct_towns:
+    description: ACS 5-year estimates for Connecticut towns (county subdivisions), summed to planning regions for 2018-2021
+    origin_kind: census_api
+    origin: https://api.census.gov/data/{year}/acs/acs5
+    years: [2018, 2019, 2020, 2021, 2022]
+    keys:
+      statefp: state
+      countyfp: county
+      cousub: county subdivision
+    fields:
+      B01003_001E: population
+      B17001_001E: poverty_universe
+      B17001_002E: below_poverty
+      B23025_003E: civilian_labor_force
+      B23025_005E: unemployed
+      B19001_001E: households
+      B19001_002E: hh_income_bracket_01
+      B19001_003E: hh_income_bracket_02
+      B19001_004E: hh_income_bracket_03
+      B19001_005E: hh_income_bracket_04
+      B19001_006E: hh_income_bracket_05
+      B19001_007E: hh_income_bracket_06
+      B19001_008E: hh_income_bracket_07
+      B19001_009E: hh_income_bracket_08
+      B19001_010E: hh_income_bracket_09
+      B19001_011E: hh_income_bracket_10
+      B19001_012E: hh_income_bracket_11
+      B19001_013E: hh_income_bracket_12
+      B19001_014E: hh_income_bracket_13
+      B19001_015E: hh_income_bracket_14
+      B19001_016E: hh_income_bracket_15
+      B19001_017E: hh_income_bracket_16
+    attributes:
+      NAME: acs_town_name
+    verified: []
+    # 169 towns plus one "not defined" (water) row per coastal county or region.
+    expected_rows: [169, 180]
+    extract: null
+
   norp_disadvantaged:
     description: NORP disadvantaged-communities table (tract-level need), one row per census tract, no year
     origin_kind: norp_raw
