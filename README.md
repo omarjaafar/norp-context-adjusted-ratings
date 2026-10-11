@@ -94,12 +94,16 @@ Notes:
 
 - Every statistic and ratio is computed by pandas. The catalog lists the only fields
   the Data Scout (CP4) may request.
-- NCCS columns marked `verified` in the catalog were confirmed by the CP1 probe. The
-  others use the same names as the NORP 2022 extract (`F9 01 Rev Contr Tot Cy` →
-  `F9_01_REV_CONTR_TOT_CY`). The extract script stops and prints the real header if
-  any are missing.
-- `expected_rows` for the NCCS tables are sanity bounds. Tighten them to the counts in
-  `MANIFEST.json` after the first extract run.
+- Every NCCS column the catalog uses is listed under `verified` and was confirmed in the
+  2018–2022 headers by `scripts/probe_nccs_efile.py` (`data/output/nccs_efile_probe.json`).
+  The extract script still stops and prints the real header if any column is missing.
+- `expected_rows` for the NCCS tables are wide sanity bounds (100k–1M rows per file). The
+  measured counts, 364,285 to 553,554 rows per file, are in `MANIFEST.json`.
+- No raw data is needed to inspect results or rebuild the panel: the extracts, crosswalk
+  and need table are committed, so `python scripts/build_panel.py` runs on a bare clone.
+  `scripts/run_cp2.sh` rebuilds everything from the raw sources.
+- One filing per organization-year: the latest `RETURN_TIME_STAMP` wins (D1 in
+  `docs/data_decisions.md`).
 - County names resolve against the Census 2020 county file, not the NORP
   `county_fips_lookup` table, which has no Florida rows. Connecticut legacy counties map to
   09001–09015 and planning regions to 09110–09190. The NORP NGO table names Connecticut
