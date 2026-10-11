@@ -40,3 +40,24 @@ The Census file resolves both. Per-state resolution shares are in `data/output/c
 ## D4. ACS 5-year vintage ↔ tax year alignment (T8, Vien)
 
 _To be written by Vien._
+
+## D5. NORP tract need is one undated snapshot, aggregated to county by population (T5, Vien)
+
+**Problem.** The TA starter need table was ACS only. NORP's `disadvantaged_communities.csv` has housing burden and a food desert flag, but per census tract and with no year column, while the need table is per county per year.
+
+**Decision.** `theorylab/need.py::aggregate_tract_need` takes the population-weighted county mean of each measure, and `add_norp_need` attaches the same county value to every ACS year.
+
+- `avg_housing_burden` is the weighted mean of the tract `Avg Housing Burden` (a percent).
+- `food_desert_share` is the weighted mean of the tract `Food Desert Pct`. That column is a 0/1 flag per tract, so the county value is the share of the county's population living in flagged tracts (0–1).
+- A tract with zero population or a missing value does not count toward that measure.
+- Neither column goes into `need_index`, so the index and `high_need` are unchanged from the ACS-only table.
+
+**What this means for results.** These two columns vary across counties but not across years. They can explain differences between counties; they cannot explain change over time within a county.
+
+**Evidence.** The `norp_need` block in `data/output/county_need_report.json`:
+- 72,742 tracts (contract met), 421 with zero population, `Food Desert Pct` filled for 99.59%.
+- 3,142 counties, none with a null value for either measure.
+- Need rows with no NORP value are 2.51% of the table: Puerto Rico (78 rows per year; the file has no Puerto Rico tracts), two Alaska census areas from 2020 on (02063 and 02066, which replaced a county the file still lists under its old code), and the nine Connecticut planning regions in 2022 (the file uses legacy Connecticut counties; see T6).
+- Tests: `tests/test_need.py`, the five `test_tract_need_*`, `test_load_norp_tracts_*` and `test_add_norp_need_*` tests.
+
+**Open question.** 68.28% of tracts with a value carry the food desert flag (`food_desert_flagged_tract_share`), which is high for a food desert definition. We use the column as NORP provides it and have not traced how NORP defines it.

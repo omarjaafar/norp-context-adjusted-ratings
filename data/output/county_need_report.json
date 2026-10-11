@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-11T12:18:42",
+  "generated_at": "2026-10-11T12:26:48",
   "output": "data/derived/county_need.csv",
   "contracts": {
     "2018": {
@@ -195,6 +195,7 @@
       "violations": []
     },
     "tracts_zero_population": 421,
+    "food_desert_flagged_tract_share": 0.6828,
     "counties": 3142,
     "counties_null": {
       "avg_housing_burden": 0,

@@ -74,6 +74,7 @@ def main() -> int:
     need = add_norp_need(need, county_norp)
     matched = need["county_fips"].isin(county_norp["county_fips"])
     pop = pd.to_numeric(tracts["Population"], errors="coerce")
+    flag = pd.to_numeric(tracts["Food Desert Pct"], errors="coerce")
 
     out = source.extract_path()
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -95,6 +96,7 @@ def main() -> int:
         "norp_need": {
             "contract": norp_contract,
             "tracts_zero_population": int((pop == 0).sum()),
+            "food_desert_flagged_tract_share": round(float(flag.mean()), 4),
             "counties": int(len(county_norp)),
             "counties_null": {c: int(county_norp[c].isna().sum()) for c in NORP_NEED_COLUMNS},
             "need_rows_matched_by_year": {str(k): int(v) for k, v in
