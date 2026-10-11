@@ -1,0 +1,305 @@
+{
+  "generated_at": "2026-10-11T12:34:45",
+  "scope": "full Form 990 filers in the committed NCCS extracts, one filing per EIN and tax year",
+  "rating_anchors_zero_full": {
+    "program_expense_ratio": [
+      0.65,
+      0.85
+    ],
+    "admin_expense_ratio": [
+      0.35,
+      0.15
+    ],
+    "fundraising_efficiency": [
+      0.35,
+      0.1
+    ],
+    "liabilities_to_assets": [
+      1.0,
+      0.0
+    ]
+  },
+  "rating_min_components": 3,
+  "by_tax_year": {
+    "2018": {
+      "full_990_filings": 263339,
+      "functional_split": {
+        "positive_total_expense": 261092,
+        "split_adds_up": 230757,
+        "split_all_empty_or_zero": 28404,
+        "split_all_zero_not_blank": 11910,
+        "split_other_mismatch": 1931,
+        "share_without_usable_split": 0.1152
+      },
+      "impossible_values_set_missing": {
+        "negative_fundraising_expense": 20,
+        "negative_liabilities": 660
+      },
+      "ratio_defined_share": {
+        "program_expense_ratio": 0.876,
+        "admin_expense_ratio": 0.876,
+        "fundraising_expense_ratio": 0.8762,
+        "fundraising_efficiency": 0.7355,
+        "operating_margin": 0.9874,
+        "equity_ratio": 0.9874,
+        "liabilities_to_assets": 0.9822,
+        "revenue_concentration": 0.9896
+      },
+      "standard_rating": {
+        "rated": 229608,
+        "rated_share": 0.8719,
+        "by_components": {
+          "0": 1250,
+          "1": 31356,
+          "2": 1125,
+          "3": 38331,
+          "4": 191277
+        },
+        "mean": 8.01,
+        "quantiles": {
+          "p10": 4.876,
+          "p25": 6.667,
+          "p50": 8.767,
+          "p75": 9.909,
+          "p90": 10.0
+        },
+        "share_scoring_10": {
+          "program_expense_ratio": 0.5382,
+          "admin_expense_ratio": 0.6359,
+          "fundraising_efficiency": 0.8137,
+          "liabilities_to_assets": 0.2287
+        },
+        "share_scoring_0": {
+          "program_expense_ratio": 0.1347,
+          "admin_expense_ratio": 0.1014,
+          "fundraising_efficiency": 0.047,
+          "liabilities_to_assets": 0.0649
+        }
+      }
+    },
+    "2019": {
+      "full_990_filings": 280154,
+      "functional_split": {
+        "positive_total_expense": 277741,
+        "split_adds_up": 245759,
+        "split_all_empty_or_zero": 29919,
+        "split_all_zero_not_blank": 12825,
+        "split_other_mismatch": 2063,
+        "share_without_usable_split": 0.1142
+      },
+      "impossible_values_set_missing": {
+        "negative_fundraising_expense": 25,
+        "negative_liabilities": 767
+      },
+      "ratio_defined_share": {
+        "program_expense_ratio": 0.8769,
+        "admin_expense_ratio": 0.8769,
+        "fundraising_expense_ratio": 0.8771,
+        "fundraising_efficiency": 0.739,
+        "operating_margin": 0.9873,
+        "equity_ratio": 0.9873,
+        "liabilities_to_assets": 0.9817,
+        "revenue_concentration": 0.9895
+      },
+      "standard_rating": {
+        "rated": 244463,
+        "rated_share": 0.8726,
+        "by_components": {
+          "0": 1333,
+          "1": 33093,
+          "2": 1265,
+          "3": 40103,
+          "4": 204360
+        },
+        "mean": 7.968,
+        "quantiles": {
+          "p10": 4.831,
+          "p25": 6.667,
+          "p50": 8.706,
+          "p75": 9.901,
+          "p90": 10.0
+        },
+        "share_scoring_10": {
+          "program_expense_ratio": 0.5319,
+          "admin_expense_ratio": 0.6256,
+          "fundraising_efficiency": 0.823,
+          "liabilities_to_assets": 0.2321
+        },
+        "share_scoring_0": {
+          "program_expense_ratio": 0.141,
+          "admin_expense_ratio": 0.1061,
+          "fundraising_efficiency": 0.0434,
+          "liabilities_to_assets": 0.064
+        }
+      }
+    },
+    "2020": {
+      "full_990_filings": 315274,
+      "functional_split": {
+        "positive_total_expense": 312147,
+        "split_adds_up": 275321,
+        "split_all_empty_or_zero": 34170,
+        "split_all_zero_not_blank": 15625,
+        "split_other_mismatch": 2656,
+        "share_without_usable_split": 0.1168
+      },
+      "impossible_values_set_missing": {
+        "negative_fundraising_expense": 35,
+        "negative_liabilities": 949
+      },
+      "ratio_defined_share": {
+        "program_expense_ratio": 0.8729,
+        "admin_expense_ratio": 0.873,
+        "fundraising_expense_ratio": 0.8732,
+        "fundraising_efficiency": 0.7447,
+        "operating_margin": 0.9849,
+        "equity_ratio": 0.9849,
+        "liabilities_to_assets": 0.9803,
+        "revenue_concentration": 0.9876
+      },
+      "standard_rating": {
+        "rated": 273912,
+        "rated_share": 0.8688,
+        "by_components": {
+          "0": 1788,
+          "1": 38192,
+          "2": 1382,
+          "3": 42319,
+          "4": 231593
+        },
+        "mean": 7.954,
+        "quantiles": {
+          "p10": 4.772,
+          "p25": 6.63,
+          "p50": 8.751,
+          "p75": 9.911,
+          "p90": 10.0
+        },
+        "share_scoring_10": {
+          "program_expense_ratio": 0.5244,
+          "admin_expense_ratio": 0.6057,
+          "fundraising_efficiency": 0.8659,
+          "liabilities_to_assets": 0.2416
+        },
+        "share_scoring_0": {
+          "program_expense_ratio": 0.162,
+          "admin_expense_ratio": 0.1271,
+          "fundraising_efficiency": 0.0257,
+          "liabilities_to_assets": 0.0598
+        }
+      }
+    },
+    "2021": {
+      "full_990_filings": 330682,
+      "functional_split": {
+        "positive_total_expense": 327249,
+        "split_adds_up": 288912,
+        "split_all_empty_or_zero": 35284,
+        "split_all_zero_not_blank": 16422,
+        "split_other_mismatch": 3053,
+        "share_without_usable_split": 0.1159
+      },
+      "impossible_values_set_missing": {
+        "negative_fundraising_expense": 41,
+        "negative_liabilities": 1125
+      },
+      "ratio_defined_share": {
+        "program_expense_ratio": 0.8733,
+        "admin_expense_ratio": 0.8734,
+        "fundraising_expense_ratio": 0.8736,
+        "fundraising_efficiency": 0.7494,
+        "operating_margin": 0.9853,
+        "equity_ratio": 0.9853,
+        "liabilities_to_assets": 0.9799,
+        "revenue_concentration": 0.9876
+      },
+      "standard_rating": {
+        "rated": 287435,
+        "rated_share": 0.8692,
+        "by_components": {
+          "0": 2011,
+          "1": 39788,
+          "2": 1448,
+          "3": 43001,
+          "4": 244434
+        },
+        "mean": 8.063,
+        "quantiles": {
+          "p10": 4.901,
+          "p25": 6.691,
+          "p50": 8.9,
+          "p75": 9.945,
+          "p90": 10.0
+        },
+        "share_scoring_10": {
+          "program_expense_ratio": 0.5342,
+          "admin_expense_ratio": 0.6191,
+          "fundraising_efficiency": 0.8665,
+          "liabilities_to_assets": 0.2563
+        },
+        "share_scoring_0": {
+          "program_expense_ratio": 0.1526,
+          "admin_expense_ratio": 0.1189,
+          "fundraising_efficiency": 0.0265,
+          "liabilities_to_assets": 0.0539
+        }
+      }
+    },
+    "2022": {
+      "full_990_filings": 341854,
+      "functional_split": {
+        "positive_total_expense": 338296,
+        "split_adds_up": 299324,
+        "split_all_empty_or_zero": 35796,
+        "split_all_zero_not_blank": 16815,
+        "split_other_mismatch": 3176,
+        "share_without_usable_split": 0.114
+      },
+      "impossible_values_set_missing": {
+        "negative_fundraising_expense": 20,
+        "negative_liabilities": 1338
+      },
+      "ratio_defined_share": {
+        "program_expense_ratio": 0.8752,
+        "admin_expense_ratio": 0.8753,
+        "fundraising_expense_ratio": 0.8755,
+        "fundraising_efficiency": 0.7473,
+        "operating_margin": 0.9825,
+        "equity_ratio": 0.9825,
+        "liabilities_to_assets": 0.9781,
+        "revenue_concentration": 0.9862
+      },
+      "standard_rating": {
+        "rated": 297684,
+        "rated_share": 0.8708,
+        "by_components": {
+          "0": 2205,
+          "1": 40348,
+          "2": 1617,
+          "3": 46073,
+          "4": 251611
+        },
+        "mean": 8.056,
+        "quantiles": {
+          "p10": 4.879,
+          "p25": 6.678,
+          "p50": 8.896,
+          "p75": 9.957,
+          "p90": 10.0
+        },
+        "share_scoring_10": {
+          "program_expense_ratio": 0.5424,
+          "admin_expense_ratio": 0.629,
+          "fundraising_efficiency": 0.8452,
+          "liabilities_to_assets": 0.2632
+        },
+        "share_scoring_0": {
+          "program_expense_ratio": 0.1468,
+          "admin_expense_ratio": 0.1136,
+          "fundraising_efficiency": 0.0348,
+          "liabilities_to_assets": 0.0544
+        }
+      }
+    }
+  }
+}
