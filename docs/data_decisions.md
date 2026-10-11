@@ -84,28 +84,7 @@ A county → planning-region lookup cannot fix this, because the nine regions cu
 - **Double counting.** For 2018–2021 the need table holds Connecticut twice, as legacy counties and as planning regions. Anything that sums or averages over counties should filter on `acs_estimated`.
 - **No NORP need for Connecticut.** See D6.
 
-## D6. NORP tract-level need: one snapshot, weighted by population (T5, Vien)
-
-**Problem.** The TA need table was ACS only. Our plan also lists housing burden and food desert share from NORP's `disadvantaged_communities.csv`, which has one row per census tract.
-
-**Decision.** `theorylab/need.py::aggregate_tract_need` takes the population-weighted mean of `Avg Housing Burden` and `Food Desert Pct` across each county's tracts. The results are the `avg_housing_burden` and `food_desert_share` columns of the need table.
-- **Same value every year.** The file has no year column, so each county's value is repeated for 2018–2022. These two columns carry no information about change over time.
-- **Not part of `need_index`.** The index stays ACS only, so it is defined the same way in every year and does not mix a dated measure with an undated one.
-- **Different scales.** `avg_housing_burden` is on a 0–51 scale and `food_desert_share` is 0–1. Standardize before combining them.
-- **Tracts that cannot contribute are skipped.** Tracts with zero population carry no weight, and a tract with a blank value is left out of that measure only.
-- **County codes are repaired.** The file drops the leading zero of `County Fips` (`9001` for 09001); the loader restores it.
-
-**Evidence.** In the `norp_need` block of `data/output/county_need_report.json`:
-- 72,742 tracts, no duplicate or missing tract IDs, 421 with zero population.
-- All 3,142 counties in the file get both values (`counties_null` is 0 for both).
-- 2.73% of need-table rows have no NORP value (`null_rates`). `need_rows_unmatched_by_state_by_year` breaks them down by state code.
-
-**Known gaps.**
-- **Puerto Rico (state code 72):** 78 rows a year. It is not in the NORP file.
-- **Connecticut (09):** 9 planning-region rows a year. The NORP file uses legacy counties, and tract numbers are not unique across Connecticut, so tracts cannot be reassigned to regions by number. Connecticut organizations therefore have ACS need but no housing burden or food desert share.
-- **Alaska (02):** 2 rows a year from 2020, when the Valdez-Cordova census area was split in two. The NORP file still has the old area.
-
-## D5. NORP tract need is one undated snapshot, aggregated to county by population (T5, Vien)
+## D6. NORP tract need is one undated snapshot, aggregated to county by population (T5, Vien)
 
 **Problem.** The TA starter need table was ACS only. NORP's `disadvantaged_communities.csv` has housing burden and a food desert flag, but per census tract and with no year column, while the need table is per county per year.
 
@@ -114,6 +93,8 @@ A county → planning-region lookup cannot fix this, because the nine regions cu
 - `avg_housing_burden` is the weighted mean of the tract `Avg Housing Burden` (a percent).
 - `food_desert_share` is the weighted mean of the tract `Food Desert Pct`. That column is a 0/1 flag per tract, so the county value is the share of the county's population living in flagged tracts (0–1).
 - A tract with zero population or a missing value does not count toward that measure.
+- The file drops the leading zero of `County Fips` (`9001` for 09001); the loader restores it.
+- The two columns are on different scales (a percent and a 0–1 share), so standardize before combining them.
 - Neither column goes into `need_index`, so the index and `high_need` are unchanged from the ACS-only table.
 
 **What this means for results.** These two columns vary across counties but not across years. They can explain differences between counties; they cannot explain change over time within a county.
@@ -121,7 +102,10 @@ A county → planning-region lookup cannot fix this, because the nine regions cu
 **Evidence.** The `norp_need` block in `data/output/county_need_report.json`:
 - 72,742 tracts (contract met), 421 with zero population, `Food Desert Pct` filled for 99.59%.
 - 3,142 counties, none with a null value for either measure.
-- Need rows with no NORP value are 2.51% of the table: Puerto Rico (78 rows per year; the file has no Puerto Rico tracts), two Alaska census areas from 2020 on (02063 and 02066, which replaced a county the file still lists under its old code), and the nine Connecticut planning regions in 2022 (the file uses legacy Connecticut counties; see T6).
+- Need rows with no NORP value are 2.73% of the table (`need_rows_unmatched_by_state_by_year`):
+  - Puerto Rico: 78 rows per year. The file has no Puerto Rico tracts.
+  - Alaska: two census areas from 2020 on (02063 and 02066), which replaced a county the file still lists under its old code.
+  - Connecticut: the nine planning regions in every year. The file uses legacy Connecticut counties, and tract numbers are not unique across Connecticut, so tracts cannot be reassigned to regions by number. Connecticut organizations therefore have ACS need but no housing burden or food desert share (see D5).
 - Tests: `tests/test_need.py`, the five `test_tract_need_*`, `test_load_norp_tracts_*` and `test_add_norp_need_*` tests.
 
 **Open question.** 68.28% of tracts with a value carry the food desert flag (`food_desert_flagged_tract_share`), which is high for a food desert definition. We use the column as NORP provides it and have not traced how NORP defines it.
