@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T20:13:13",
+  "generated_at": "2026-10-11T12:18:42",
   "output": "data/derived/county_need.csv",
   "contracts": {
     "2018": {
@@ -175,5 +175,62 @@
       "09180",
       "09190"
     ]
+  },
+  "norp_need": {
+    "contract": {
+      "label": "norp_disadvantaged",
+      "rows": 72742,
+      "expected_rows": [
+        72742,
+        72742
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "tract_population": 1.0,
+        "avg_housing_burden": 1.0,
+        "food_desert_pct": 0.9959,
+        "county_fips": 1.0
+      },
+      "violations": []
+    },
+    "tracts_zero_population": 421,
+    "counties": 3142,
+    "counties_null": {
+      "avg_housing_burden": 0,
+      "food_desert_share": 0
+    },
+    "need_rows_matched_by_year": {
+      "2018": 3142,
+      "2019": 3142,
+      "2020": 3141,
+      "2021": 3141,
+      "2022": 3133
+    },
+    "need_rows_unmatched_by_state_by_year": {
+      "2018": {
+        "72": 78
+      },
+      "2019": {
+        "72": 78
+      },
+      "2020": {
+        "02": 2,
+        "72": 78
+      },
+      "2021": {
+        "02": 2,
+        "72": 78
+      },
+      "2022": {
+        "02": 2,
+        "09": 9,
+        "72": 78
+      }
+    },
+    "null_rates": {
+      "avg_housing_burden": 0.0251,
+      "food_desert_share": 0.0251
+    }
   }
 }
