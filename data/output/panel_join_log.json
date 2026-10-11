@@ -1,0 +1,205 @@
+{
+  "generated_at": "2026-10-11T13:53:22",
+  "parts": {
+    "nccs_p01": {
+      "rows_in": 2460174,
+      "dropped_missing_keys": 0,
+      "dropped_duplicate_keys": 69430,
+      "rows_out": 2390744,
+      "duplicate_resolution": {
+        "rule": "latest RETURN_TIME_STAMP wins; missing timestamp ranks lowest; ties by file order",
+        "duplicate_key_groups": 67295,
+        "groups_same_timestamp": 37178,
+        "groups_distinct_timestamps": 30117,
+        "kept_rows_marked_amended": 27886,
+        "rows_missing_timestamp": 0
+      },
+      "extract_rows_by_year": {
+        "2018": 419877,
+        "2019": 436289,
+        "2020": 514469,
+        "2021": 537670,
+        "2022": 551869
+      }
+    },
+    "nccs_p09": {
+      "rows_in": 2133365,
+      "dropped_missing_keys": 0,
+      "dropped_duplicate_keys": 63125,
+      "rows_out": 2070240,
+      "duplicate_resolution": {
+        "rule": "latest RETURN_TIME_STAMP wins; missing timestamp ranks lowest; ties by file order",
+        "duplicate_key_groups": 61158,
+        "groups_same_timestamp": 34297,
+        "groups_distinct_timestamps": 26861,
+        "kept_rows_marked_amended": 25114,
+        "rows_missing_timestamp": 0
+      },
+      "extract_rows_by_year": {
+        "2018": 364285,
+        "2019": 378623,
+        "2020": 448048,
+        "2021": 464734,
+        "2022": 477675
+      }
+    },
+    "nccs_p10": {
+      "rows_in": 2466500,
+      "dropped_missing_keys": 0,
+      "dropped_duplicate_keys": 69639,
+      "rows_out": 2396861,
+      "duplicate_resolution": {
+        "rule": "latest RETURN_TIME_STAMP wins; missing timestamp ranks lowest; ties by file order",
+        "duplicate_key_groups": 67499,
+        "groups_same_timestamp": 37252,
+        "groups_distinct_timestamps": 30247,
+        "kept_rows_marked_amended": 27997,
+        "rows_missing_timestamp": 0
+      },
+      "extract_rows_by_year": {
+        "2018": 420826,
+        "2019": 437203,
+        "2020": 515679,
+        "2021": 539238,
+        "2022": 553554
+      }
+    }
+  },
+  "inputs": {
+    "p01_rows": 2390744,
+    "p09_rows": 2070240,
+    "p10_rows": 2396861,
+    "crosswalk_eins": 612230,
+    "need_rows": 16140
+  },
+  "by_tax_year": {
+    "2018": {
+      "rows": 404697,
+      "with_p09": 351711,
+      "with_p10": 404697,
+      "with_county": 398925,
+      "with_need": 398895,
+      "county_match_rate": 0.9857,
+      "need_match_rate": 0.9857
+    },
+    "2019": {
+      "rows": 430729,
+      "with_p09": 373624,
+      "with_p10": 430729,
+      "with_county": 424377,
+      "with_need": 424348,
+      "county_match_rate": 0.9853,
+      "need_match_rate": 0.9852
+    },
+    "2020": {
+      "rows": 482421,
+      "with_p09": 417302,
+      "with_p10": 482421,
+      "with_county": 474051,
+      "with_need": 474051,
+      "county_match_rate": 0.9827,
+      "need_match_rate": 0.9827
+    },
+    "2021": {
+      "rows": 529599,
+      "with_p09": 457559,
+      "with_p10": 529599,
+      "with_county": 518912,
+      "with_need": 518912,
+      "county_match_rate": 0.9798,
+      "need_match_rate": 0.9798
+    },
+    "2022": {
+      "rows": 543298,
+      "with_p09": 470044,
+      "with_p10": 543298,
+      "with_county": 530589,
+      "with_need": 530589,
+      "county_match_rate": 0.9766,
+      "need_match_rate": 0.9766
+    }
+  },
+  "eins_in_panel": 628099,
+  "eins_with_county": 612021,
+  "eins_with_3plus_consecutive_linked_years": 459486,
+  "ratio_fill_rates": {
+    "program_expense_ratio": 0.5603,
+    "admin_expense_ratio": 0.5604,
+    "fundraising_expense_ratio": 0.5605,
+    "fundraising_efficiency": 0.4763,
+    "operating_margin": 0.9717,
+    "equity_ratio": 0.9709,
+    "liabilities_to_assets": 0.831,
+    "revenue_concentration": 0.6328,
+    "revenue_growth": 0.7103
+  },
+  "panel": {
+    "path": "data/derived/org_year_panel.csv.gz",
+    "rows": 2390744,
+    "columns": [
+      "ein",
+      "tax_year",
+      "revenue_total",
+      "expenses_total",
+      "fundraising_expense_p01",
+      "contributions",
+      "program_revenue",
+      "salaries",
+      "net_assets_boy",
+      "net_assets_eoy",
+      "return_type",
+      "p09_total_expense",
+      "p09_program_expense",
+      "p09_management_expense",
+      "p09_fundraising_expense",
+      "has_p09",
+      "total_assets_eoy",
+      "total_liabilities_eoy",
+      "has_p10",
+      "county_fips",
+      "state",
+      "category",
+      "has_county",
+      "population",
+      "median_household_income",
+      "poverty_universe",
+      "below_poverty",
+      "civilian_labor_force",
+      "unemployed",
+      "poverty_rate",
+      "unemployment_rate",
+      "need_index",
+      "high_need",
+      "acs_estimated",
+      "avg_housing_burden",
+      "food_desert_share",
+      "has_need",
+      "program_expense_ratio",
+      "admin_expense_ratio",
+      "fundraising_expense_ratio",
+      "fundraising_efficiency",
+      "operating_margin",
+      "equity_ratio",
+      "liabilities_to_assets",
+      "revenue_concentration",
+      "standard_rating",
+      "rating_components",
+      "revenue_growth"
+    ],
+    "size_mb": 397.25
+  },
+  "assumption_4": {
+    "threshold": 0.8,
+    "county_match_rate_by_year": {
+      "2018": 0.9857,
+      "2019": 0.9853,
+      "2020": 0.9827,
+      "2021": 0.9798,
+      "2022": 0.9766
+    },
+    "years_missing": [],
+    "min_rate": 0.9766,
+    "eins_with_3plus_consecutive_linked_years": 459486,
+    "holds": true
+  }
+}
