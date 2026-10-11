@@ -75,7 +75,7 @@ python scripts/feasibility_check.py --data-dir <path to NORP data/raw>
 | EIN → county crosswalk incl. FL and CT, per-year match rate (Assumption 4) | `theorylab/crosswalk.py`, `scripts/build_crosswalk.py` | `data/derived/ein_county_crosswalk.csv.gz`, `data/output/crosswalk_report.json` |
 | County need table (ACS 5-year 2018–2022, Connecticut planning regions rebuilt for 2018–2021, NORP tract-level housing burden and food desert share) | `theorylab/need.py`, `scripts/build_county_need.py` | `data/derived/county_need.csv`, `data/output/county_need_report.json` |
 | Organization-year panel with join log | `theorylab/panel.py`, `scripts/build_panel.py` | `data/derived/org_year_panel.csv.gz` (git-ignored), `data/output/panel_join_log.json` |
-| Financial ratio library | `theorylab/ratios.py` | — |
+| Financial ratio library, audited, with the standard rating (defined in `docs/ratings_theory.md`) | `theorylab/ratios.py`, `scripts/ratio_audit.py` | `data/output/ratio_audit.json` |
 | Unit tests | `tests/` | — |
 
 Build order:
@@ -87,6 +87,7 @@ python scripts/build_nccs_extracts.py                               # ~4 GB down
 python scripts/build_crosswalk.py --norp-raw-dir <path to NORP data/raw>
 python scripts/build_county_need.py --norp-raw-dir <path to NORP data/raw>   # Census API; needs CENSUS_API_KEY
 python scripts/build_panel.py
+python scripts/ratio_audit.py                                       # ratio and rating coverage from the committed extracts
 ```
 
 Notes:
