@@ -73,7 +73,7 @@ python scripts/feasibility_check.py --data-dir <path to NORP data/raw>
 | Data catalog with contracts (keys, fields, expected rows) | `catalog/catalog.yaml`, `theorylab/catalog.py` | — |
 | Slim NCCS extracts, Parts I/IX/X 2018–2022, hash manifest (Assumption 3) | `scripts/build_nccs_extracts.py` | `data/extracts/nccs/*.csv.gz`, `data/extracts/nccs/MANIFEST.json` |
 | EIN → county crosswalk incl. FL and CT, per-year match rate (Assumption 4) | `theorylab/crosswalk.py`, `scripts/build_crosswalk.py` | `data/derived/ein_county_crosswalk.csv.gz`, `data/output/crosswalk_report.json` |
-| County need table (ACS 5-year 2018–2022 + NORP tract-level housing burden and food desert share) | `theorylab/need.py`, `scripts/build_county_need.py` | `data/derived/county_need.csv`, `data/output/county_need_report.json` |
+| County need table (ACS 5-year 2018–2022, Connecticut planning regions rebuilt for 2018–2021, NORP tract-level housing burden and food desert share) | `theorylab/need.py`, `scripts/build_county_need.py` | `data/derived/county_need.csv`, `data/output/county_need_report.json` |
 | Organization-year panel with join log | `theorylab/panel.py`, `scripts/build_panel.py` | `data/derived/org_year_panel.csv.gz` (git-ignored), `data/output/panel_join_log.json` |
 | Financial ratio library | `theorylab/ratios.py` | — |
 | Unit tests | `tests/` | — |
@@ -101,6 +101,7 @@ Notes:
   `MANIFEST.json` after the first extract run.
 - County names resolve against the Census 2020 county file, not the NORP
   `county_fips_lookup` table, which has no Florida rows. Connecticut legacy counties map to
-  09001–09015 and planning regions to 09110–09190. The 2022 ACS reports Connecticut by
-  planning region, so 2022 need joins for legacy-county Connecticut EINs show up as misses
-  in `panel_join_log.json` rather than being silently dropped.
+  09001–09015 and planning regions to 09110–09190. The NORP NGO table names Connecticut
+  organizations by planning region, which the ACS publishes only from 2022, so the need
+  table rebuilds the planning regions for 2018–2021 from town-level ACS data (marked
+  `acs_estimated`). See D5 in `docs/data_decisions.md`.
