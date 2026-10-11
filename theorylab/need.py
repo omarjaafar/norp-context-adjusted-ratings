@@ -1,9 +1,14 @@
-"""County need table from ACS 5-year estimates.
+"""County need table from ACS 5-year estimates plus NORP tract-level need.
 
 One row per county per ACS year with population, median household income,
 poverty rate and unemployment rate, plus a composite need index computed by
 pandas (z-scores within each year). The 2022 ACS reports Connecticut by
 planning region (09110-09190); 2018-2021 use the legacy counties.
+
+NORP's disadvantaged-communities table adds housing burden and food desert
+share. It is one tract-level snapshot with no year, so the county aggregate
+is the same for every ACS year. It uses legacy Connecticut counties, so the
+2022 Connecticut planning-region rows get no NORP values.
 """
 
 from __future__ import annotations
@@ -22,6 +27,8 @@ NEED_COLUMNS = (
     "poverty_universe", "below_poverty", "civilian_labor_force", "unemployed",
     "poverty_rate", "unemployment_rate", "need_index", "high_need",
 )
+# Added by add_norp_need(); not part of need_index.
+NORP_NEED_COLUMNS = ("avg_housing_burden", "food_desert_share")
 
 
 def acs_url(source: Source, year: int, api_key: str | None = None) -> str:
@@ -36,7 +43,13 @@ def fetch_acs_rows(source: Source, year: int, api_key: str | None = None) -> lis
     req = urllib.request.Request(acs_url(source, year, api_key),
                                  headers={"User-Agent": "theorylab-cp2"})
     with urllib.request.urlopen(req, timeout=120) as r:
-        return json.loads(r.read().decode("utf-8"))
+        body = r.read().decode("utf-8")
+    try:
+        return json.loads(body)
+    except json.JSONDecodeError:
+        # The API answers 200 with an HTML "Missing Key" page when no key is sent.
+        raise RuntimeError(f"Census API returned no data for {year}; "
+                           "set CENSUS_API_KEY or pass --api-key") from None
 
 
 def acs_rows_to_frame(rows: list, source: Source, year: int) -> pd.DataFrame:
@@ -88,3 +101,41 @@ def add_need_index(df: pd.DataFrame) -> pd.DataFrame:
     q75 = out.groupby("acs_year")["need_index"].transform(lambda s: s.quantile(0.75))
     out["high_need"] = (out["need_index"] >= q75).astype("boolean").where(out["need_index"].notna())
     return out.drop(columns="_log_income")
+
+
+def load_norp_tracts(path, source: Source) -> pd.DataFrame:
+    """Read the NORP tract table with raw column names; codes stay text."""
+    codes = list(source.keys.values()) + list(source.attributes)
+    return pd.read_csv(path, usecols=source.columns(), dtype={c: str for c in codes})
+
+
+def _weighted_mean(values: pd.Series, weights: pd.Series, by: pd.Series) -> pd.Series:
+    """Weighted mean per group over rows with a value and a positive weight."""
+    w = weights.where(values.notna() & (weights > 0))
+    total = w.groupby(by).sum(min_count=1)
+    return (values * w).groupby(by).sum(min_count=1) / total
+
+
+def aggregate_tract_need(tracts: pd.DataFrame, source: Source) -> pd.DataFrame:
+    """Population-weighted county means of the NORP tract need measures.
+
+    One row per county. A tract with zero population or a missing value does
+    not count toward that measure; a county with no usable tract gets NaN.
+    """
+    t = tracts.rename(columns={**source.fields, **source.attributes})
+    t["county_fips"] = t["county_fips"].astype(str).str.strip().str.zfill(5)
+    pop = t["tract_population"].astype("float64")
+    by = t["county_fips"]
+    out = pd.DataFrame({
+        "norp_tracts": t.groupby(by).size(),
+        "norp_population": pop.groupby(by).sum(),
+        "avg_housing_burden": _weighted_mean(t["avg_housing_burden"].astype("float64"), pop, by),
+        "food_desert_share": _weighted_mean(t["food_desert_pct"].astype("float64"), pop, by),
+    })
+    return out.rename_axis("county_fips").reset_index()
+
+
+def add_norp_need(need: pd.DataFrame, county_norp: pd.DataFrame) -> pd.DataFrame:
+    """Attach the NORP county measures to every year of the need table."""
+    cols = ["county_fips", *NORP_NEED_COLUMNS]
+    return need.merge(county_norp[cols], on="county_fips", how="left", validate="many_to_one")

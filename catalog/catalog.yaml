@@ -172,3 +172,21 @@ sources:
     verified: []
     expected_rows: [3140, 3240]
     extract: data/derived/county_need.csv
+
+  norp_disadvantaged:
+    description: NORP disadvantaged-communities table (tract-level need), one row per census tract, no year
+    origin_kind: norp_raw
+    origin: disadvantaged_communities.csv
+    years: []
+    keys:
+      tract_geoid: Geoid
+    fields:
+      Population: tract_population
+      Avg Housing Burden: avg_housing_burden
+      Food Desert Pct: food_desert_pct
+    attributes:
+      County Fips: county_fips
+    verified: [Geoid, County Fips, Population, Avg Housing Burden, Food Desert Pct]
+    # Row count measured by scripts/build_county_need.py (county_need_report.json -> norp_need.contract).
+    expected_rows: [72742, 72742]
+    extract: null
