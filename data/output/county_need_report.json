@@ -1,0 +1,179 @@
+{
+  "generated_at": "2026-10-10T20:13:13",
+  "output": "data/derived/county_need.csv",
+  "contracts": {
+    "2018": {
+      "label": "acs_county-2018",
+      "rows": 3220,
+      "expected_rows": [
+        3140,
+        3240
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "median_household_income": 0.9997,
+        "poverty_universe": 0.9997,
+        "below_poverty": 0.9997,
+        "civilian_labor_force": 0.9997,
+        "unemployed": 0.9997,
+        "acs_county_name": 1.0
+      },
+      "violations": []
+    },
+    "2019": {
+      "label": "acs_county-2019",
+      "rows": 3220,
+      "expected_rows": [
+        3140,
+        3240
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "median_household_income": 1.0,
+        "poverty_universe": 1.0,
+        "below_poverty": 1.0,
+        "civilian_labor_force": 1.0,
+        "unemployed": 1.0,
+        "acs_county_name": 1.0
+      },
+      "violations": []
+    },
+    "2020": {
+      "label": "acs_county-2020",
+      "rows": 3221,
+      "expected_rows": [
+        3140,
+        3240
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "median_household_income": 0.9997,
+        "poverty_universe": 1.0,
+        "below_poverty": 1.0,
+        "civilian_labor_force": 1.0,
+        "unemployed": 1.0,
+        "acs_county_name": 1.0
+      },
+      "violations": []
+    },
+    "2021": {
+      "label": "acs_county-2021",
+      "rows": 3221,
+      "expected_rows": [
+        3140,
+        3240
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "median_household_income": 0.9997,
+        "poverty_universe": 1.0,
+        "below_poverty": 1.0,
+        "civilian_labor_force": 1.0,
+        "unemployed": 1.0,
+        "acs_county_name": 1.0
+      },
+      "violations": []
+    },
+    "2022": {
+      "label": "acs_county-2022",
+      "rows": 3222,
+      "expected_rows": [
+        3140,
+        3240
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "median_household_income": 0.9997,
+        "poverty_universe": 1.0,
+        "below_poverty": 1.0,
+        "civilian_labor_force": 1.0,
+        "unemployed": 1.0,
+        "acs_county_name": 1.0
+      },
+      "violations": []
+    }
+  },
+  "rows_by_year": {
+    "2018": 3220,
+    "2019": 3220,
+    "2020": 3221,
+    "2021": 3221,
+    "2022": 3222
+  },
+  "null_rates": {
+    "median_household_income": 0.0002,
+    "poverty_rate": 0.0001,
+    "unemployment_rate": 0.0001,
+    "need_index": 0.0002
+  },
+  "high_need_counties_by_year": {
+    "2018": 805,
+    "2019": 805,
+    "2020": 805,
+    "2021": 805,
+    "2022": 806
+  },
+  "connecticut_codes_by_year": {
+    "2018": [
+      "09001",
+      "09003",
+      "09005",
+      "09007",
+      "09009",
+      "09011",
+      "09013",
+      "09015"
+    ],
+    "2019": [
+      "09001",
+      "09003",
+      "09005",
+      "09007",
+      "09009",
+      "09011",
+      "09013",
+      "09015"
+    ],
+    "2020": [
+      "09001",
+      "09003",
+      "09005",
+      "09007",
+      "09009",
+      "09011",
+      "09013",
+      "09015"
+    ],
+    "2021": [
+      "09001",
+      "09003",
+      "09005",
+      "09007",
+      "09009",
+      "09011",
+      "09013",
+      "09015"
+    ],
+    "2022": [
+      "09110",
+      "09120",
+      "09130",
+      "09140",
+      "09150",
+      "09160",
+      "09170",
+      "09180",
+      "09190"
+    ]
+  }
+}
