@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-11T12:26:48",
+  "generated_at": "2026-10-11T12:27:29",
   "output": "data/derived/county_need.csv",
   "contracts": {
     "2018": {
@@ -101,13 +101,193 @@
         "acs_county_name": 1.0
       },
       "violations": []
+    },
+    "ct_towns-2018": {
+      "label": "acs_ct_towns-2018",
+      "rows": 173,
+      "expected_rows": [
+        169,
+        180
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "poverty_universe": 1.0,
+        "below_poverty": 1.0,
+        "civilian_labor_force": 1.0,
+        "unemployed": 1.0,
+        "households": 1.0,
+        "hh_income_bracket_01": 1.0,
+        "hh_income_bracket_02": 1.0,
+        "hh_income_bracket_03": 1.0,
+        "hh_income_bracket_04": 1.0,
+        "hh_income_bracket_05": 1.0,
+        "hh_income_bracket_06": 1.0,
+        "hh_income_bracket_07": 1.0,
+        "hh_income_bracket_08": 1.0,
+        "hh_income_bracket_09": 1.0,
+        "hh_income_bracket_10": 1.0,
+        "hh_income_bracket_11": 1.0,
+        "hh_income_bracket_12": 1.0,
+        "hh_income_bracket_13": 1.0,
+        "hh_income_bracket_14": 1.0,
+        "hh_income_bracket_15": 1.0,
+        "hh_income_bracket_16": 1.0,
+        "acs_town_name": 1.0
+      },
+      "violations": []
+    },
+    "ct_towns-2019": {
+      "label": "acs_ct_towns-2019",
+      "rows": 173,
+      "expected_rows": [
+        169,
+        180
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "poverty_universe": 1.0,
+        "below_poverty": 1.0,
+        "civilian_labor_force": 1.0,
+        "unemployed": 1.0,
+        "households": 1.0,
+        "hh_income_bracket_01": 1.0,
+        "hh_income_bracket_02": 1.0,
+        "hh_income_bracket_03": 1.0,
+        "hh_income_bracket_04": 1.0,
+        "hh_income_bracket_05": 1.0,
+        "hh_income_bracket_06": 1.0,
+        "hh_income_bracket_07": 1.0,
+        "hh_income_bracket_08": 1.0,
+        "hh_income_bracket_09": 1.0,
+        "hh_income_bracket_10": 1.0,
+        "hh_income_bracket_11": 1.0,
+        "hh_income_bracket_12": 1.0,
+        "hh_income_bracket_13": 1.0,
+        "hh_income_bracket_14": 1.0,
+        "hh_income_bracket_15": 1.0,
+        "hh_income_bracket_16": 1.0,
+        "acs_town_name": 1.0
+      },
+      "violations": []
+    },
+    "ct_towns-2020": {
+      "label": "acs_ct_towns-2020",
+      "rows": 173,
+      "expected_rows": [
+        169,
+        180
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "poverty_universe": 1.0,
+        "below_poverty": 1.0,
+        "civilian_labor_force": 1.0,
+        "unemployed": 1.0,
+        "households": 1.0,
+        "hh_income_bracket_01": 1.0,
+        "hh_income_bracket_02": 1.0,
+        "hh_income_bracket_03": 1.0,
+        "hh_income_bracket_04": 1.0,
+        "hh_income_bracket_05": 1.0,
+        "hh_income_bracket_06": 1.0,
+        "hh_income_bracket_07": 1.0,
+        "hh_income_bracket_08": 1.0,
+        "hh_income_bracket_09": 1.0,
+        "hh_income_bracket_10": 1.0,
+        "hh_income_bracket_11": 1.0,
+        "hh_income_bracket_12": 1.0,
+        "hh_income_bracket_13": 1.0,
+        "hh_income_bracket_14": 1.0,
+        "hh_income_bracket_15": 1.0,
+        "hh_income_bracket_16": 1.0,
+        "acs_town_name": 1.0
+      },
+      "violations": []
+    },
+    "ct_towns-2021": {
+      "label": "acs_ct_towns-2021",
+      "rows": 173,
+      "expected_rows": [
+        169,
+        180
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "poverty_universe": 1.0,
+        "below_poverty": 1.0,
+        "civilian_labor_force": 1.0,
+        "unemployed": 1.0,
+        "households": 1.0,
+        "hh_income_bracket_01": 1.0,
+        "hh_income_bracket_02": 1.0,
+        "hh_income_bracket_03": 1.0,
+        "hh_income_bracket_04": 1.0,
+        "hh_income_bracket_05": 1.0,
+        "hh_income_bracket_06": 1.0,
+        "hh_income_bracket_07": 1.0,
+        "hh_income_bracket_08": 1.0,
+        "hh_income_bracket_09": 1.0,
+        "hh_income_bracket_10": 1.0,
+        "hh_income_bracket_11": 1.0,
+        "hh_income_bracket_12": 1.0,
+        "hh_income_bracket_13": 1.0,
+        "hh_income_bracket_14": 1.0,
+        "hh_income_bracket_15": 1.0,
+        "hh_income_bracket_16": 1.0,
+        "acs_town_name": 1.0
+      },
+      "violations": []
+    },
+    "ct_towns-2022": {
+      "label": "acs_ct_towns-2022",
+      "rows": 174,
+      "expected_rows": [
+        169,
+        180
+      ],
+      "null_key_rows": 0,
+      "duplicate_key_rows": 0,
+      "fill_rates": {
+        "population": 1.0,
+        "poverty_universe": 1.0,
+        "below_poverty": 1.0,
+        "civilian_labor_force": 1.0,
+        "unemployed": 1.0,
+        "households": 1.0,
+        "hh_income_bracket_01": 1.0,
+        "hh_income_bracket_02": 1.0,
+        "hh_income_bracket_03": 1.0,
+        "hh_income_bracket_04": 1.0,
+        "hh_income_bracket_05": 1.0,
+        "hh_income_bracket_06": 1.0,
+        "hh_income_bracket_07": 1.0,
+        "hh_income_bracket_08": 1.0,
+        "hh_income_bracket_09": 1.0,
+        "hh_income_bracket_10": 1.0,
+        "hh_income_bracket_11": 1.0,
+        "hh_income_bracket_12": 1.0,
+        "hh_income_bracket_13": 1.0,
+        "hh_income_bracket_14": 1.0,
+        "hh_income_bracket_15": 1.0,
+        "hh_income_bracket_16": 1.0,
+        "acs_town_name": 1.0
+      },
+      "violations": []
     }
   },
   "rows_by_year": {
-    "2018": 3220,
-    "2019": 3220,
-    "2020": 3221,
-    "2021": 3221,
+    "2018": 3229,
+    "2019": 3229,
+    "2020": 3230,
+    "2021": 3230,
     "2022": 3222
   },
   "null_rates": {
@@ -132,7 +312,16 @@
       "09009",
       "09011",
       "09013",
-      "09015"
+      "09015",
+      "09110",
+      "09120",
+      "09130",
+      "09140",
+      "09150",
+      "09160",
+      "09170",
+      "09180",
+      "09190"
     ],
     "2019": [
       "09001",
@@ -142,7 +331,16 @@
       "09009",
       "09011",
       "09013",
-      "09015"
+      "09015",
+      "09110",
+      "09120",
+      "09130",
+      "09140",
+      "09150",
+      "09160",
+      "09170",
+      "09180",
+      "09190"
     ],
     "2020": [
       "09001",
@@ -152,7 +350,16 @@
       "09009",
       "09011",
       "09013",
-      "09015"
+      "09015",
+      "09110",
+      "09120",
+      "09130",
+      "09140",
+      "09150",
+      "09160",
+      "09170",
+      "09180",
+      "09190"
     ],
     "2021": [
       "09001",
@@ -162,7 +369,16 @@
       "09009",
       "09011",
       "09013",
-      "09015"
+      "09015",
+      "09110",
+      "09120",
+      "09130",
+      "09140",
+      "09150",
+      "09160",
+      "09170",
+      "09180",
+      "09190"
     ],
     "2022": [
       "09110",
@@ -175,6 +391,69 @@
       "09180",
       "09190"
     ]
+  },
+  "ct_planning_regions": {
+    "method": "sum of town (county subdivision) ACS rows; median income interpolated from B19001",
+    "towns_mapped": 169,
+    "regions": 9,
+    "towns_by_year": {
+      "2018": 169,
+      "2019": 169,
+      "2020": 169,
+      "2021": 169,
+      "2022": 169
+    },
+    "towns_unmapped_by_year": {},
+    "estimated_rows_by_year": {
+      "2018": 9,
+      "2019": 9,
+      "2020": 9,
+      "2021": 9
+    },
+    "check_against_published_2022": {
+      "regions_compared": 9,
+      "max_abs_count_difference": {
+        "population": 0,
+        "poverty_universe": 0,
+        "below_poverty": 0,
+        "civilian_labor_force": 0,
+        "unemployed": 0
+      },
+      "median_income_mean_abs_pct_error": 0.85,
+      "median_income_max_abs_pct_error": 1.54
+    }
+  },
+  "vintage_correlation": {
+    "2018_vs_2019": {
+      "counties": 3219,
+      "poverty_rate": 0.9839,
+      "unemployment_rate": 0.9543,
+      "need_index": 0.9873
+    },
+    "2019_vs_2020": {
+      "counties": 3219,
+      "poverty_rate": 0.9736,
+      "unemployment_rate": 0.9269,
+      "need_index": 0.9801
+    },
+    "2020_vs_2021": {
+      "counties": 3221,
+      "poverty_rate": 0.9818,
+      "unemployment_rate": 0.9457,
+      "need_index": 0.9854
+    },
+    "2021_vs_2022": {
+      "counties": 3213,
+      "poverty_rate": 0.9793,
+      "unemployment_rate": 0.9472,
+      "need_index": 0.9846
+    },
+    "2018_vs_2022": {
+      "counties": 3210,
+      "poverty_rate": 0.9216,
+      "unemployment_rate": 0.7705,
+      "need_index": 0.937
+    }
   },
   "norp_need": {
     "contract": {
@@ -210,17 +489,21 @@
     },
     "need_rows_unmatched_by_state_by_year": {
       "2018": {
+        "09": 9,
         "72": 78
       },
       "2019": {
+        "09": 9,
         "72": 78
       },
       "2020": {
         "02": 2,
+        "09": 9,
         "72": 78
       },
       "2021": {
         "02": 2,
+        "09": 9,
         "72": 78
       },
       "2022": {
@@ -230,8 +513,8 @@
       }
     },
     "null_rates": {
-      "avg_housing_burden": 0.0251,
-      "food_desert_share": 0.0251
+      "avg_housing_burden": 0.0273,
+      "food_desert_share": 0.0273
     }
   }
 }
