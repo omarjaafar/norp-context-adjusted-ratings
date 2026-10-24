@@ -110,3 +110,36 @@ Notes:
   organizations by planning region, which the ACS publishes only from 2022, so the need
   table rebuilds the planning regions for 2018–2021 from town-level ACS data (marked
   `acs_estimated`). See D5 in `docs/data_decisions.md`.
+
+## Checkpoint 3: Executor and Validator
+
+| Piece | Code | Output |
+|---|---|---|
+| Method library: correlation, fixed effects (absorbed, clustered SEs), multilevel (MixedLM), two-stage group means, lagged outcomes | `theorylab/executor.py` | — |
+| Validator: county-level permutation tests, BH-FDR, effect-size floor, held-out-year replication, four-verdict rule | `theorylab/validator.py` | — |
+| Theory spec format and schema check (what the CP4 Planner will write) | `theorylab/spec.py`, `specs/ratings_fairness.json` | — |
+| Ratings theory end to end from the hand-written spec (H1, H2, verdict) | `theorylab/theory_run.py`, `scripts/run_theory.py` | `data/output/theory_runs/ratings_fairness.json` |
+| Assumption 5: MixedLM fit time and convergence on 2022 full-990 filers | `scripts/measure_assumption5.py` | `data/output/assumption_5.json` |
+| Open checks from CP2: Part IX coverage by return type; rating anchor sensitivity | `theorylab/checks.py`, `theorylab/sensitivity.py`, `scripts/part9_coverage.py`, `scripts/anchor_sensitivity.py` | `data/output/part9_coverage.json`, `data/output/anchor_sensitivity.json` |
+| Tests on synthetic data with known answers | `tests/test_executor.py`, `tests/test_validator.py`, `tests/test_theory_run.py` | — |
+
+```bash
+pip install -r requirements.txt          # adds scipy and statsmodels
+bash scripts/run_cp3.sh                  # QUICK=1 for 199 permutations
+```
+
+How the gate reads (`theorylab/validator.py::decide_verdict`):
+
+- **H1** (the gap exists): difference in mean rating, high-need vs other counties. Its
+  p-value comes from shuffling `high_need` across counties within each tax year, so
+  organizations in the same county are never treated as independent draws.
+- **H2** (the gap survives size, sector and year): fixed-effects regression of the rating
+  on `high_need` + log revenue, absorbing tax year and NORP category, SEs clustered by
+  county; its p-value comes from the same county-level permutation.
+- H1 and H2 p-values go through Benjamini-Hochberg; each must also clear the effect-size
+  floor (0.1 SD of the rating). H2 must replicate in the held-out year (2022).
+- **supported** = H1 and H2 hold and H2 replicates; **weak** = H1 holds only;
+  **unsupported** = no H1 gap; **reversed** = the gap runs the other way.
+- Multilevel and county-year-mean models are reported next to the verdict as robustness
+  checks and never change it. Every theory run restricts to full Form 990 filers
+  (`return_type == "990"`), which settles which rows the Part IX ratios come from.

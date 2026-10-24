@@ -1,0 +1,56 @@
+{
+  "spec_version": 1,
+  "theory_id": "ratings_fairness",
+  "theory": "Standard financial-ratio ratings unfairly penalize nonprofits in high-need counties.",
+  "source": "docs/ratings_theory.md",
+  "written_by": "hand (CP3); from CP4 the Planner agent writes specs in this format",
+  "outcome": "standard_rating",
+  "exposure": "high_need",
+  "expected_sign": -1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": ["990"],
+    "require_true": ["has_county", "has_need"],
+    "require_present": ["standard_rating", "high_need", "log_revenue", "category", "county_fips"]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "The mean standard rating is lower in high-need counties than elsewhere.",
+      "method": "difference_in_means"
+    },
+    {
+      "id": "H2",
+      "claim": "The gap remains after controlling for organization size (log revenue), sector (NORP category) and tax year.",
+      "method": "fixed_effects",
+      "controls": ["log_revenue"],
+      "absorb": ["tax_year", "category"],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "controls": ["log_revenue"],
+      "categorical": ["category"],
+      "group": "county_fips",
+      "years": [2022]
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "controls": ["log_revenue"],
+      "absorb": ["tax_year", "category"],
+      "groups": ["county_fips", "tax_year"]
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "holdout_year": 2022
+  }
+}
