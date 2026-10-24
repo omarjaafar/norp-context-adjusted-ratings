@@ -102,6 +102,45 @@ def test_prepare_part_latest_timestamp_beats_file_order(catalog):
     assert list(part["return_type"]) == ["990", "990"]
 
 
+def test_prepare_part_separates_exact_copies_from_same_timestamp_rows_that_differ(catalog):
+    """CP2 feedback: a shared timestamp alone does not make two rows the same return."""
+    src = catalog["nccs_p01"]
+    ts = "2022-05-01T09:00:00-05:00"
+    rows = [("120000011", "2021", "100", "1", "1", "1", "1", "1", "1", "1"),   # exact copy pair
+            ("120000011", "2021", "100", "1", "1", "1", "1", "1", "1", "1"),
+            ("120000012", "2021", "100", "1", "1", "1", "1", "1", "1", "1"),   # same ts, rows differ
+            ("120000012", "2021", "250", "1", "1", "1", "1", "1", "1", "1"),
+            ("120000013", "2021", "100", "1", "1", "1", "1", "1", "1", "1"),   # re-filing
+            ("120000013", "2021", "300", "1", "1", "1", "1", "1", "1", "1")]
+    meta = [("990", "FALSE", ts)] * 5 + [("990", "TRUE", "2022-11-01T09:00:00-05:00")]
+    _, log = prepare_part(_frame(src, rows, meta), src)
+    d = log["duplicate_resolution"]
+    assert d["duplicate_key_groups"] == 3
+    assert d["groups_same_timestamp"] == 2
+    assert d["groups_exact_copies"] == 1
+    assert d["groups_same_timestamp_rows_differ"] == 1
+    assert d["groups_distinct_timestamps"] == 1
+
+
+def test_build_panel_reports_full_990_match_rate_for_assumption_4(catalog):
+    p01, _ = prepare_part(_p01(catalog["nccs_p01"]), catalog["nccs_p01"], keep_meta=("return_type",))
+    p09, _ = prepare_part(_p09(catalog["nccs_p09"]), catalog["nccs_p09"])
+    p10, _ = prepare_part(_p10(catalog["nccs_p10"]), catalog["nccs_p10"])
+    crosswalk = pd.DataFrame({"ein": ["120000001", "120000002"], "county_fips": ["13001", None],
+                              "state": ["GA", "GA"], "category": ["Human Services", "Education"]})
+    need = pd.DataFrame({"county_fips": ["13001"], "acs_year": [2019], "need_index": [1.1],
+                         "high_need": [True]})
+    _, log = build_panel(p01, p09, p10, crosswalk, need)
+    # 2019: the 990 filer links, the 990EZ filer does not.
+    assert log["by_tax_year"]["2019"]["county_match_rate"] == 0.5
+    assert log["by_tax_year"]["2019"]["full_990_rows"] == 1
+    assert log["by_tax_year"]["2019"]["full_990_county_match_rate"] == 1.0
+    a4 = assumption_4_check(log, years=(2018, 2019, 2020))
+    assert a4["basis"] == "full_990"
+    assert a4["full_990_county_match_rate_by_year"] == {"2018": 1.0, "2019": 1.0, "2020": 1.0}
+    assert a4["holds"] is True
+
+
 def test_build_panel_joins_and_logs(catalog):
     p01, _ = prepare_part(_p01(catalog["nccs_p01"]), catalog["nccs_p01"])
     p09, _ = prepare_part(_p09(catalog["nccs_p09"]), catalog["nccs_p09"])

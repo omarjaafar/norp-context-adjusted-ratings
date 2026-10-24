@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-11T13:53:22",
+  "generated_at": "2026-10-24T19:46:37",
   "parts": {
     "nccs_p01": {
       "rows_in": 2460174,
@@ -10,6 +10,8 @@
         "rule": "latest RETURN_TIME_STAMP wins; missing timestamp ranks lowest; ties by file order",
         "duplicate_key_groups": 67295,
         "groups_same_timestamp": 37178,
+        "groups_exact_copies": 37138,
+        "groups_same_timestamp_rows_differ": 40,
         "groups_distinct_timestamps": 30117,
         "kept_rows_marked_amended": 27886,
         "rows_missing_timestamp": 0
@@ -31,6 +33,8 @@
         "rule": "latest RETURN_TIME_STAMP wins; missing timestamp ranks lowest; ties by file order",
         "duplicate_key_groups": 61158,
         "groups_same_timestamp": 34297,
+        "groups_exact_copies": 34273,
+        "groups_same_timestamp_rows_differ": 24,
         "groups_distinct_timestamps": 26861,
         "kept_rows_marked_amended": 25114,
         "rows_missing_timestamp": 0
@@ -52,6 +56,8 @@
         "rule": "latest RETURN_TIME_STAMP wins; missing timestamp ranks lowest; ties by file order",
         "duplicate_key_groups": 67499,
         "groups_same_timestamp": 37252,
+        "groups_exact_copies": 37213,
+        "groups_same_timestamp_rows_differ": 39,
         "groups_distinct_timestamps": 30247,
         "kept_rows_marked_amended": 27997,
         "rows_missing_timestamp": 0
@@ -80,7 +86,10 @@
       "with_county": 398925,
       "with_need": 398895,
       "county_match_rate": 0.9857,
-      "need_match_rate": 0.9857
+      "need_match_rate": 0.9857,
+      "full_990_rows": 263339,
+      "full_990_with_county": 260240,
+      "full_990_county_match_rate": 0.9882
     },
     "2019": {
       "rows": 430729,
@@ -89,7 +98,10 @@
       "with_county": 424377,
       "with_need": 424348,
       "county_match_rate": 0.9853,
-      "need_match_rate": 0.9852
+      "need_match_rate": 0.9852,
+      "full_990_rows": 280154,
+      "full_990_with_county": 276663,
+      "full_990_county_match_rate": 0.9875
     },
     "2020": {
       "rows": 482421,
@@ -98,7 +110,10 @@
       "with_county": 474051,
       "with_need": 474051,
       "county_match_rate": 0.9827,
-      "need_match_rate": 0.9827
+      "need_match_rate": 0.9827,
+      "full_990_rows": 315274,
+      "full_990_with_county": 310344,
+      "full_990_county_match_rate": 0.9844
     },
     "2021": {
       "rows": 529599,
@@ -107,7 +122,10 @@
       "with_county": 518912,
       "with_need": 518912,
       "county_match_rate": 0.9798,
-      "need_match_rate": 0.9798
+      "need_match_rate": 0.9798,
+      "full_990_rows": 330682,
+      "full_990_with_county": 325187,
+      "full_990_county_match_rate": 0.9834
     },
     "2022": {
       "rows": 543298,
@@ -116,7 +134,10 @@
       "with_county": 530589,
       "with_need": 530589,
       "county_match_rate": 0.9766,
-      "need_match_rate": 0.9766
+      "need_match_rate": 0.9766,
+      "full_990_rows": 341854,
+      "full_990_with_county": 335421,
+      "full_990_county_match_rate": 0.9812
     }
   },
   "eins_in_panel": 628099,
@@ -186,10 +207,13 @@
       "rating_components",
       "revenue_growth"
     ],
-    "size_mb": 397.25
+    "size_mb": 397.25,
+    "sha256_csv": "7d0e2bdadb2524081ccb84b5e22fa9d4e58e8e55b0cd8cde68b79a14263a2e92",
+    "sha256_gz": "520fa966f7292bdfb2a592cb82139941f802916ccde181cc5710984554caa9bd"
   },
   "assumption_4": {
     "threshold": 0.8,
+    "basis": "full_990",
     "county_match_rate_by_year": {
       "2018": 0.9857,
       "2019": 0.9853,
@@ -197,8 +221,15 @@
       "2021": 0.9798,
       "2022": 0.9766
     },
+    "full_990_county_match_rate_by_year": {
+      "2018": 0.9882,
+      "2019": 0.9875,
+      "2020": 0.9844,
+      "2021": 0.9834,
+      "2022": 0.9812
+    },
     "years_missing": [],
-    "min_rate": 0.9766,
+    "min_rate": 0.9812,
     "eins_with_3plus_consecutive_linked_years": 459486,
     "holds": true
   }

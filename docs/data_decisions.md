@@ -13,7 +13,15 @@ Choices we made in the data layer that affect results. Each entry gives the deci
   - how many duplicate groups there were
   - how many kept rows are marked amended (`RETURN_AMENDED_X`)
   - how many rows had no timestamp
-- Test: `tests/test_panel.py::test_prepare_part_latest_timestamp_beats_file_order`.
+  - how many groups share one timestamp, and of those, how many are **exact copies** (every column equal, compared row by row since CP3) and how many differ
+- What it shows (Part I; Parts IX and X are alike):
+  - 67,295 duplicate groups.
+  - 37,138 are exact copies, so the choice does not matter for them.
+  - 40 share a timestamp but differ in some column. These are the only groups where file order still decides.
+  - 30,117 have distinct timestamps, which is where the timestamp rule matters.
+- **Correction (CP2 feedback).** The CP2 report called the same-timestamp groups "exact copies" before any rows were compared. The row comparison confirms the claim for all but 40 groups in Part I, 24 in Part IX and 39 in Part X.
+- Tests: `tests/test_panel.py::test_prepare_part_latest_timestamp_beats_file_order`, `test_prepare_part_separates_exact_copies_from_same_timestamp_rows_that_differ`.
+- **Rebuild check.** `panel.sha256_csv` and `panel.rows` in the join log identify the panel. A rebuild from the committed inputs should reproduce the CSV hash. The gzip hash (`sha256_gz`) can differ across zlib versions.
 
 ## D2. Geography is each organization's current county, used for every year (T7, Omar)
 

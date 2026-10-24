@@ -66,13 +66,20 @@ def prepare_part(raw: pd.DataFrame, source: Source, keep_meta=()):
         amended = winners.get("return_amended")
         n_amended = (int(amended.astype("string").str.strip().str.upper().eq("TRUE").sum())
                      if amended is not None else 0)
-        # Groups whose filings share one timestamp are the same return listed twice,
-        # so which copy is kept does not matter; the rest are genuine re-filings.
+        # A shared timestamp does not make two rows the same return: compare every
+        # column. Exact copies make the choice irrelevant; same-timestamp groups whose
+        # rows differ are settled by file order; distinct timestamps are re-filings.
         ts_per_group = dup_groups.groupby(KEYS)["_ts"].nunique(dropna=False)
+        content = [c for c in dup_groups.columns if c not in ("_ts", "_pos")]
+        row_hash = pd.util.hash_pandas_object(dup_groups[content], index=False)
+        versions = row_hash.groupby([dup_groups[k] for k in KEYS]).nunique()
+        same_ts = ts_per_group == 1
         log["duplicate_resolution"] = {
             "rule": "latest RETURN_TIME_STAMP wins; missing timestamp ranks lowest; ties by file order",
             "duplicate_key_groups": int(len(ts_per_group)),
-            "groups_same_timestamp": int((ts_per_group == 1).sum()),
+            "groups_same_timestamp": int(same_ts.sum()),
+            "groups_exact_copies": int((same_ts & (versions == 1)).sum()),
+            "groups_same_timestamp_rows_differ": int((same_ts & (versions > 1)).sum()),
             "groups_distinct_timestamps": int((ts_per_group > 1).sum()),
             "kept_rows_marked_amended": n_amended,
             "rows_missing_timestamp": int(ts.isna().sum()),
@@ -137,6 +144,14 @@ def build_panel(p01: pd.DataFrame, p09: pd.DataFrame, p10: pd.DataFrame,
             "county_match_rate": round(float(g["has_county"].mean()), 4),
             "need_match_rate": round(float(g["has_need"].mean()), 4),
         }
+        if "return_type" in g.columns:
+            full = g[g["return_type"].eq("990")]
+            by_year[str(int(year))].update({
+                "full_990_rows": int(len(full)),
+                "full_990_with_county": int(full["has_county"].sum()),
+                "full_990_county_match_rate": (round(float(full["has_county"].mean()), 4)
+                                               if len(full) else None),
+            })
     log["by_tax_year"] = by_year
 
     linked = panel.loc[panel["has_county"], ["ein", "tax_year"]]
@@ -154,12 +169,22 @@ def build_panel(p01: pd.DataFrame, p09: pd.DataFrame, p10: pd.DataFrame,
 
 
 def assumption_4_check(log: dict, years=(2018, 2019, 2020, 2021, 2022), threshold: float = 0.8) -> dict:
-    """Assumption 4: >= 80% of filers link to a county in every year 2018-2022."""
-    rates = {y: log["by_tax_year"].get(str(y), {}).get("county_match_rate") for y in years}
+    """Assumption 4: >= 80% of full-990 filers link to a county in every year 2018-2022.
+
+    Judged on the full-990 rate when the panel has return_type (the CP1 wording);
+    falls back to all filers otherwise. Both rates are reported.
+    """
+    by = log["by_tax_year"]
+    all_rates = {y: by.get(str(y), {}).get("county_match_rate") for y in years}
+    full_rates = {y: by.get(str(y), {}).get("full_990_county_match_rate") for y in years}
+    basis = "full_990" if any(r is not None for r in full_rates.values()) else "all_filers"
+    rates = full_rates if basis == "full_990" else all_rates
     measured = [r for r in rates.values() if r is not None]
     return {
         "threshold": threshold,
-        "county_match_rate_by_year": {str(y): r for y, r in rates.items()},
+        "basis": basis,
+        "county_match_rate_by_year": {str(y): r for y, r in all_rates.items()},
+        "full_990_county_match_rate_by_year": {str(y): r for y, r in full_rates.items()},
         "years_missing": [str(y) for y, r in rates.items() if r is None],
         "min_rate": min(measured) if measured else None,
         "eins_with_3plus_consecutive_linked_years": log["eins_with_3plus_consecutive_linked_years"],

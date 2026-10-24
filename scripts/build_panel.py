@@ -16,6 +16,8 @@ Usage:
 from __future__ import annotations
 
 import datetime
+import gzip
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -30,6 +32,14 @@ from theorylab.panel import assumption_4_check, build_panel, prepare_part  # noq
 CROSSWALK = REPO_ROOT / "data" / "derived" / "ein_county_crosswalk.csv.gz"
 PANEL = REPO_ROOT / "data" / "derived" / "org_year_panel.csv.gz"
 LOG = REPO_ROOT / "data" / "output" / "panel_join_log.json"
+
+
+def sha256_of(path: Path, decompress: bool = False) -> str:
+    h = hashlib.sha256()
+    with (gzip.open(path, "rb") if decompress else open(path, "rb")) as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def load_source(source, keep_meta=()):
@@ -70,7 +80,10 @@ def main() -> int:
         **log,
         "panel": {"path": PANEL.relative_to(REPO_ROOT).as_posix(), "rows": int(len(panel)),
                   "columns": list(panel.columns),
-                  "size_mb": round(PANEL.stat().st_size / 1e6, 2)},
+                  "size_mb": round(PANEL.stat().st_size / 1e6, 2),
+                  # gzip bytes can differ across zlib versions; the CSV hash is the one to compare
+                  "sha256_csv": sha256_of(PANEL, decompress=True),
+                  "sha256_gz": sha256_of(PANEL)},
         "assumption_4": assumption_4_check(log),
     }
     LOG.parent.mkdir(parents=True, exist_ok=True)
