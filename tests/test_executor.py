@@ -118,6 +118,55 @@ def test_multilevel_recovers_slope_and_group_variance():
     assert r.details["residual_variance"] == pytest.approx(1.0, abs=0.15)
     assert r.n_groups == groups
     assert r.details["fit_seconds"] >= 0
+    assert r.details["optimizer"] == "lbfgs"
+
+
+def _random_intercept_frame(seed=3, groups=80, per=25):
+    rng = np.random.default_rng(seed)
+    g = np.repeat(np.arange(groups), per)
+    x = rng.normal(size=len(g))
+    y = 1.5 * x + rng.normal(0, 1.0, groups)[g] + rng.normal(0, 1.0, len(g))
+    return pd.DataFrame({"y": y, "x": x, "county": g.astype(str)})
+
+
+def test_multilevel_falls_back_when_lbfgs_stops_on_the_boundary(monkeypatch):
+    # On the 2022 panel lbfgs reports converged but warns about the boundary and returns x ~ 0.
+    import warnings
+    from statsmodels.regression.mixed_linear_model import MixedLM
+    from statsmodels.tools.sm_exceptions import ConvergenceWarning
+    real_fit = MixedLM.fit
+
+    def fit(self, *args, method=None, **kwargs):
+        res = real_fit(self, *args, method=method, **kwargs)
+        if method == ["lbfgs"]:
+            warnings.warn("The MLE may be on the boundary of the parameter space.", ConvergenceWarning)
+        return res
+
+    monkeypatch.setattr(MixedLM, "fit", fit)
+    r = multilevel(_random_intercept_frame(), "y", "x", group="county")
+    assert r.details["optimizer"] == "powell"
+    assert [a["method"] for a in r.details["attempts"]] == ["lbfgs", "powell"]
+    assert r.details["attempts"][0]["valid"] is False
+    assert r.details["converged"] is True
+    assert r.effect == pytest.approx(1.5, abs=0.08)
+
+
+def test_multilevel_reports_not_converged_when_no_optimizer_is_valid(monkeypatch):
+    import warnings
+    from statsmodels.regression.mixed_linear_model import MixedLM
+    from statsmodels.tools.sm_exceptions import ConvergenceWarning
+    real_fit = MixedLM.fit
+
+    def fit(self, *args, **kwargs):
+        res = real_fit(self, *args, **kwargs)
+        warnings.warn("Random effects covariance is singular", ConvergenceWarning)
+        return res
+
+    monkeypatch.setattr(MixedLM, "fit", fit)
+    r = multilevel(_random_intercept_frame(), "y", "x", group="county", methods=("lbfgs", "cg"))
+    assert r.details["converged"] is False
+    assert len(r.details["attempts"]) == 2
+    assert np.isfinite(r.std_error)
 
 
 def test_two_stage_group_means_recovers_a_group_level_effect():

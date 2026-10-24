@@ -1,0 +1,123 @@
+{
+  "generated_at": "2026-10-24T19:34:17",
+  "machine": {
+    "python": "3.10.11",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 141 Stepping 1, GenuineIntel"
+  },
+  "year": 2022,
+  "population": {
+    "rows_in": 2390744,
+    "after_return_type": 1531303,
+    "after_years": 341854,
+    "after_has_county": 335421,
+    "after_has_need": 335421,
+    "after_standard_rating_present": 292454,
+    "after_high_need_present": 292454,
+    "after_log_revenue_present": 289622,
+    "after_category_present": 289622,
+    "after_county_fips_present": 289622,
+    "rows_out": 289622,
+    "organizations": 289622,
+    "units": 3074,
+    "exposed_rows": 24267,
+    "exposed_units_by_year": {
+      "2022": 708
+    }
+  },
+  "assumption_5": {
+    "statement": "statsmodels MixedLM fits a random intercept by county on full-990 filers in under 10 minutes on a laptop",
+    "threshold_seconds": 600,
+    "fit_seconds": 19.33,
+    "converged": true,
+    "n_obs": 289622,
+    "n_groups": 3074,
+    "status": "Holding (measured)",
+    "holds": true
+  },
+  "fit": {
+    "method": "multilevel",
+    "outcome": "standard_rating",
+    "exposure": "high_need",
+    "effect": -0.04980655518290298,
+    "std_error": 0.023426453569683137,
+    "p_value": 0.033496454006078646,
+    "n_obs": 289622,
+    "standardized_effect": -0.023144943145762098,
+    "n_groups": 3074,
+    "details": {
+      "fit_seconds": 19.33,
+      "converged": true,
+      "convergence_warnings": [],
+      "optimizer": "powell",
+      "attempts": [
+        {
+          "method": "lbfgs",
+          "seconds": 2.24,
+          "valid": false,
+          "warnings": [
+            "The MLE may be on the boundary of the parameter space.",
+            "The Hessian matrix at the estimated parameter values is not positive definite."
+          ],
+          "error": null,
+          "effect": 4.4084686719891704e-13
+        },
+        {
+          "method": "powell",
+          "seconds": 17.09,
+          "valid": true,
+          "warnings": [],
+          "error": null,
+          "effect": -0.04980655518290298
+        }
+      ],
+      "group": "county_fips",
+      "random_intercept_variance": 0.06366139013352431,
+      "residual_variance": 4.4780156605271815,
+      "group_size": {
+        "median": 21.0,
+        "min": 1,
+        "max": 7335,
+        "groups_with_one_row": 84
+      },
+      "controls": {
+        "log_revenue": 0.025587609338153405
+      },
+      "categorical": [
+        "category"
+      ],
+      "reml": true,
+      "optimizers_tried": [
+        "lbfgs",
+        "powell"
+      ],
+      "outcome_sd": 2.151941133284775
+    }
+  },
+  "fallbacks": {
+    "two_stage_county_means": {
+      "method": "two_stage_group_means",
+      "outcome": "standard_rating",
+      "exposure": "high_need",
+      "effect": -0.04828074253453877,
+      "std_error": 0.04863985108953773,
+      "p_value": 0.32089664232444204,
+      "n_obs": 289622,
+      "standardized_effect": -0.022435903002997984,
+      "n_groups": 3074,
+      "details": {
+        "groups": [
+          "county_fips"
+        ],
+        "controls": [
+          "log_revenue"
+        ],
+        "absorb": [
+          "category"
+        ],
+        "covariance": "HC1",
+        "outcome_sd": 2.151941133284775
+      }
+    }
+  }
+}

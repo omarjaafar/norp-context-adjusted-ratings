@@ -228,14 +228,42 @@ def fixed_effects(df: pd.DataFrame, outcome: str, exposure: str, controls=(), ab
         })
 
 
+MIXEDLM_OPTIMIZERS = ("lbfgs", "powell", "cg", "nm")
+
+
+def _fit_mixedlm(model, reml: bool, method: str, maxiter: int) -> dict:
+    """One MixedLM fit with one optimizer; never raises. valid = finite SE on x and no ConvergenceWarning."""
+    start = time.perf_counter()
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        try:
+            res = model.fit(reml=reml, method=[method], maxiter=maxiter)
+        except Exception as exc:  # an optimizer that crashes is one failed attempt
+            return {"method": method, "seconds": round(time.perf_counter() - start, 2), "res": None,
+                    "valid": False, "warnings": [], "error": f"{type(exc).__name__}: {exc}"}
+    msgs = [str(w.message) for w in caught if issubclass(w.category, ConvergenceWarning)]
+    se = float(res.bse["x"]) if "x" in res.bse.index else float("nan")
+    valid = bool(getattr(res, "converged", False)) and np.isfinite(se) and se > 0 and not msgs
+    return {"method": method, "seconds": round(time.perf_counter() - start, 2), "res": res,
+            "valid": valid, "warnings": msgs, "error": None}
+
+
 def multilevel(df: pd.DataFrame, outcome: str, exposure: str, controls=(), categorical=(),
-               group: str = "county_fips", reml: bool = True, methods=("lbfgs", "bfgs"),
+               group: str = "county_fips", reml: bool = True, methods=MIXEDLM_OPTIMIZERS,
                maxiter: int = 300) -> MethodResult:
     """Random-intercept model (statsmodels MixedLM): outcome ~ exposure + controls + C(categorical), (1 | group).
 
-    details records the fit time in seconds, whether the optimizer converged
-    (no ConvergenceWarning and statsmodels' own flag), the random-intercept
-    variance and the residual variance, which Assumption 5 is about.
+    Optimizers are tried one at a time, in order, until one gives a valid fit.
+    On the 2022 full-990 panel lbfgs stops on the boundary (county variance 0,
+    singular Hessian) and returns an exposure coefficient of ~1e-13 with no SE,
+    while powell, cg and nm agree with each other; statsmodels still flags the
+    lbfgs fit as converged, so its own flag is not enough. If no optimizer is
+    valid, the attempt with the highest log-likelihood and a finite SE is
+    reported with converged = False.
+
+    details records the fit time in seconds (all attempts), the optimizer used,
+    every attempt, the random-intercept variance and the residual variance,
+    which Assumption 5 is about.
     """
     controls, categorical = list(controls), list(categorical)
     num, keys = _complete_rows(df, [outcome, exposure, *controls], [group, *categorical])
@@ -249,12 +277,21 @@ def multilevel(df: pd.DataFrame, outcome: str, exposure: str, controls=(), categ
         terms.append(f"C(f{i})")
     groups = keys[group].astype(str).to_numpy()
     model = smf.mixedlm("y ~ " + " + ".join(terms), data, groups=groups)
-    start = time.perf_counter()
-    with warnings.catch_warnings(record=True) as caught:
-        warnings.simplefilter("always")
-        res = model.fit(reml=reml, method=list(methods), maxiter=maxiter)
-    seconds = time.perf_counter() - start
-    convergence_warnings = [str(w.message) for w in caught if issubclass(w.category, ConvergenceWarning)]
+    attempts = []
+    for method in methods:
+        attempts.append(_fit_mixedlm(model, reml, method, maxiter))
+        if attempts[-1]["valid"]:
+            break
+    chosen = next((a for a in attempts if a["valid"]), None)
+    if chosen is None:
+        usable = [a for a in attempts if a["res"] is not None and np.isfinite(float(a["res"].bse["x"]))]
+        if not usable:
+            raise RuntimeError("no MixedLM optimizer produced a usable fit: "
+                               + "; ".join(f"{a['method']}: {a['error'] or a['warnings']}" for a in attempts))
+        chosen = max(usable, key=lambda a: float(a["res"].llf))
+    res = chosen["res"]
+    seconds = sum(a["seconds"] for a in attempts)
+    convergence_warnings = chosen["warnings"]
     sizes = pd.Series(groups).value_counts()
     sd_y = float(data["y"].std(ddof=1))
     effect, se, p = float(res.params["x"]), float(res.bse["x"]), float(res.pvalues["x"])
@@ -264,8 +301,13 @@ def multilevel(df: pd.DataFrame, outcome: str, exposure: str, controls=(), categ
         n_groups=int(len(sizes)),
         details={
             "fit_seconds": round(seconds, 2),
-            "converged": bool(getattr(res, "converged", False)) and not convergence_warnings,
+            "converged": bool(chosen["valid"]),
             "convergence_warnings": convergence_warnings,
+            "optimizer": chosen["method"],
+            "attempts": [{"method": a["method"], "seconds": a["seconds"], "valid": a["valid"],
+                          "warnings": a["warnings"], "error": a["error"],
+                          "effect": float(a["res"].params["x"]) if a["res"] is not None else None}
+                         for a in attempts],
             "group": group,
             "random_intercept_variance": float(np.asarray(res.cov_re)[0, 0]),
             "residual_variance": float(res.scale),
@@ -274,7 +316,7 @@ def multilevel(df: pd.DataFrame, outcome: str, exposure: str, controls=(), categ
             "controls": {c: float(res.params[f"c{i}"]) for i, c in enumerate(controls)},
             "categorical": categorical,
             "reml": reml,
-            "optimizers": list(methods),
+            "optimizers_tried": [a["method"] for a in attempts],
             "outcome_sd": sd_y,
         })
 
