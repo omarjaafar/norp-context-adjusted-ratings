@@ -109,3 +109,18 @@ A county → planning-region lookup cannot fix this, because the nine regions cu
 - Tests: `tests/test_need.py`, the five `test_tract_need_*`, `test_load_norp_tracts_*` and `test_add_norp_need_*` tests.
 
 **Open question.** 68.28% of tracts with a value carry the food desert flag (`food_desert_flagged_tract_share`), which is high for a food desert definition. We use the column as NORP provides it and have not traced how NORP defines it.
+
+## D7. Part IX ratios come from full Form 990 filers only (CP2 open check, Omar)
+
+**Problem.** In 2018 the panel had 351,711 rows with Part IX but only 263,339 full Form 990 filings, so Part IX could not be only full-990 rows. Part IX of a full 990 has the program / management / fundraising split that three of the four rating ratios need. Form 990EZ has no such split.
+
+**Finding.** `scripts/part9_coverage.py` keeps one filing per (ein, tax_year) with the D1 rule and counts Part IX rows by the return type of the Part I filing:
+
+- The extra rows are all **990EZ**: 538,937 panel rows over 2018–2022 (88,372 / 93,470 / 102,028 / 126,877 / 128,190 by year). No other return type appears.
+- Their functional split is usable in at most 0.02% of rows in any year. NCCS fills Part IX for EZ filers with totals only.
+- Every full-990 filing has a Part IX row (`full_990_without_p09` is 0 in every year), and its split is usable in 87.3–87.7% of them.
+- Part I and Part IX disagree on the return type in 3–37 rows per year.
+
+**Decision.** Every analysis that uses Part IX ratios, including the standard rating, keeps `return_type == "990"`. The theory specs do this in `population.return_type` (`specs/ratings_fairness.json`).
+
+**Evidence.** `data/output/part9_coverage.json`: `by_tax_year`, `not_full_990_return_types`.

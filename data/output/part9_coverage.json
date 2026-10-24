@@ -1,0 +1,116 @@
+{
+  "generated_at": "2026-10-24T19:35:45",
+  "by_tax_year": {
+    "2018": {
+      "p01_rows_by_return_type": {
+        "990": 263339,
+        "990EZ": 141358
+      },
+      "p09_rows_by_own_return_type": {
+        "990": 263342,
+        "990EZ": 88369
+      },
+      "panel_rows_with_p09_by_p01_return_type": {
+        "990": 263339,
+        "990EZ": 88372
+      },
+      "p09_rows_without_p01": 0,
+      "full_990_without_p09": 0,
+      "return_type_disagreements": 3,
+      "usable_split_share_by_p01_return_type": {
+        "990": 0.8763,
+        "990EZ": 0.0
+      }
+    },
+    "2019": {
+      "p01_rows_by_return_type": {
+        "990": 280154,
+        "990EZ": 150575
+      },
+      "p09_rows_by_own_return_type": {
+        "990": 280165,
+        "990EZ": 93459
+      },
+      "panel_rows_with_p09_by_p01_return_type": {
+        "990": 280154,
+        "990EZ": 93470
+      },
+      "p09_rows_without_p01": 0,
+      "full_990_without_p09": 0,
+      "return_type_disagreements": 11,
+      "usable_split_share_by_p01_return_type": {
+        "990": 0.8772,
+        "990EZ": 0.0001
+      }
+    },
+    "2020": {
+      "p01_rows_by_return_type": {
+        "990": 315274,
+        "990EZ": 167147
+      },
+      "p09_rows_by_own_return_type": {
+        "990": 315297,
+        "990EZ": 102005
+      },
+      "panel_rows_with_p09_by_p01_return_type": {
+        "990": 315274,
+        "990EZ": 102028
+      },
+      "p09_rows_without_p01": 0,
+      "full_990_without_p09": 0,
+      "return_type_disagreements": 23,
+      "usable_split_share_by_p01_return_type": {
+        "990": 0.8733,
+        "990EZ": 0.0002
+      }
+    },
+    "2021": {
+      "p01_rows_by_return_type": {
+        "990": 330682,
+        "990EZ": 198917
+      },
+      "p09_rows_by_own_return_type": {
+        "990": 330712,
+        "990EZ": 126847
+      },
+      "panel_rows_with_p09_by_p01_return_type": {
+        "990": 330682,
+        "990EZ": 126877
+      },
+      "p09_rows_without_p01": 0,
+      "full_990_without_p09": 0,
+      "return_type_disagreements": 30,
+      "usable_split_share_by_p01_return_type": {
+        "990": 0.8737,
+        "990EZ": 0.0002
+      }
+    },
+    "2022": {
+      "p01_rows_by_return_type": {
+        "990": 341854,
+        "990EZ": 201444
+      },
+      "p09_rows_by_own_return_type": {
+        "990": 341891,
+        "990EZ": 128153
+      },
+      "panel_rows_with_p09_by_p01_return_type": {
+        "990": 341854,
+        "990EZ": 128190
+      },
+      "p09_rows_without_p01": 0,
+      "full_990_without_p09": 0,
+      "return_type_disagreements": 37,
+      "usable_split_share_by_p01_return_type": {
+        "990": 0.8756,
+        "990EZ": 0.0002
+      }
+    }
+  },
+  "panel_rows_with_p09": 2070240,
+  "panel_rows_with_p09_not_full_990": 538937,
+  "not_full_990_return_types": {
+    "990EZ": 538937
+  },
+  "rule": "analyses of Part IX ratios restrict to return_type == '990' (specs/*.json population)"
+}
