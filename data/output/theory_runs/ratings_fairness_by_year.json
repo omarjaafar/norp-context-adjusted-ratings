@@ -1,0 +1,197 @@
+{
+  "generated_at": "2026-10-24T19:49:07",
+  "theory_id": "ratings_fairness",
+  "settings": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "expected_sign": -1,
+    "permutation_unit": "county_fips",
+    "fdr_families": [
+      "H1 over years",
+      "H2 over years"
+    ],
+    "trend_inference": "county-clustered SE (CR1); see module docstring"
+  },
+  "population": {
+    "rows_in": 2390744,
+    "after_return_type": 1531303,
+    "after_has_county": 1507855,
+    "after_has_need": 1507813,
+    "after_standard_rating_present": 1314041,
+    "after_high_need_present": 1314021,
+    "after_log_revenue_present": 1303953,
+    "after_category_present": 1303953,
+    "after_county_fips_present": 1303953,
+    "rows_out": 1303953,
+    "organizations": 337995,
+    "units": 3087,
+    "exposed_rows": 105597,
+    "exposed_units_by_year": {
+      "2018": 689,
+      "2019": 693,
+      "2020": 702,
+      "2021": 702,
+      "2022": 708
+    }
+  },
+  "by_year": {
+    "2018": {
+      "rows": 225587,
+      "units": 3035,
+      "exposed_units": 689,
+      "outcome_sd": 2.1358764774720447,
+      "H1": {
+        "effect": -0.039889203238797855,
+        "standardized_effect": -0.018675800618399734,
+        "mean_exposed": 7.984388584341331,
+        "mean_unexposed": 8.024277787580129,
+        "p_value": 0.224,
+        "q_value": 0.37333333333333335,
+        "holds": false
+      },
+      "H2": {
+        "effect": -0.012449855004736301,
+        "standardized_effect": -0.005828920883791722,
+        "std_error": 0.049547910573457275,
+        "clustered_p_value": 0.801623140530436,
+        "p_value": 0.67,
+        "absorb": [
+          "category"
+        ],
+        "q_value": 0.752,
+        "holds": false
+      }
+    },
+    "2019": {
+      "rows": 240085,
+      "units": 3048,
+      "exposed_units": 693,
+      "outcome_sd": 2.1519239308896814,
+      "H1": {
+        "effect": -0.03514276894887747,
+        "standardized_effect": -0.01633086023368317,
+        "mean_exposed": 7.947536838647181,
+        "mean_unexposed": 7.982679607596059,
+        "p_value": 0.328,
+        "q_value": 0.41000000000000003,
+        "holds": false
+      },
+      "H2": {
+        "effect": -0.009951036652412027,
+        "standardized_effect": -0.0046242511222494365,
+        "std_error": 0.052465205691151054,
+        "clustered_p_value": 0.8495809452755165,
+        "p_value": 0.752,
+        "absorb": [
+          "category"
+        ],
+        "q_value": 0.752,
+        "holds": false
+      }
+    },
+    "2020": {
+      "rows": 267721,
+      "units": 3067,
+      "exposed_units": 702,
+      "outcome_sd": 2.1804517185526398,
+      "H1": {
+        "effect": -0.03267842632684381,
+        "standardized_effect": -0.014986998358549025,
+        "mean_exposed": 7.939271842331833,
+        "mean_unexposed": 7.971950268658677,
+        "p_value": 0.423,
+        "q_value": 0.42299999999999993,
+        "holds": false
+      },
+      "H2": {
+        "effect": -0.014115446003900396,
+        "standardized_effect": -0.0064736338272466205,
+        "std_error": 0.05410585657058404,
+        "clustered_p_value": 0.7941981489487123,
+        "p_value": 0.715,
+        "absorb": [
+          "category"
+        ],
+        "q_value": 0.752,
+        "holds": false
+      }
+    },
+    "2021": {
+      "rows": 280938,
+      "units": 3075,
+      "exposed_units": 702,
+      "outcome_sd": 2.13756196620055,
+      "H1": {
+        "effect": -0.05944492499640219,
+        "standardized_effect": -0.02780968502263525,
+        "mean_exposed": 8.024616657785757,
+        "mean_unexposed": 8.084061582782159,
+        "p_value": 0.079,
+        "q_value": 0.1975,
+        "holds": false
+      },
+      "H2": {
+        "effect": -0.03474432128585233,
+        "standardized_effect": -0.01625418202383591,
+        "std_error": 0.04783477345328079,
+        "clustered_p_value": 0.4676855112005164,
+        "p_value": 0.301,
+        "absorb": [
+          "category"
+        ],
+        "q_value": 0.752,
+        "holds": false
+      }
+    },
+    "2022": {
+      "rows": 289622,
+      "units": 3074,
+      "exposed_units": 708,
+      "outcome_sd": 2.151941133284775,
+      "H1": {
+        "effect": -0.06820939391494107,
+        "standardized_effect": -0.03169668206064011,
+        "mean_exposed": 8.010207398492305,
+        "mean_unexposed": 8.078416792407246,
+        "p_value": 0.068,
+        "q_value": 0.1975,
+        "holds": false
+      },
+      "H2": {
+        "effect": -0.04537616390798853,
+        "standardized_effect": -0.02108615482372664,
+        "std_error": 0.048795443667793224,
+        "clustered_p_value": 0.3524823135271231,
+        "p_value": 0.161,
+        "absorb": [
+          "category"
+        ],
+        "q_value": 0.752,
+        "holds": false
+      }
+    }
+  },
+  "years_H1_holds": [],
+  "years_H2_holds": [],
+  "trend": {
+    "model": "standard_rating ~ high_need + high_need x (tax_year - 2020) + controls | absorb",
+    "center_year": 2020.0,
+    "gap_change_per_year": -0.009384749200448473,
+    "gap_change_per_year_sd": -0.0043599907610408,
+    "std_error": 0.007691024457290214,
+    "p_value": 0.22247436077769867,
+    "gap_at_center_year": -0.023081175005057807,
+    "gap_at_center_year_p_value": 0.6352426665360573,
+    "n_obs": 1303953,
+    "clusters": 3087,
+    "covariance": "cluster (CR1)"
+  },
+  "trend_meta_regression": {
+    "slope_per_year": -0.009048314438955585,
+    "std_error": 0.002308210334749167,
+    "p_value": 0.029524241534509343,
+    "years": 5
+  }
+}
