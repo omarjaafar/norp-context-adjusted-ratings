@@ -72,6 +72,9 @@ def validate_spec(spec: dict, available_columns=None) -> list:
         errors.append("validator.effect_floor_sd must be >= 0")
     if "n_permutations" in v and int(v["n_permutations"]) < 19:
         errors.append("validator.n_permutations must be at least 19 (p can reach 0.05)")
+    if "permutation" in v and not (isinstance(v["permutation"], dict)
+                                   and isinstance(v["permutation"].get("keep_paths", False), bool)):
+        errors.append('validator.permutation must be an object like {"keep_paths": true}')
     if "holdout" in v:
         h = v["holdout"]
         if not isinstance(h, dict) or not h.get("by"):

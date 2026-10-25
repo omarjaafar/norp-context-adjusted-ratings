@@ -60,6 +60,59 @@ def test_unit_permuter_keeps_one_value_per_county_year_and_the_exposed_count():
     assert per_year.tolist() == [15.0, 15.0, 15.0]
 
 
+def _persistent_panel(counties=80, per=5, years=(2018, 2019, 2020, 2021, 2022), seed=0):
+    """No exposure effect, but a county effect and an exposure that both persist over years;
+    a few counties switch exposure in 2020."""
+    rng = np.random.default_rng(seed)
+    county_effect = rng.normal(0, 1.0, counties)
+    rows = []
+    for t in years:
+        for c in range(counties):
+            exposed = c < counties // 4 if not (t >= 2020 and c in (0, 1, 30, 31)) else c >= 30
+            for o in range(per):
+                rows.append({"county_fips": f"{c:05d}", "tax_year": t, "ein": f"{c:04d}{o:05d}",
+                             "high_need": float(exposed),
+                             "y": county_effect[c] + rng.normal(0, 0.5)})
+    return pd.DataFrame(rows)
+
+
+def test_keep_paths_draws_whole_county_histories_and_keeps_yearly_counts():
+    df = _persistent_panel()
+    perm = UnitPermuter(df, "high_need", unit="county_fips", within="tax_year", keep_paths=True)
+    assert perm.n_units == 80
+    paths = lambda frame, col: (frame.groupby(["county_fips", "tax_year"])[col].first()  # noqa: E731
+                                .unstack().apply(tuple, axis=1))
+    real = paths(df, "high_need")
+    draw = df.assign(d=perm.draw(np.random.default_rng(5)))
+    drawn = paths(draw, "d")
+    assert sorted(drawn.tolist()) == sorted(real.tolist())            # same histories, reassigned
+    assert (drawn != real).any()
+    yearly = lambda frame, col: frame.groupby(["tax_year", "county_fips"])[col].first().groupby(level=0).sum()  # noqa: E731
+    assert yearly(draw, "d").tolist() == yearly(df, "high_need").tolist()
+
+
+def test_keep_paths_only_swaps_counties_present_in_the_same_years():
+    df = _persistent_panel()
+    df = df[~((df["county_fips"] == "00079") & (df["tax_year"] == 2022))]   # one county misses a year
+    perm = UnitPermuter(df, "high_need", unit="county_fips", within="tax_year", keep_paths=True)
+    rng = np.random.default_rng(0)
+    for _ in range(20):
+        d = df.assign(d=perm.draw(rng))
+        lone = d[d["county_fips"] == "00079"]
+        assert (lone["d"] == lone["high_need"]).all()       # alone in its stratum, never moves
+
+
+def test_year_by_year_shuffle_understates_the_null_when_exposure_persists():
+    df = _persistent_panel()
+    y = df["y"].to_numpy()
+    stat = lambda xv: difference_in_means(y, xv)  # noqa: E731
+    yearly = permutation_test(stat, UnitPermuter(df, "high_need", unit="county_fips",
+                                                 within="tax_year"), 199, seed=1)
+    paths = permutation_test(stat, UnitPermuter(df, "high_need", unit="county_fips",
+                                                within="tax_year", keep_paths=True), 199, seed=1)
+    assert paths["null_sd"] > 1.8 * yearly["null_sd"]
+
+
 def test_unit_permuter_rejects_exposure_that_varies_inside_a_unit():
     df = _county_panel()
     df.loc[0, "high_need"] = 1.0 - df.loc[0, "high_need"]

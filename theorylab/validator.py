@@ -5,7 +5,9 @@ Pieces, each usable on its own:
   assigned to (counties, within each tax year), re-estimate, and count how often
   a shuffled estimate is at least as large as the real one. Organizations in one
   county share that county's need, so shuffling organizations one by one would
-  understate the noise; shuffling whole counties does not.
+  understate the noise; shuffling whole counties does not. With keep_paths, each
+  county takes another county's whole history, because need persists over years
+  and a year-by-year shuffle would understate the noise the same way.
 - benjamini_hochberg: false discovery rate control over a family of p-values.
 - passes_effect_floor: a significant gap must also be large enough to matter,
   measured in outcome standard deviations.
@@ -45,17 +47,28 @@ class UnitPermuter:
     county-year keeps one exposure value, and the values are shuffled among the
     counties of the same tax year, so every draw has the same number of exposed
     counties per year as the data. Raises if the column varies inside a unit.
+
+    keep_paths=True (needs unit and within) shuffles whole histories instead: each
+    county takes another county's exposure in every year, among counties present
+    in the same years. The exposed count per year is still exact, and an exposure
+    that persists over years (most counties are high-need in all years or none)
+    stays persistent in every draw. Shuffling each year separately breaks that
+    persistence, and when organizations and counties carry over between years
+    the resulting null is too narrow (see docs/validator.md).
     """
 
     def __init__(self, df: pd.DataFrame, column: str, unit: str | None = None,
-                 within: str | None = None):
+                 within: str | None = None, keep_paths: bool = False):
         values = to_float(df[column]).to_numpy()
         if np.isnan(values).any():
             raise ValueError(f"{column} has missing values; select the population first")
         for key in (unit, within):
             if key is not None and df[key].isna().any():
                 raise ValueError(f"{key} has missing values; select the population first")
+        if keep_paths and (unit is None or within is None):
+            raise ValueError("keep_paths needs both unit and within")
         self.column = column
+        self.keep_paths = bool(keep_paths)
         self._values = values
         if unit is None:
             self._codes = np.arange(len(df))
@@ -79,11 +92,29 @@ class UnitPermuter:
         self._level = level
         self._strata = [np.flatnonzero(strata == s) for s in np.unique(strata)]
         self.n_units = int(len(level))
+        if self.keep_paths:
+            self._init_paths(agg.index)
+
+    def _init_paths(self, index: pd.MultiIndex) -> None:
+        """Lookup tables for drawing whole unit histories (keep_paths=True)."""
+        w = pd.factorize(index.get_level_values(0), sort=True)[0]
+        u, units = pd.factorize(index.get_level_values(1), sort=True)
+        pos = np.full((len(units), int(w.max()) + 1), -1, dtype="int64")
+        pos[u, w] = np.arange(len(w))
+        patterns = pd.factorize(pd.Series([row.tobytes() for row in pos >= 0]))[0]
+        self._u, self._w, self._pos = u, w, pos
+        self._unit_strata = [np.flatnonzero(patterns == p) for p in np.unique(patterns)]
+        self.n_units = int(len(units))
 
     def observed(self) -> np.ndarray:
         return self._values.copy()
 
     def draw(self, rng: np.random.Generator) -> np.ndarray:
+        if self.keep_paths:
+            source = np.arange(self._pos.shape[0])
+            for units in self._unit_strata:
+                source[units] = rng.permutation(units)
+            return self._level[self._pos[source[self._u], self._w]][self._codes]
         v = self._level.copy()
         for pos in self._strata:
             v[pos] = rng.permutation(v[pos])

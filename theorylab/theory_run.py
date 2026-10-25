@@ -3,6 +3,7 @@
     panel (data/derived/org_year_panel.csv.gz)
       -> select_population()            spec.population: return type, joins, complete rows
       -> H1: difference in means        permutation test, counties shuffled within tax year
+                                        (whole county histories with validator.permutation.keep_paths)
       -> H2: fixed effects              controls + absorbed factors, clustered SEs,
                                         permutation test on the same coefficient
       -> Benjamini-Hochberg over H1, H2
@@ -186,7 +187,8 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
     y = to_float(pop[outcome]).to_numpy()
     x = to_float(pop[exposure]).to_numpy()
     sd_y = float(np.std(y, ddof=1))
-    permuter = UnitPermuter(pop, exposure, unit=unit, within=within)
+    keep_paths = bool((v.get("permutation") or {}).get("keep_paths", False))
+    permuter = UnitPermuter(pop, exposure, unit=unit, within=within, keep_paths=keep_paths)
 
     # H1: the gap exists.
     h1_effect = difference_in_means(y, x)
@@ -231,6 +233,7 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
                       "seed": seed, "holdout": {"by": holdout["by"], "folds": int(holdout["folds"])},
                       "holdout_year_for_information": v.get("holdout_year"),
                       "permutation_unit": unit, "permutation_within": within,
+                      "permutation_keep_paths": keep_paths,
                       "fdr_family": ["H1", "H2"]},
         "rating": rating,
         "population": pop_log,

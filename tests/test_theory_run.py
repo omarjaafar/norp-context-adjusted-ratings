@@ -97,6 +97,7 @@ def test_planted_penalty_is_supported(spec):
     assert report["H2"]["permutation"]["observed"] == pytest.approx(report["H2"]["fit"]["effect"], rel=1e-6)
     assert report["replication"]["replicated"] is True
     assert report["replication"]["by"] == "state"
+    assert report["validator"]["permutation_keep_paths"] is True   # whole county histories
     assert report["replication_year"]["holdout_year"] == 2022     # still reported, for information
     assert report["population"]["after_return_type"] < report["population"]["rows_in"]
 
