@@ -1,0 +1,320 @@
+{
+  "theory_id": "ratings_fairness",
+  "base_verdict": "unsupported",
+  "verdict_stable": true,
+  "variants_with_other_verdict": [],
+  "variants": {
+    "base": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.85
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.15
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.1
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.0
+        ]
+      },
+      "min_components": 3,
+      "verdict": "unsupported",
+      "rows": 1303953,
+      "outcome_sd": 2.152469974089619,
+      "H1_effect": -0.04762415304988643,
+      "H1_standardized": -0.02212535070089836,
+      "H1_q": 0.27,
+      "H2_effect": -0.02458272941601242,
+      "H2_standardized": -0.011420707239556089,
+      "H2_q": 0.44,
+      "replicated": false
+    },
+    "program_full_at_80pct": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.8
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.15
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.1
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.0
+        ]
+      },
+      "min_components": 3,
+      "verdict": "unsupported",
+      "rows": 1303953,
+      "outcome_sd": 2.1407509284829027,
+      "H1_effect": -0.05354212213274501,
+      "H1_standardized": -0.025010906883356575,
+      "H1_q": 0.16,
+      "H2_effect": -0.030276138384614747,
+      "H2_standardized": -0.014142765504285311,
+      "H2_q": 0.285,
+      "replicated": false
+    },
+    "program_full_at_90pct": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.9
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.15
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.1
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.0
+        ]
+      },
+      "min_components": 3,
+      "verdict": "unsupported",
+      "rows": 1303953,
+      "outcome_sd": 2.1408592171365846,
+      "H1_effect": -0.040708060677658864,
+      "H1_standardized": -0.019014823745442826,
+      "H1_q": 0.41,
+      "H2_effect": -0.01721087026960774,
+      "H2_standardized": -0.008039234963159982,
+      "H2_q": 0.605,
+      "replicated": false
+    },
+    "admin_full_at_10pct": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.85
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.1
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.1
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.0
+        ]
+      },
+      "min_components": 3,
+      "verdict": "unsupported",
+      "rows": 1303953,
+      "outcome_sd": 2.1676646892123026,
+      "H1_effect": -0.04538644807331593,
+      "H1_standardized": -0.020937946860133935,
+      "H1_q": 0.4,
+      "H2_effect": -0.021530805622428706,
+      "H2_standardized": -0.009932719635827385,
+      "H2_q": 0.495,
+      "replicated": false
+    },
+    "admin_full_at_20pct": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.85
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.2
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.1
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.0
+        ]
+      },
+      "min_components": 3,
+      "verdict": "unsupported",
+      "rows": 1303953,
+      "outcome_sd": 2.115957600383156,
+      "H1_effect": -0.04607461641958821,
+      "H1_standardized": -0.021774829708896368,
+      "H1_q": 0.29,
+      "H2_effect": -0.023674809019588385,
+      "H2_standardized": -0.011188697266571583,
+      "H2_q": 0.435,
+      "replicated": false
+    },
+    "fundraising_full_at_5c": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.85
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.15
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.05
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.0
+        ]
+      },
+      "min_components": 3,
+      "verdict": "unsupported",
+      "rows": 1303953,
+      "outcome_sd": 2.1642823242648928,
+      "H1_effect": -0.0350179046246728,
+      "H1_standardized": -0.016179915268941067,
+      "H1_q": 0.62,
+      "H2_effect": -0.01370058409062162,
+      "H2_standardized": -0.006330312795616939,
+      "H2_q": 0.7,
+      "replicated": false
+    },
+    "fundraising_full_at_20c": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.85
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.15
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.2
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.0
+        ]
+      },
+      "min_components": 3,
+      "verdict": "unsupported",
+      "rows": 1303953,
+      "outcome_sd": 2.129688530720604,
+      "H1_effect": -0.06383897409360273,
+      "H1_standardized": -0.029975732682375904,
+      "H1_q": 0.03,
+      "H2_effect": -0.038803403216332355,
+      "H2_standardized": -0.018220224533586037,
+      "H2_q": 0.18,
+      "replicated": false
+    },
+    "liabilities_full_at_25pct": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.85
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.15
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.1
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.25
+        ]
+      },
+      "min_components": 3,
+      "verdict": "unsupported",
+      "rows": 1303953,
+      "outcome_sd": 2.145804421794115,
+      "H1_effect": -0.03860012102663468,
+      "H1_standardized": -0.017988648282475334,
+      "H1_q": 0.41,
+      "H2_effect": -0.017872802490728316,
+      "H2_standardized": -0.008329185227321324,
+      "H2_q": 0.56,
+      "replicated": false
+    },
+    "liabilities_full_at_50pct": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.85
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.15
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.1
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.5
+        ]
+      },
+      "min_components": 3,
+      "verdict": "unsupported",
+      "rows": 1303953,
+      "outcome_sd": 2.1338744722061316,
+      "H1_effect": -0.02904437259473802,
+      "H1_standardized": -0.0136110970785972,
+      "H1_q": 0.64,
+      "H2_effect": -0.010701104775463509,
+      "H2_standardized": -0.005014870797156144,
+      "H2_q": 0.78,
+      "replicated": false
+    },
+    "four_ratios_required": {
+      "anchors": {
+        "program_expense_ratio": [
+          0.65,
+          0.85
+        ],
+        "admin_expense_ratio": [
+          0.35,
+          0.15
+        ],
+        "fundraising_efficiency": [
+          0.35,
+          0.1
+        ],
+        "liabilities_to_assets": [
+          1.0,
+          0.0
+        ]
+      },
+      "min_components": 4,
+      "verdict": "unsupported",
+      "rows": 1105549,
+      "outcome_sd": 2.0255954473357813,
+      "H1_effect": -0.021317067134283718,
+      "H1_standardized": -0.01052385221457797,
+      "H1_q": 0.775,
+      "H2_effect": -0.007566930772306715,
+      "H2_standardized": -0.003735657474082163,
+      "H2_q": 0.775,
+      "replicated": false
+    }
+  },
+  "generated_at": "2026-10-25T16:07:35",
+  "n_permutations": 199
+}

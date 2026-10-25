@@ -100,6 +100,8 @@ How the Validator's four verdicts would read:
 
 The statistical tests and thresholds belong to the Executor and Validator in CP3. This section fixes only what is being compared.
 
+**The verdict does not depend on the rating anchors (CP3).** `scripts/anchor_sensitivity.py` reruns the theory with each "full marks" anchor moved one at a time, plus a rating that requires all four ratios (10 variants, 199 permutations each, whole county histories shuffled, 5-fold held-out states). Every variant is **unsupported**, the same as the base rating. The H1 gap runs from −0.011 to −0.030 SD, a third or less of the 0.1 SD floor. Only one variant (fundraising full marks at 20 cents per dollar) reaches q < 0.05 on H1, and none replicates across held-out states. Source: `data/output/anchor_sensitivity.json`.
+
 ## 4. Limits
 
 - **Need changes slowly.** The need index is a five-year average, so the theory is tested across counties, not within a county over time (D4).
