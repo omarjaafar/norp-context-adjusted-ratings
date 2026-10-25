@@ -116,7 +116,7 @@ Notes:
 | Piece | Code | Output |
 |---|---|---|
 | Method library: correlation, fixed effects (absorbed, clustered SEs), multilevel (MixedLM), two-stage group means, lagged outcomes | `theorylab/executor.py` | — |
-| Validator: county-level permutation tests, BH-FDR, effect-size floor, held-out-state replication (5 folds; held-out year reported for information), four-verdict rule; review of the permutation scheme and the BH family | `theorylab/validator.py`, `docs/validator.md` | — |
+| Validator: county-level permutation tests, BH-FDR, effect-size floor, held-out-state replication (5 folds; held-out year reported for information), four-verdict rule; review of the permutation scheme and the BH family | `theorylab/validator.py`, `docs/validator.md`, `scripts/permutation_check.py` | `data/output/permutation_check.json` |
 | Negative and positive controls through the gate on the real panel | `theorylab/controls.py`, `scripts/run_controls.py` | `data/output/controls.json` |
 | Theory spec format and schema check (what the CP4 Planner will write) | `theorylab/spec.py`, `specs/ratings_fairness.json` | — |
 | Ratings theory end to end from the hand-written spec (H1, H2, verdict) | `theorylab/theory_run.py`, `scripts/run_theory.py` | `data/output/theory_runs/ratings_fairness.json` |

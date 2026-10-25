@@ -1,0 +1,104 @@
+{
+  "generated_at": "2026-10-25T16:34:00",
+  "theory_id": "ratings_fairness",
+  "n_permutations": 199,
+  "population": {
+    "rows_in": 2390744,
+    "after_return_type": 1531303,
+    "after_has_county": 1507855,
+    "after_has_need": 1507813,
+    "after_standard_rating_present": 1314041,
+    "after_high_need_present": 1314021,
+    "after_log_revenue_present": 1303953,
+    "after_category_present": 1303953,
+    "after_county_fips_present": 1303953,
+    "rows_out": 1303953,
+    "organizations": 337995,
+    "units": 3087,
+    "exposed_rows": 105597,
+    "exposed_units_by_year": {
+      "2018": 689,
+      "2019": 693,
+      "2020": 702,
+      "2021": 702,
+      "2022": 708
+    }
+  },
+  "persistence": {
+    "source": "data/derived/county_need.csv",
+    "counties_in_all_years": 3217,
+    "years": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022
+    ],
+    "counties_by_years_high_need": {
+      "0": 2207,
+      "1": 102,
+      "2": 104,
+      "3": 106,
+      "4": 96,
+      "5": 602
+    },
+    "share_never_switch": 0.8731737643767485
+  },
+  "exposure_r2_on_h2_controls": 0.002999511122335985,
+  "schemes": {
+    "year_by_year": {
+      "keep_paths": false,
+      "units_permuted": 15299,
+      "H1": {
+        "observed": -0.04762415304988643,
+        "p_value": 0.01,
+        "n_permutations": 199,
+        "units_permuted": 15299,
+        "null_mean": -0.0019768615283753447,
+        "null_sd": 0.01689316018040671,
+        "seed": 6235,
+        "alternative": "two-sided"
+      },
+      "H2": {
+        "observed": -0.024582729416012687,
+        "p_value": 0.095,
+        "n_permutations": 199,
+        "units_permuted": 15299,
+        "null_mean": 0.0013621239261417052,
+        "null_sd": 0.015324444820622804,
+        "seed": 6236,
+        "alternative": "two-sided"
+      }
+    },
+    "whole_history": {
+      "keep_paths": true,
+      "units_permuted": 3087,
+      "H1": {
+        "observed": -0.04762415304988643,
+        "p_value": 0.135,
+        "n_permutations": 199,
+        "units_permuted": 3087,
+        "null_mean": -0.0008288581483869422,
+        "null_sd": 0.031025635465096364,
+        "seed": 6235,
+        "alternative": "two-sided"
+      },
+      "H2": {
+        "observed": -0.024582729416012687,
+        "p_value": 0.44,
+        "n_permutations": 199,
+        "units_permuted": 3087,
+        "null_mean": 0.0008265969476800764,
+        "null_sd": 0.028152235497763058,
+        "seed": 6236,
+        "alternative": "two-sided"
+      }
+    }
+  },
+  "h1_null_sd_ratio_history_to_yearly": 1.8365797242058357,
+  "H2_clustered": {
+    "effect": -0.02458272941601242,
+    "std_error": 0.048538842601837495,
+    "p_value": 0.6125735985302396
+  }
+}

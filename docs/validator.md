@@ -47,7 +47,7 @@ The TA code shuffled `high_need` across counties **separately in each tax year**
 
 87% of counties never switch. A year-by-year shuffle gives a county a new random exposure every year. But the outcome is persistent too: the same organizations file every year, and county effects carry over. So in the real data, a county's five years of ratings move together with one persistent exposure. In a year-by-year shuffle they are spread across five independent exposures, which averages the county effect out. The resulting null is too narrow, and the p-values are too small.
 
-Measured on the real panel (1,303,953 rows, 3,087 counties, 199 permutations):
+Measured on the real panel (1,303,953 rows, 3,087 counties, 199 permutations). Every number in sections 2.1 and 2.2 comes from `scripts/permutation_check.py` → `data/output/permutation_check.json`.
 
 | | Year-by-year shuffle (TA) | Whole-history shuffle (CP3) |
 |---|---|---|
