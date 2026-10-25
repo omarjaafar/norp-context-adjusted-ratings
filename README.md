@@ -20,7 +20,7 @@ A **human-directed theory-testing pipeline for nonprofit finance**, built for th
                                    │
                                    ▼
             Validator (Python) ─► permutation · BH-FDR · effect-size floor ·
-                                  confounder controls · held-out-year replication
+                                  confounder controls · held-out-state replication
                                    │  verdict: supported / weak / unsupported / reversed
                     survivors ─► drill-down (state / sector / size) ─► Executor
                                    │
@@ -116,7 +116,7 @@ Notes:
 | Piece | Code | Output |
 |---|---|---|
 | Method library: correlation, fixed effects (absorbed, clustered SEs), multilevel (MixedLM), two-stage group means, lagged outcomes | `theorylab/executor.py` | — |
-| Validator: county-level permutation tests, BH-FDR, effect-size floor, held-out-year replication, four-verdict rule | `theorylab/validator.py` | — |
+| Validator: county-level permutation tests, BH-FDR, effect-size floor, held-out-state replication (5 folds; held-out year reported for information), four-verdict rule | `theorylab/validator.py` | — |
 | Theory spec format and schema check (what the CP4 Planner will write) | `theorylab/spec.py`, `specs/ratings_fairness.json` | — |
 | Ratings theory end to end from the hand-written spec (H1, H2, verdict) | `theorylab/theory_run.py`, `scripts/run_theory.py` | `data/output/theory_runs/ratings_fairness.json` |
 | Assumption 5: MixedLM fit time and convergence on 2022 full-990 filers | `scripts/measure_assumption5.py` | `data/output/assumption_5.json` |

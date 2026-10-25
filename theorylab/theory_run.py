@@ -6,7 +6,8 @@
       -> H2: fixed effects              controls + absorbed factors, clustered SEs,
                                         permutation test on the same coefficient
       -> Benjamini-Hochberg over H1, H2
-      -> held-out-year replication of H2
+      -> held-out-state replication     H2 on k folds of states; feeds the verdict
+      -> held-out-year replication      H2 in one year; reported for information only
       -> decide_verdict()               supported / weak / unsupported / reversed
       -> robustness models              reported next to the verdict, never change it
 
@@ -31,7 +32,8 @@ from theorylab.executor import (Residualizer, correlation, fixed_effects, fwl_co
 from theorylab.ratios import RATING_ANCHORS, RATING_MIN_COMPONENTS, standard_rating
 from theorylab.spec import SpecError, spec_columns
 from theorylab.validator import (GateInput, UnitPermuter, benjamini_hochberg, decide_verdict,
-                                 difference_in_means, held_out_year_replication, permutation_test)
+                                 difference_in_means, held_out_group_replication,
+                                 held_out_year_replication, permutation_test)
 
 PANEL_PATH = REPO_ROOT / "data" / "derived" / "org_year_panel.csv.gz"
 JOIN_LOG = REPO_ROOT / "data" / "output" / "panel_join_log.json"
@@ -204,8 +206,13 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
     h2_perm = permutation_test(lambda xv: fwl_coefficient(y_resid, resid(xv)), permuter, n_perm, seed + 1)
 
     q, _ = benjamini_hochberg([h1_perm["p_value"], h2_perm["p_value"]], alpha)
-    replication = held_out_year_replication(pop, fit_h2, int(v["holdout_year"]), alpha=alpha,
-                                            expected_sign=sign)
+    holdout = v["holdout"]
+    replication = held_out_group_replication(pop, fit_h2, group=holdout["by"],
+                                             n_folds=int(holdout["folds"]), seed=seed + 2,
+                                             alpha=alpha, expected_sign=sign)
+    replication_year = (held_out_year_replication(pop, fit_h2, int(v["holdout_year"]), alpha=alpha,
+                                                  expected_sign=sign)
+                        if v.get("holdout_year") is not None else None)
     gate_h1 = GateInput(h1_effect, h1_effect / sd_y if sd_y > 0 else float("nan"), float(q[0]))
     gate_h2 = GateInput(h2_fit.effect, h2_fit.standardized_effect, float(q[1]))
     verdict = decide_verdict(gate_h1, gate_h2, expected_sign=sign, alpha=alpha, floor=floor,
@@ -221,7 +228,8 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
         "verdict": verdict["verdict"],
         "reasons": verdict["reasons"],
         "validator": {"alpha": alpha, "effect_floor_sd": floor, "n_permutations": n_perm,
-                      "seed": seed, "holdout_year": int(v["holdout_year"]),
+                      "seed": seed, "holdout": {"by": holdout["by"], "folds": int(holdout["folds"])},
+                      "holdout_year_for_information": v.get("holdout_year"),
                       "permutation_unit": unit, "permutation_within": within,
                       "fdr_family": ["H1", "H2"]},
         "rating": rating,
@@ -248,6 +256,7 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
             "q_value": float(q[1]),
         },
         "replication": replication,
+        "replication_year": replication_year,
         "robustness": robustness,
     })
 

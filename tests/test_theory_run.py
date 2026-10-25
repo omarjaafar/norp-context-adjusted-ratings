@@ -26,8 +26,9 @@ def spec():
 
 
 def _panel(penalty=-1.0, size_gap=0.0, counties=80, per=12, seed=0):
-    """Panel-shaped frame. High-need = top quarter of counties; the rating is built from the
-    four ratios so anchor variants re-score it, then shifted by `penalty` in high-need counties."""
+    """Panel-shaped frame. High-need = top quarter of counties, spread over 10 states; the rating
+    is built from the four ratios so anchor variants re-score it, then shifted by `penalty` in
+    high-need counties."""
     rng = np.random.default_rng(seed)
     high = np.zeros(counties, dtype=bool)
     high[: counties // 4] = True
@@ -38,7 +39,7 @@ def _panel(penalty=-1.0, size_gap=0.0, counties=80, per=12, seed=0):
                 log_rev = 13 + size_gap * high[c] + rng.normal()
                 rows.append({
                     "ein": f"{c:04d}{o:05d}", "tax_year": t, "county_fips": f"{c + 1000:05d}",
-                    "state": "GA", "category": ["Health", "Education", "Human Services"][o % 3],
+                    "state": f"S{c % 10}", "category": ["Health", "Education", "Human Services"][o % 3],
                     "return_type": "990" if o < per - 1 else "990EZ",
                     "has_county": "True", "has_need": "True",
                     "high_need": "True" if high[c] else "False",
@@ -66,9 +67,11 @@ def test_spec_errors_are_reported_not_repaired(tmp_path):
     s = json.loads(SPEC_PATH.read_text(encoding="utf-8"))
     s["hypotheses"][1]["controls"] = ["made_up_column"]
     s["expected_sign"] = 0
+    s["validator"]["holdout"] = {"by": "state", "folds": 1}
     errors = validate_spec(s, available_columns())
     assert any("made_up_column" in e for e in errors)
     assert any("expected_sign" in e for e in errors)
+    assert any("holdout.folds" in e for e in errors)
     path = tmp_path / "bad.json"
     path.write_text(json.dumps(s), encoding="utf-8")
     with pytest.raises(SpecError):
@@ -93,6 +96,8 @@ def test_planted_penalty_is_supported(spec):
     assert report["H2"]["fit"]["effect"] == pytest.approx(-1.0, abs=0.25)
     assert report["H2"]["permutation"]["observed"] == pytest.approx(report["H2"]["fit"]["effect"], rel=1e-6)
     assert report["replication"]["replicated"] is True
+    assert report["replication"]["by"] == "state"
+    assert report["replication_year"]["holdout_year"] == 2022     # still reported, for information
     assert report["population"]["after_return_type"] < report["population"]["rows_in"]
 
 

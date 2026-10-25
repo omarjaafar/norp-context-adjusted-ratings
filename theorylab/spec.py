@@ -17,7 +17,7 @@ HYPOTHESIS_METHODS = {"H1": ("difference_in_means",), "H2": ("fixed_effects",)}
 ROBUSTNESS_METHODS = ("multilevel", "two_stage_group_means", "lagged_outcome", "correlation")
 REQUIRED_KEYS = ("spec_version", "theory_id", "theory", "outcome", "exposure", "expected_sign",
                  "exposure_unit", "population", "hypotheses", "validator")
-VALIDATOR_KEYS = ("alpha", "effect_floor_sd", "n_permutations", "seed", "holdout_year")
+VALIDATOR_KEYS = ("alpha", "effect_floor_sd", "n_permutations", "seed", "holdout")
 
 
 class SpecError(ValueError):
@@ -38,6 +38,9 @@ def spec_columns(spec: dict) -> set:
         cols.update(item.get("absorb", []))
         cols.update(item.get("categorical", []))
         cols.update(c for c in (item.get("cluster"), item.get("group")) if c)
+    holdout = (spec.get("validator") or {}).get("holdout")
+    if isinstance(holdout, dict) and holdout.get("by"):
+        cols.add(holdout["by"])
     cols.add("tax_year")
     return {c for c in cols if c}
 
@@ -69,6 +72,12 @@ def validate_spec(spec: dict, available_columns=None) -> list:
         errors.append("validator.effect_floor_sd must be >= 0")
     if "n_permutations" in v and int(v["n_permutations"]) < 19:
         errors.append("validator.n_permutations must be at least 19 (p can reach 0.05)")
+    if "holdout" in v:
+        h = v["holdout"]
+        if not isinstance(h, dict) or not h.get("by"):
+            errors.append('validator.holdout must be an object like {"by": "state", "folds": 5}')
+        elif not isinstance(h.get("folds"), int) or h["folds"] < 2:
+            errors.append("validator.holdout.folds must be an integer of at least 2")
     if available_columns is not None:
         unknown = sorted(spec_columns(spec) - set(available_columns))
         if unknown:

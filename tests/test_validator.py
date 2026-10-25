@@ -1,4 +1,5 @@
-"""Validator gate: permutation, BH-FDR, effect floor, held-out-year replication, verdict rule."""
+"""Validator gate: permutation, BH-FDR, effect floor, held-out-state and held-out-year replication,
+verdict rule."""
 
 import numpy as np
 import pandas as pd
@@ -7,22 +8,26 @@ from statsmodels.stats.multitest import multipletests
 
 from theorylab.executor import fixed_effects
 from theorylab.validator import (GateInput, UnitPermuter, benjamini_hochberg, decide_verdict,
-                                 difference_in_means, held_out_year_replication,
-                                 passes_effect_floor, permutation_test)
+                                 difference_in_means, group_folds, held_out_group_replication,
+                                 held_out_year_replication, passes_effect_floor, permutation_test)
 
 
 def _county_panel(effect=-1.0, counties=60, per=10, years=(2020, 2021, 2022), seed=0,
-                  effect_by_year=None):
-    """Organizations in counties; the top quarter of counties is exposed in every year."""
+                  effect_by_year=None, states=10, effect_by_state=None):
+    """Organizations in counties, county c in state c % states; the top quarter of counties is
+    exposed in every year. effect_by_state overrides the effect state by state."""
     rng = np.random.default_rng(seed)
     exposed_county = np.zeros(counties)
     exposed_county[: counties // 4] = 1.0
     rows = []
     for t in years:
-        eff = effect if effect_by_year is None else effect_by_year.get(t, 0.0)
+        eff_t = effect if effect_by_year is None else effect_by_year.get(t, 0.0)
         for c in range(counties):
+            state = f"S{c % states:02d}"
+            eff = eff_t if effect_by_state is None else effect_by_state[state]
             for o in range(per):
                 rows.append({"county_fips": f"{c:05d}", "tax_year": t, "ein": f"{c:04d}{o:05d}",
+                             "state": state,
                              "high_need": exposed_county[c],
                              "y": eff * exposed_county[c] + rng.normal()})
     return pd.DataFrame(rows)
@@ -109,6 +114,47 @@ def test_replication_fails_when_the_effect_flips_in_the_held_out_year():
     assert rep["train"]["effect"] < -0.5
     assert rep["test"]["effect"] > 0.5
     assert rep["same_sign"] is False
+    assert rep["replicated"] is False
+
+
+def test_group_folds_are_deterministic_for_a_seed_and_cover_every_state_once():
+    states = pd.Series([f"S{i:02d}" for i in range(10)] * 3)
+    folds = group_folds(states, 5, seed=7)
+    assert folds == group_folds(states, 5, seed=7)
+    assert folds != group_folds(states, 5, seed=8)
+    assert sorted(s for f in folds for s in f) == sorted(states.unique())
+    assert [len(f) for f in folds] == [2, 2, 2, 2, 2]
+    with pytest.raises(ValueError):
+        group_folds(states, 11, seed=7)
+
+
+def test_state_replication_holds_for_a_stable_effect():
+    rep = held_out_group_replication(_county_panel(effect=-1.0), _fit, n_folds=5, seed=3,
+                                     expected_sign=-1)
+    assert rep["replicated"] is True
+    assert rep["folds_with_expected_sign"] == 5
+    assert rep["pooled_effect"] == pytest.approx(-1.0, abs=0.25)
+    assert rep["pooled_p_value"] < 0.05
+    for fold in rep["folds"]:                 # no held-out state is in its training set
+        assert not set(fold["held_out"]) & set(
+            s for f in rep["folds"] if f is not fold for s in f["held_out"])
+
+
+def test_state_replication_fails_when_a_few_states_carry_the_gap():
+    # 3 of 10 states have a large gap; the other 7 have a small one the other way. The
+    # pooled sample still shows a gap, but at least two folds hold only the 7 states.
+    effect_by_state = {f"S{i:02d}": (-1.5 if i < 3 else 0.3) for i in range(10)}
+    df = _county_panel(effect_by_state=effect_by_state)
+    assert _fit(df).effect < 0
+    rep = held_out_group_replication(df, _fit, n_folds=5, seed=3, expected_sign=-1)
+    assert rep["folds_with_expected_sign"] <= 3
+    assert rep["same_sign_in_every_fold"] is False
+    assert rep["replicated"] is False
+
+
+def test_state_replication_fails_when_there_is_no_effect():
+    rep = held_out_group_replication(_county_panel(effect=0.0), _fit, n_folds=5, seed=3,
+                                     expected_sign=-1)
     assert rep["replicated"] is False
 
 

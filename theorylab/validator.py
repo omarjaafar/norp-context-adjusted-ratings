@@ -9,8 +9,13 @@ Pieces, each usable on its own:
 - benjamini_hochberg: false discovery rate control over a family of p-values.
 - passes_effect_floor: a significant gap must also be large enough to matter,
   measured in outcome standard deviations.
+- held_out_group_replication: split the states into folds, fit on the other
+  states, re-estimate on each held-out fold, and require the expected sign in
+  every fold and a significant pooled held-out estimate. This is the replication
+  that feeds the verdict.
 - held_out_year_replication: fit on the other years, re-estimate on the held-out
-  year, and require the same sign and significance there.
+  year. Reported for information only: need barely moves between years, so a
+  held-out year re-tests the same organizations in the same counties.
 - decide_verdict: supported / weak / unsupported / reversed, from H1 (the gap
   exists) and H2 (the gap survives the controls), as docs/ratings_theory.md
   defines them.
@@ -24,6 +29,7 @@ from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 from theorylab.executor import MethodResult, to_float
 
@@ -184,6 +190,88 @@ def held_out_year_replication(df: pd.DataFrame, fit, holdout_year: int, *, time_
     }
 
 
+def group_folds(groups: pd.Series, n_folds: int, seed: int) -> list:
+    """Assign the distinct values of `groups` to n_folds folds at random.
+
+    The values are sorted, shuffled with the seed, and dealt into folds of near-equal
+    size (in groups, not rows), so a seed always gives the same folds.
+    """
+    values = np.array(sorted(groups.dropna().unique()), dtype=object)
+    if n_folds < 2:
+        raise ValueError("n_folds must be at least 2")
+    if len(values) < n_folds:
+        raise ValueError(f"{len(values)} groups cannot be split into {n_folds} folds")
+    shuffled = values[np.random.default_rng(seed).permutation(len(values))]
+    return [sorted(fold.tolist()) for fold in np.array_split(shuffled, n_folds)]
+
+
+def held_out_group_replication(df: pd.DataFrame, fit, *, group: str = "state", n_folds: int = 5,
+                               seed: int = 0, alpha: float = 0.05,
+                               expected_sign: int | None = None) -> dict:
+    """K-fold replication over groups (states): fit on the other groups, test on each fold.
+
+    fit: function frame -> MethodResult. Replicated means
+      1. in every fold the held-out estimate has the sign of its training fit (and the
+         expected sign, when given), and
+      2. the inverse-variance-pooled held-out estimate has p < alpha.
+    A gap carried by a few states fails (1) in the folds without them; a gap that is
+    the right sign everywhere but too noisy to tell from zero fails (2). Folds share no
+    states, so no counties, which makes the held-out estimates independent and the
+    pooling valid. Requiring significance in every fold would ask each fold to have
+    the power of the whole sample; that is not the test. Cochran's Q across folds is
+    reported for information and does not change `replicated`.
+    """
+    if df[group].isna().any():
+        raise ValueError(f"{group} has missing values; select the population first")
+    folds = group_folds(df[group], n_folds, seed)
+    rows = []
+    for i, held_out in enumerate(folds):
+        in_test = df[group].isin(held_out)
+        r_train: MethodResult = fit(df[~in_test])
+        r_test: MethodResult = fit(df[in_test])
+        s_train, s_test = int(np.sign(r_train.effect)), int(np.sign(r_test.effect))
+        rows.append({
+            "fold": i,
+            "held_out": held_out,
+            "train": r_train.to_dict(),
+            "test": r_test.to_dict(),
+            "same_sign": bool(s_test != 0 and s_test == s_train
+                              and (expected_sign is None or s_test == expected_sign)),
+        })
+
+    effects = np.array([r["test"]["effect"] for r in rows], dtype="float64")
+    ses = np.array([r["test"]["std_error"] for r in rows], dtype="float64")
+    usable = np.isfinite(effects) & np.isfinite(ses) & (ses > 0)
+    if usable.all():
+        w = 1.0 / ses ** 2
+        pooled = float((w * effects).sum() / w.sum())
+        pooled_se = float(1.0 / np.sqrt(w.sum()))
+        pooled_p = float(2 * stats.norm.sf(abs(pooled / pooled_se)))
+        q_stat = float((w * (effects - pooled) ** 2).sum())
+        q_p = float(stats.chi2.sf(q_stat, n_folds - 1))
+        i2 = float(max(0.0, (q_stat - (n_folds - 1)) / q_stat)) if q_stat > 0 else 0.0
+    else:  # a fold without a usable estimate cannot count as replicated
+        pooled = pooled_se = pooled_p = q_stat = q_p = i2 = float("nan")
+    sign_ok = all(r["same_sign"] for r in rows)
+    pooled_sign_ok = expected_sign is None or int(np.sign(pooled)) == expected_sign
+    significant = bool(np.isfinite(pooled_p) and pooled_p < alpha and pooled_sign_ok)
+    return {
+        "by": group,
+        "n_folds": int(n_folds),
+        "seed": int(seed),
+        "rule": "expected sign in every held-out fold and inverse-variance-pooled held-out p < alpha",
+        "folds": rows,
+        "folds_with_expected_sign": int(sum(r["same_sign"] for r in rows)),
+        "pooled_effect": pooled,
+        "pooled_std_error": pooled_se,
+        "pooled_p_value": pooled_p,
+        "heterogeneity": {"cochran_q": q_stat, "p_value": q_p, "i_squared": i2},
+        "same_sign_in_every_fold": bool(sign_ok),
+        "significant_pooled": significant,
+        "replicated": bool(sign_ok and significant),
+    }
+
+
 # ---------------------------------------------------------------- verdict
 
 @dataclass
@@ -205,7 +293,7 @@ def decide_verdict(h1: GateInput, h2: GateInput, *, expected_sign: int, alpha: f
 
     reversed:    H1 holds with the opposite sign (e.g. higher ratings in high-need counties).
     unsupported: no H1 gap that is significant (after FDR) and above the effect floor.
-    supported:   H1 holds, H2 holds with the same sign, and H2 replicates in the held-out year.
+    supported:   H1 holds, H2 holds with the same sign, and H2 replicates in the held-out states.
     weak:        H1 holds, but H2 shrinks below the floor, loses significance, flips, or
                  does not replicate.
     """
@@ -225,7 +313,7 @@ def decide_verdict(h1: GateInput, h2: GateInput, *, expected_sign: int, alpha: f
         h2_holds = h2.holds(expected_sign, alpha, floor)
         if h2_holds and replicated:
             verdict = "supported"
-            reasons.append("H1 and H2 hold and H2 replicates in the held-out year")
+            reasons.append("H1 and H2 hold and H2 replicates in the held-out states")
         else:
             verdict = "weak"
             reasons.append("H1 holds")
@@ -233,5 +321,5 @@ def decide_verdict(h1: GateInput, h2: GateInput, *, expected_sign: int, alpha: f
                 reasons.append(f"H2 fails the gate (effect {h2.standardized_effect:+.3f} SD, "
                                f"q = {h2.q_value:.4g})")
             if not replicated:
-                reasons.append("H2 does not replicate in the held-out year")
+                reasons.append("H2 does not replicate in the held-out states")
     return {"verdict": verdict, "reasons": reasons}

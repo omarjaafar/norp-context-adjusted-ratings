@@ -51,6 +51,7 @@
     "effect_floor_sd": 0.1,
     "n_permutations": 999,
     "seed": 6235,
+    "holdout": {"by": "state", "folds": 5},
     "holdout_year": 2022
   }
 }
