@@ -1,0 +1,427 @@
+{
+  "generated_at": "2026-10-25T16:10:05",
+  "theory_id": "ratings_fairness",
+  "n_permutations": 199,
+  "robustness_models": false,
+  "population": {
+    "rows_in": 2390744,
+    "after_return_type": 1531303,
+    "after_has_county": 1507855,
+    "after_has_need": 1507813,
+    "after_standard_rating_present": 1314041,
+    "after_high_need_present": 1314021,
+    "after_log_revenue_present": 1303953,
+    "after_category_present": 1303953,
+    "after_county_fips_present": 1303953,
+    "rows_out": 1303953,
+    "organizations": 337995,
+    "units": 3087,
+    "exposed_rows": 105597,
+    "exposed_units_by_year": {
+      "2018": 689,
+      "2019": 693,
+      "2020": 702,
+      "2021": 702,
+      "2022": 708
+    }
+  },
+  "negative_control": {
+    "what": "exposure replaced by another county's whole history (placebo); no real effect",
+    "expected_verdict": "unsupported",
+    "n_runs": 20,
+    "verdict_counts": {
+      "supported": 0,
+      "weak": 0,
+      "unsupported": 20,
+      "reversed": 0
+    },
+    "false_positives": 0,
+    "false_positive_seeds": [],
+    "h1_significant": 0,
+    "h1_above_floor": 0,
+    "replicated": 0,
+    "runs": [
+      {
+        "seed": 1000,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.99)",
+          "H1 gap -0.001 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.002849001997983436,
+        "H1_standardized": -0.0013235966272599983,
+        "H1_p": 0.94,
+        "H1_q": 0.99,
+        "H2_effect": 0.0006867667174839923,
+        "H2_standardized": 0.0003190598362583238,
+        "H2_q": 0.99,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      },
+      {
+        "seed": 1001,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.575)",
+          "H1 gap -0.011 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.02302429381373905,
+        "H1_standardized": -0.010696685245738262,
+        "H1_p": 0.41,
+        "H1_q": 0.575,
+        "H2_effect": -0.015757944997879324,
+        "H2_standardized": -0.007320866347761297,
+        "H2_q": 0.575,
+        "replicated": false,
+        "folds_with_expected_sign": 2
+      },
+      {
+        "seed": 1002,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.725)",
+          "H1 gap -0.005 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.010324163835692346,
+        "H1_standardized": -0.004796426412432963,
+        "H1_p": 0.725,
+        "H1_q": 0.725,
+        "H2_effect": -0.01348950030386486,
+        "H2_standardized": -0.006266986516069849,
+        "H2_q": 0.725,
+        "replicated": false,
+        "folds_with_expected_sign": 3
+      },
+      {
+        "seed": 1003,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.605)",
+          "H1 gap +0.009 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": 0.020247890572573368,
+        "H1_standardized": 0.00940681673440632,
+        "H1_p": 0.495,
+        "H1_q": 0.605,
+        "H2_effect": 0.016545701230965503,
+        "H2_standardized": 0.00768684415120051,
+        "H2_q": 0.605,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      },
+      {
+        "seed": 1004,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.265)",
+          "H1 gap +0.017 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": 0.035943255145081565,
+        "H1_standardized": 0.0166986093082593,
+        "H1_p": 0.265,
+        "H1_q": 0.265,
+        "H2_effect": 0.03474176603019887,
+        "H2_standardized": 0.016140418425531256,
+        "H2_q": 0.265,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      },
+      {
+        "seed": 1005,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.12)",
+          "H1 gap -0.024 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.051851160056755496,
+        "H1_standardized": -0.024089144415910282,
+        "H1_p": 0.12,
+        "H1_q": 0.12,
+        "H2_effect": -0.0475196750104512,
+        "H2_standardized": -0.022076812026402135,
+        "H2_q": 0.12,
+        "replicated": false,
+        "folds_with_expected_sign": 4
+      },
+      {
+        "seed": 1006,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.93)",
+          "H1 gap +0.001 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": 0.0024464409698339296,
+        "H1_standardized": 0.0011365737962819409,
+        "H1_p": 0.93,
+        "H1_q": 0.93,
+        "H2_effect": -0.004709700847228545,
+        "H2_standardized": -0.0021880448526212307,
+        "H2_q": 0.93,
+        "replicated": false,
+        "folds_with_expected_sign": 2
+      },
+      {
+        "seed": 1007,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.14)",
+          "H1 gap +0.021 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": 0.044561449199672865,
+        "H1_standardized": 0.0207024719211333,
+        "H1_p": 0.14,
+        "H1_q": 0.14,
+        "H2_effect": 0.047529878786892424,
+        "H2_standardized": 0.022081552522931265,
+        "H2_q": 0.14,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      },
+      {
+        "seed": 1008,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.77)",
+          "H1 gap -0.005 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.010942475739090796,
+        "H1_standardized": -0.005083683336265299,
+        "H1_p": 0.77,
+        "H1_q": 0.77,
+        "H2_effect": -0.014562139726708482,
+        "H2_standardized": -0.0067653160796668005,
+        "H2_q": 0.77,
+        "replicated": false,
+        "folds_with_expected_sign": 3
+      },
+      {
+        "seed": 1009,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.95)",
+          "H1 gap -0.001 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.0016448069263947929,
+        "H1_standardized": -0.0007641486042519405,
+        "H1_p": 0.95,
+        "H1_q": 0.95,
+        "H2_effect": 0.003717389842142876,
+        "H2_standardized": 0.0017270344705807733,
+        "H2_q": 0.95,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      },
+      {
+        "seed": 1010,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.67)",
+          "H1 gap -0.011 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.023356138440863816,
+        "H1_standardized": -0.010850854470451895,
+        "H1_p": 0.525,
+        "H1_q": 0.67,
+        "H2_effect": -0.012367381889336027,
+        "H2_standardized": -0.005745669876099793,
+        "H2_q": 0.67,
+        "replicated": false,
+        "folds_with_expected_sign": 1
+      },
+      {
+        "seed": 1011,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.96)",
+          "H1 gap +0.001 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": 0.0028021407197726944,
+        "H1_standardized": 0.0013018256949009713,
+        "H1_p": 0.915,
+        "H1_q": 0.96,
+        "H2_effect": 0.0016152787021378276,
+        "H2_standardized": 0.0007504303063837186,
+        "H2_q": 0.96,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      },
+      {
+        "seed": 1012,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.965)",
+          "H1 gap -0.000 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.0007924154117056048,
+        "H1_standardized": -0.0003681423765461605,
+        "H1_p": 0.965,
+        "H1_q": 0.965,
+        "H2_effect": -0.002838266055953496,
+        "H2_standardized": -0.0013186088958820122,
+        "H2_q": 0.965,
+        "replicated": false,
+        "folds_with_expected_sign": 1
+      },
+      {
+        "seed": 1013,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.48)",
+          "H1 gap +0.011 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": 0.02358653360489882,
+        "H1_standardized": 0.010957892044405717,
+        "H1_p": 0.47,
+        "H1_q": 0.48,
+        "H2_effect": 0.021829912018921267,
+        "H2_standardized": 0.01014179629992477,
+        "H2_q": 0.48,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      },
+      {
+        "seed": 1014,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.565)",
+          "H1 gap +0.011 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": 0.02277070984818863,
+        "H1_standardized": 0.010578874559130348,
+        "H1_p": 0.565,
+        "H1_q": 0.565,
+        "H2_effect": 0.023327575045107164,
+        "H2_standardized": 0.01083758441507343,
+        "H2_q": 0.565,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      },
+      {
+        "seed": 1015,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.33)",
+          "H1 gap -0.017 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.036622517165739055,
+        "H1_standardized": -0.017014182593291894,
+        "H1_p": 0.305,
+        "H1_q": 0.33,
+        "H2_effect": -0.03099484946661801,
+        "H2_standardized": -0.01439966635526574,
+        "H2_q": 0.33,
+        "replicated": false,
+        "folds_with_expected_sign": 3
+      },
+      {
+        "seed": 1016,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.975)",
+          "H1 gap +0.001 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": 0.0013390367250796231,
+        "H1_standardized": 0.0006220931028995955,
+        "H1_p": 0.975,
+        "H1_q": 0.975,
+        "H2_effect": -0.002395083772687815,
+        "H2_standardized": -0.0011127141384171032,
+        "H2_q": 0.975,
+        "replicated": false,
+        "folds_with_expected_sign": 1
+      },
+      {
+        "seed": 1017,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.29)",
+          "H1 gap -0.018 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.03808674650585786,
+        "H1_standardized": -0.01769443800114635,
+        "H1_p": 0.29,
+        "H1_q": 0.29,
+        "H2_effect": -0.041869251660350305,
+        "H2_standardized": -0.019451723909904378,
+        "H2_q": 0.29,
+        "replicated": false,
+        "folds_with_expected_sign": 3
+      },
+      {
+        "seed": 1018,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.425)",
+          "H1 gap +0.013 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": 0.02779360071281367,
+        "H1_standardized": 0.01291242203021619,
+        "H1_p": 0.425,
+        "H1_q": 0.425,
+        "H2_effect": 0.02766024652979726,
+        "H2_standardized": 0.01285046800315813,
+        "H2_q": 0.425,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      },
+      {
+        "seed": 1019,
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.975)",
+          "H1 gap -0.000 SD is below the 0.1 SD floor"
+        ],
+        "H1_effect": -0.0009185151941633052,
+        "H1_standardized": -0.00042672613565807743,
+        "H1_p": 0.975,
+        "H1_q": 0.975,
+        "H2_effect": 0.0035925340416367328,
+        "H2_standardized": 0.0016690286437822132,
+        "H2_q": 0.975,
+        "replicated": false,
+        "folds_with_expected_sign": 0
+      }
+    ]
+  },
+  "positive_controls": [
+    {
+      "planted_effect_sd": 0.25,
+      "planted_shift": -0.5381174935224048,
+      "expected_verdict": "supported",
+      "verdict": "supported",
+      "reasons": [
+        "H1 and H2 hold and H2 replicates in the held-out states"
+      ],
+      "H1_effect": -0.5857416465722922,
+      "H1_standardized": -0.2713834742197874,
+      "H1_p": 0.005,
+      "H1_q": 0.005,
+      "H2_effect": -0.562700222938413,
+      "H2_standardized": -0.2607080140859137,
+      "H2_q": 0.005,
+      "replicated": true,
+      "folds_with_expected_sign": 5,
+      "passed": true
+    },
+    {
+      "planted_effect_sd": 0.05,
+      "planted_shift": -0.10762349870448096,
+      "expected_verdict": "unsupported",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap -0.072 SD is below the 0.1 SD floor"
+      ],
+      "H1_effect": -0.15524765175436794,
+      "H1_standardized": -0.07211270589378359,
+      "H1_p": 0.005,
+      "H1_q": 0.005,
+      "H2_effect": -0.13220622812049262,
+      "H2_standardized": -0.06140993913945826,
+      "H2_q": 0.005,
+      "replicated": false,
+      "folds_with_expected_sign": 4,
+      "passed": true
+    }
+  ],
+  "all_passed": true
+}
