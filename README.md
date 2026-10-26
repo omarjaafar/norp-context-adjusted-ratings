@@ -120,9 +120,12 @@ Notes:
 | Negative and positive controls through the gate on the real panel | `theorylab/controls.py`, `scripts/run_controls.py` | `data/output/controls.json` |
 | Theory spec format and schema check (what the CP4 Planner will write) | `theorylab/spec.py`, `specs/ratings_fairness.json` | — |
 | Ratings theory end to end from the hand-written spec (H1, H2, verdict) | `theorylab/theory_run.py`, `scripts/run_theory.py` | `data/output/theory_runs/ratings_fairness.json` |
+| Ratings theory for each tax year, and whether the gap shifts over time | `theorylab/trends.py`, `scripts/run_by_year.py` | `data/output/theory_runs/ratings_fairness_by_year.json` |
 | Assumption 5: MixedLM fit time and convergence on 2022 full-990 filers | `scripts/measure_assumption5.py` | `data/output/assumption_5.json` |
 | Open checks from CP2: Part IX coverage by return type; rating anchor sensitivity | `theorylab/checks.py`, `theorylab/sensitivity.py`, `scripts/part9_coverage.py`, `scripts/anchor_sensitivity.py` | `data/output/part9_coverage.json`, `data/output/anchor_sensitivity.json` |
-| Tests on synthetic data with known answers | `tests/test_executor.py`, `tests/test_validator.py`, `tests/test_theory_run.py`, `tests/test_controls.py` | — |
+| Tests on synthetic data with known answers | `tests/test_executor.py`, `tests/test_validator.py`, `tests/test_theory_run.py`, `tests/test_controls.py`, `tests/test_trends.py` | — |
+
+**Result: the ratings-fairness theory is unsupported.** On 1,303,953 full-990 organization-years the high-need gap is −0.022 SD (q = 0.268), a fifth of the effect floor. It fails the gate in every tax year and under all 10 anchor variants, and it does not replicate across held-out states. The same gate recovers a planted 0.25 SD gap and rejects 20 of 20 placebos (`data/output/controls.json`).
 
 ```bash
 pip install -r requirements.txt          # adds scipy and statsmodels
