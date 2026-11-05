@@ -32,7 +32,7 @@ from theorylab.executor import (Residualizer, correlation, fixed_effects, fwl_co
                                 two_stage_group_means)
 from theorylab.ratios import RATING_ANCHORS, RATING_MIN_COMPONENTS, standard_rating
 from theorylab.spec import SpecError, spec_columns
-from theorylab.validator import (GateInput, UnitPermuter, benjamini_hochberg, decide_verdict,
+from theorylab.validator import (GateInput, pearson_r, UnitPermuter, benjamini_hochberg, decide_verdict,
                                  difference_in_means, held_out_group_replication,
                                  held_out_year_replication, permutation_test)
 
@@ -118,6 +118,10 @@ def select_population(df: pd.DataFrame, spec: dict) -> tuple[pd.DataFrame, dict]
     if "ein" in out.columns:
         log["organizations"] = int(out["ein"].nunique())
     log["units"] = int(out[spec["exposure_unit"]].nunique())
+    if spec.get("exposure_type", "binary") == "continuous":
+        xv = to_float(out[spec["exposure"]])
+        log["exposure_mean"], log["exposure_sd"] = float(xv.mean()), float(xv.std(ddof=1))
+        return out, log
     exposed = to_float(out[spec["exposure"]]).eq(1.0)
     log["exposed_rows"] = int(exposed.sum())
     log["exposed_units_by_year"] = {
@@ -184,6 +188,11 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
     if pop.empty:
         raise ValueError("the population is empty")
 
+    continuous = spec.get("exposure_type", "binary") == "continuous"
+    if continuous:  # coefficients are per SD of the exposure, so the SD floor means the same thing
+        xs = to_float(pop[exposure])
+        pop = pop.copy()
+        pop[exposure] = (xs - xs.mean()) / xs.std(ddof=1)
     y = to_float(pop[outcome]).to_numpy()
     x = to_float(pop[exposure]).to_numpy()
     sd_y = float(np.std(y, ddof=1))
@@ -191,9 +200,15 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
     permuter = UnitPermuter(pop, exposure, unit=unit, within=within, keep_paths=keep_paths)
 
     # H1: the gap exists.
-    h1_effect = difference_in_means(y, x)
-    h1_perm = permutation_test(lambda xv: difference_in_means(y, xv), permuter, n_perm, seed)
-    welch = stats.ttest_ind(y[x == 1], y[x == 0], equal_var=False)
+    if continuous:
+        h1_stat = lambda xv: pearson_r(y, xv)  # noqa: E731
+        h1_effect = h1_stat(x)
+        welch = None
+    else:
+        h1_stat = lambda xv: difference_in_means(y, xv)  # noqa: E731
+        h1_effect = h1_stat(x)
+        welch = stats.ttest_ind(y[x == 1], y[x == 0], equal_var=False)
+    h1_perm = permutation_test(h1_stat, permuter, n_perm, seed)
 
     # H2: the gap survives the controls.
     h2 = hyps["H2"]
@@ -215,7 +230,9 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
     replication_year = (held_out_year_replication(pop, fit_h2, int(v["holdout_year"]), alpha=alpha,
                                                   expected_sign=sign)
                         if v.get("holdout_year") is not None else None)
-    gate_h1 = GateInput(h1_effect, h1_effect / sd_y if sd_y > 0 else float("nan"), float(q[0]))
+    # difference in means is in outcome units; a correlation is already standardized
+    h1_std = h1_effect if continuous else (h1_effect / sd_y if sd_y > 0 else float("nan"))
+    gate_h1 = GateInput(h1_effect, h1_std, float(q[0]))
     gate_h2 = GateInput(h2_fit.effect, h2_fit.standardized_effect, float(q[1]))
     verdict = decide_verdict(gate_h1, gate_h2, expected_sign=sign, alpha=alpha, floor=floor,
                              replicated=replication["replicated"])
@@ -227,6 +244,7 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
         "generated_at": datetime.datetime.now().isoformat(timespec="seconds"),
         "theory_id": spec["theory_id"],
         "theory": spec["theory"],
+        "exposure_type": "continuous" if continuous else "binary",
         "verdict": verdict["verdict"],
         "reasons": verdict["reasons"],
         "validator": {"alpha": alpha, "effect_floor_sd": floor, "n_permutations": n_perm,
@@ -240,14 +258,14 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
         "outcome_sd": sd_y,
         "H1": {
             "claim": hyps["H1"].get("claim"),
-            "method": "difference_in_means",
+            "method": "correlation" if continuous else "difference_in_means",
             "effect": h1_effect,
             "standardized_effect": gate_h1.standardized_effect,
-            "mean_exposed": float(y[x == 1].mean()),
-            "mean_unexposed": float(y[x == 0].mean()),
-            "n_exposed": int((x == 1).sum()),
-            "n_unexposed": int((x == 0).sum()),
-            "welch_t_p_value_rows_independent": float(welch.pvalue),
+            "mean_exposed": None if continuous else float(y[x == 1].mean()),
+            "mean_unexposed": None if continuous else float(y[x == 0].mean()),
+            "n_exposed": None if continuous else int((x == 1).sum()),
+            "n_unexposed": None if continuous else int((x == 0).sum()),
+            "welch_t_p_value_rows_independent": None if welch is None else float(welch.pvalue),
             "permutation": h1_perm,
             "q_value": float(q[0]),
         },

@@ -13,7 +13,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-HYPOTHESIS_METHODS = {"H1": ("difference_in_means",), "H2": ("fixed_effects",)}
+HYPOTHESIS_METHODS = {"H1": ("difference_in_means", "correlation"), "H2": ("fixed_effects",)}
+EXPOSURE_TYPES = ("binary", "continuous")  # spec_version 1 without exposure_type means binary
+H1_BY_TYPE = {"binary": "difference_in_means", "continuous": "correlation"}
 ROBUSTNESS_METHODS = ("multilevel", "two_stage_group_means", "lagged_outcome", "correlation")
 REQUIRED_KEYS = ("spec_version", "theory_id", "theory", "outcome", "exposure", "expected_sign",
                  "exposure_unit", "population", "hypotheses", "validator")
@@ -52,6 +54,9 @@ def validate_spec(spec: dict, available_columns=None) -> list:
         return errors
     if spec["expected_sign"] not in (-1, 1):
         errors.append("expected_sign must be -1 or 1")
+    etype = spec.get("exposure_type", "binary")
+    if etype not in EXPOSURE_TYPES:
+        errors.append(f"exposure_type must be one of {EXPOSURE_TYPES}")
     pop = spec["population"]
     if not isinstance(pop, dict):
         errors.append("population must be an object")
@@ -61,6 +66,8 @@ def validate_spec(spec: dict, available_columns=None) -> list:
             errors.append(f"hypothesis {hid} is missing")
         elif hyps[hid].get("method") not in methods:
             errors.append(f"{hid} method must be one of {methods}, not {hyps[hid].get('method')!r}")
+    if etype in H1_BY_TYPE and "H1" in hyps and hyps["H1"].get("method") != H1_BY_TYPE[etype]:
+        errors.append(f"a {etype} exposure needs H1 method {H1_BY_TYPE[etype]!r}")
     for item in spec.get("robustness", []):
         if item.get("method") not in ROBUSTNESS_METHODS:
             errors.append(f"robustness {item.get('id')!r}: unknown method {item.get('method')!r}")

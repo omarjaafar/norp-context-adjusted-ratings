@@ -164,6 +164,13 @@ def difference_in_means(y: np.ndarray, exposure: np.ndarray) -> float:
     return float(y[exposed].mean() - y[~exposed].mean())
 
 
+def pearson_r(y: np.ndarray, x: np.ndarray) -> float:
+    """Pearson correlation of y and x (nan when either is constant)."""
+    xc, yc = x - x.mean(), y - y.mean()
+    denom = float(np.sqrt((xc @ xc) * (yc @ yc)))
+    return float(xc @ yc) / denom if denom > 0 else float("nan")
+
+
 # ---------------------------------------------------------------- multiple testing, size
 
 def benjamini_hochberg(p_values, alpha: float = 0.05):
