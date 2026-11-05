@@ -74,7 +74,7 @@ def extract_one(source, year: int, raw_dir: Path = RAW_DIR) -> dict:
 
     df = pd.read_csv(raw_path, usecols=source.columns(), dtype=str, low_memory=False)
     df = df[source.columns()]
-    contract = check_contract(df, source, label=f"{source.name}-{year}")
+    contract = check_contract(df, source, label=f"{source.name}-{year}", year=year)
 
     out = source.extract_path(year)
     out.parent.mkdir(parents=True, exist_ok=True)

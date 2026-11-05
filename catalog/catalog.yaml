@@ -5,7 +5,7 @@
 #   keys                 : canonical key name -> raw column
 #   fields               : raw numeric column -> canonical name
 #   attributes           : raw text column -> canonical name
-#   expected_rows        : [min, max] rows per file (per year for yearly sources)
+#   expected_rows        : [min, max] rows per file, or {year: [min, max]} for yearly sources
 #   extract              : committed slim extract (yearly sources), relative to the repo root
 #   filing_meta          : optional raw column -> canonical name; filing metadata used
 #                          to choose one filing per key (amended / timestamp / form type)
@@ -45,8 +45,14 @@ sources:
     verified: [F9_01_REV_TOT_CY, F9_01_EXP_TOT_CY, F9_01_EXP_FUNDR_TOT_CY, F9_01_REV_CONTR_TOT_CY,
                F9_01_REV_PROG_TOT_CY, F9_01_EXP_SAL_ETC_CY, F9_01_NAFB_TOT_BOY, F9_01_NAFB_TOT_EOY,
                RETURN_TYPE, RETURN_AMENDED_X, RETURN_TIME_STAMP]
-    # Sanity bounds until the first extract measures the real counts (see MANIFEST.json).
-    expected_rows: [100000, 1000000]
+    # Exact rows per yearly file, measured in data/extracts/nccs/MANIFEST.json (CP2).
+    # efile_v2_1 is a fixed release, so any other count means the source file changed.
+    expected_rows:
+      2018: [419877, 419877]
+      2019: [436289, 436289]
+      2020: [514469, 514469]
+      2021: [537670, 537670]
+      2022: [551869, 551869]
     extract: data/extracts/nccs/F9-P01-T00-SUMMARY-{year}.csv.gz
 
   nccs_p09:
@@ -69,7 +75,14 @@ sources:
       RETURN_AMENDED_X: return_amended
       RETURN_TIME_STAMP: return_time_stamp
     verified: [RETURN_TYPE, RETURN_AMENDED_X, RETURN_TIME_STAMP, F9_09_EXP_TOT_TOT, F9_09_EXP_TOT_PROG, F9_09_EXP_TOT_MGMT, F9_09_EXP_TOT_FUNDR]
-    expected_rows: [100000, 1000000]
+    # Exact rows per yearly file, measured in data/extracts/nccs/MANIFEST.json (CP2).
+    # efile_v2_1 is a fixed release, so any other count means the source file changed.
+    expected_rows:
+      2018: [364285, 364285]
+      2019: [378623, 378623]
+      2020: [448048, 448048]
+      2021: [464734, 464734]
+      2022: [477675, 477675]
     extract: data/extracts/nccs/F9-P09-T00-EXPENSES-{year}.csv.gz
 
   nccs_p10:
@@ -90,7 +103,14 @@ sources:
       RETURN_AMENDED_X: return_amended
       RETURN_TIME_STAMP: return_time_stamp
     verified: [RETURN_TYPE, RETURN_AMENDED_X, RETURN_TIME_STAMP, F9_10_ASSET_TOT_EOY, F9_10_LIAB_TOT_EOY]
-    expected_rows: [100000, 1000000]
+    # Exact rows per yearly file, measured in data/extracts/nccs/MANIFEST.json (CP2).
+    # efile_v2_1 is a fixed release, so any other count means the source file changed.
+    expected_rows:
+      2018: [420826, 420826]
+      2019: [437203, 437203]
+      2020: [515679, 515679]
+      2021: [539238, 539238]
+      2022: [553554, 553554]
     extract: data/extracts/nccs/F9-P10-T00-BALANCE-SHEET-{year}.csv.gz
 
   norp_ngo:

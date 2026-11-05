@@ -26,7 +26,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from theorylab.catalog import REPO_ROOT, load_catalog  # noqa: E402
+from theorylab.catalog import REPO_ROOT, ContractError, load_catalog  # noqa: E402
 from theorylab.panel import assumption_4_check, build_panel, prepare_part  # noqa: E402
 
 CROSSWALK = REPO_ROOT / "data" / "derived" / "ein_county_crosswalk.csv.gz"
@@ -50,6 +50,9 @@ def load_source(source, keep_meta=()):
             files[str(year)] = "missing"
             continue
         df = pd.read_csv(path, dtype=str)
+        lo, hi = source.row_bounds(year)
+        if not lo <= len(df) <= hi:  # a changed or swapped extract stops the build here
+            raise ContractError(f"{path.name}: {len(df)} rows, catalog expects [{lo}, {hi}]")
         files[str(year)] = int(len(df))
         frames.append(df)
     if not frames:

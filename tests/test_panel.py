@@ -63,9 +63,9 @@ def test_catalog_loads_and_names_are_canonical(catalog):
 
 def test_check_contract_reports_and_raises(catalog):
     src = catalog["nccs_p09"]
-    report = check_contract(_p09(src), src)
+    report = check_contract(_p09(src), src, year=2018)
     assert report["rows"] == 3
-    assert report["violations"]  # 3 rows is far below the expected range
+    assert report["violations"]  # 3 rows is far below the 2018 count
     with pytest.raises(ContractError):
         check_contract(_p09(src).drop(columns=["F9_09_EXP_TOT_MGMT"]), src)
 

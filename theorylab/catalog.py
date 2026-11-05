@@ -36,7 +36,7 @@ class Source:
     fields: dict        # raw numeric column -> canonical name
     attributes: dict    # raw text column -> canonical name
     verified: tuple
-    expected_rows: tuple
+    expected_rows: tuple | dict  # (min, max), or {year: (min, max)} for yearly sources
     extract: str | None
     filing_meta: dict = None  # raw filing-metadata column -> canonical name (optional)
 
@@ -50,6 +50,14 @@ class Source:
         return (list(self.keys) + list(self.fields.values()) + list(self.attributes.values())
                 + list((self.filing_meta or {}).values()))
 
+    def row_bounds(self, year: int | None = None) -> tuple:
+        """(min, max) rows expected in one file; per-year bounds need the year."""
+        if isinstance(self.expected_rows, dict):
+            if year is None or int(year) not in self.expected_rows:
+                raise ValueError(f"{self.name}: expected_rows is per year; no bounds for year {year}")
+            return self.expected_rows[int(year)]
+        return self.expected_rows
+
     def origin_for(self, year: int | None = None) -> str:
         return self.origin.format(year=year) if year is not None else self.origin
 
@@ -60,15 +68,24 @@ class Source:
         return REPO_ROOT / rel
 
 
+def _parse_row_bounds(name: str, rows) -> tuple | dict:
+    def pair(r):
+        if not (isinstance(r, list) and len(r) == 2 and r[0] <= r[1]):
+            raise ValueError(f"catalog source {name!r}: expected_rows must be [min, max] "
+                             "or {year: [min, max]}")
+        return int(r[0]), int(r[1])
+    if isinstance(rows, dict):
+        return {int(year): pair(r) for year, r in rows.items()}
+    return pair(rows)
+
+
 def _parse_source(name: str, raw: dict) -> Source:
     missing = [k for k in REQUIRED_KEYS if k not in raw]
     if missing:
         raise ValueError(f"catalog source {name!r} is missing {missing}")
     if raw["origin_kind"] not in ORIGIN_KINDS:
         raise ValueError(f"catalog source {name!r}: origin_kind must be one of {ORIGIN_KINDS}")
-    rows = raw["expected_rows"]
-    if not (isinstance(rows, list) and len(rows) == 2 and rows[0] <= rows[1]):
-        raise ValueError(f"catalog source {name!r}: expected_rows must be [min, max]")
+    rows = _parse_row_bounds(name, raw["expected_rows"])
     src = Source(
         name=name,
         description=str(raw["description"]),
@@ -79,7 +96,7 @@ def _parse_source(name: str, raw: dict) -> Source:
         fields=dict(raw["fields"] or {}),
         attributes=dict(raw["attributes"] or {}),
         verified=tuple(raw["verified"] or []),
-        expected_rows=(int(rows[0]), int(rows[1])),
+        expected_rows=rows,
         extract=raw["extract"],
         filing_meta=dict(raw.get("filing_meta") or {}),
     )
@@ -87,6 +104,8 @@ def _parse_source(name: str, raw: dict) -> Source:
     dupes = sorted({n for n in names if names.count(n) > 1})
     if dupes:
         raise ValueError(f"catalog source {name!r}: canonical names used twice: {dupes}")
+    if isinstance(rows, dict) and set(rows) != set(src.years):
+        raise ValueError(f"catalog source {name!r}: per-year expected_rows must cover exactly {list(src.years)}")
     unknown = [c for c in src.verified if c not in src.columns()]
     if unknown:
         raise ValueError(f"catalog source {name!r}: verified columns not in contract: {unknown}")
@@ -107,7 +126,8 @@ def missing_columns(columns, source: Source) -> list:
     return [c for c in source.columns() if c not in present]
 
 
-def check_contract(df: pd.DataFrame, source: Source, label: str | None = None) -> dict:
+def check_contract(df: pd.DataFrame, source: Source, label: str | None = None,
+                   year: int | None = None) -> dict:
     """Check a raw table (raw column names) against its contract.
 
     Raises ContractError when contracted columns are missing. Everything else
@@ -119,7 +139,7 @@ def check_contract(df: pd.DataFrame, source: Source, label: str | None = None) -
     if missing:
         raise ContractError(f"{label}: missing contracted columns {missing}")
 
-    lo, hi = source.expected_rows
+    lo, hi = source.row_bounds(year)
     key_cols = list(source.keys.values())
     null_keys = int(df[key_cols].isna().any(axis=1).sum())
     duplicate_keys = int(df.duplicated(key_cols, keep="first").sum())
