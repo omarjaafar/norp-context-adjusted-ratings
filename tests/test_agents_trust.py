@@ -190,3 +190,32 @@ def test_orchestrator_end_to_end_loads_every_theorys_columns(tmp_path, monkeypat
     assert verdicts["poverty_margin"] == "unsupported"  # pure noise
     assert (tmp_path / "runs" / "poverty_margin.spec.json").exists()
     assert llm.usage.calls == 4
+
+
+# ---- the five theories and the A1 review (O4, W5, W6) --------------------------
+
+def test_five_theories_have_gold_answers_and_avoid_column_names():
+    from theorylab.benchmark import load_theories
+    theories = load_theories()
+    assert [t["id"] for t in theories] == ["ratings_fairness", "health_margin", "education_fundraising",
+                                           "crime_overhead", "unemployment_vulnerability"]
+    for t in theories:
+        g = t["gold"]
+        assert g["expected_sign"] in (-1, 1) and g["exposure_unit"] == "county_fips"
+        for variant in ("text", "paraphrase"):
+            low = t[variant].lower()
+            for col in (g["outcome"], g["exposure"]):
+                assert col not in low and col.replace("_", " ") not in low, (t["id"], variant, col)
+
+
+def test_review_spec_checks_variables_sign_and_unit():
+    from theorylab.benchmark import load_theories, review_spec, runnable
+    t1 = load_theories()[0]
+    spec = _ratings_spec()
+    assert review_spec(spec, t1["gold"]) == []
+    spec["expected_sign"] = 1
+    spec["exposure_unit"] = "state"
+    assert [p.split(":")[0] for p in review_spec(spec, t1["gold"])] == ["expected_sign", "exposure_unit"]
+    cols = available_columns()
+    assert runnable(t1, cols)
+    assert runnable(load_theories()[4], cols)  # unemployment_rate is already in the panel

@@ -1,7 +1,45 @@
-[
-  "Standard financial-ratio ratings unfairly penalize nonprofits in high-need counties: the 0-10 standard rating is lower where county need is high.",
-  "Nonprofits in counties with higher poverty rates spend a smaller share of their expenses on programs.",
-  "Organizations in counties with a larger share of food-desert population rely more heavily on contributions, measured by revenue concentration.",
-  "Fundraising efficiency is lower in counties with higher unemployment rates.",
-  "Operating margins are thinner for nonprofits in counties with a higher housing burden."
-]
+{
+  "about": "The first five theories (CP4). Each has the plain-language text the Planner gets, one paraphrase, and the gold answer the Planner's spec is reviewed against (Assumption 1: right variables, sign, unit of analysis). Texts avoid column names on purpose (CP4 audit W5). chr_* columns come from County Health Rankings (Vien, V2); until they are in the panel, those theories cannot run.",
+  "theories": [
+    {
+      "id": "ratings_fairness",
+      "text": "Watchdog-style financial ratings are unfair to nonprofits that work in hard-pressed places: organizations in the most economically distressed quarter of counties get lower scores on the usual 0-10 financial score.",
+      "paraphrase": "If you score nonprofits the way charity watchdogs do, the ones based in the worst-off local economies come out worse.",
+      "gold": {"outcome": "standard_rating", "exposure": "high_need", "exposure_type": "binary",
+               "expected_sign": -1, "exposure_unit": "county_fips"},
+      "why": "The CP3 theory; the hand-written spec specs/ratings_fairness.json is its gold standard."
+    },
+    {
+      "id": "health_margin",
+      "text": "Nonprofits in places where people are in worse health are stretched thinner: they end the year with smaller surpluses relative to their income.",
+      "paraphrase": "Poor community health eats into nonprofits' bottom line.",
+      "gold": {"outcome": "operating_margin", "exposure": "chr_poor_fair_health", "exposure_type": "continuous",
+               "expected_sign": -1, "exposure_unit": "county_fips"},
+      "why": "Demand pressure: more need for services on the same revenue base (resource dependency)."
+    },
+    {
+      "id": "education_fundraising",
+      "text": "In better-educated communities it costs nonprofits less to bring in each donated dollar.",
+      "paraphrase": "Where more residents have been to college, fundraising pays off more cheaply.",
+      "gold": {"outcome": "fundraising_efficiency", "exposure": "chr_some_college", "exposure_type": "continuous",
+               "expected_sign": -1, "exposure_unit": "county_fips"},
+      "why": "A wealthier, more giving local donor base."
+    },
+    {
+      "id": "crime_overhead",
+      "text": "Nonprofits in more violent places spend a bigger slice of their budget on running the organization itself rather than on programs or fundraising.",
+      "paraphrase": "High local crime pushes up nonprofits' overhead.",
+      "gold": {"outcome": "admin_expense_ratio", "exposure": "chr_violent_crime_rate", "exposure_type": "continuous",
+               "expected_sign": 1, "exposure_unit": "county_fips"},
+      "why": "Security, insurance and staff turnover costs."
+    },
+    {
+      "id": "unemployment_vulnerability",
+      "text": "Where joblessness is high, nonprofits owe more relative to what they own.",
+      "paraphrase": "Local job losses leave nonprofits carrying heavier debt loads.",
+      "gold": {"outcome": "liabilities_to_assets", "exposure": "unemployment_rate", "exposure_type": "continuous",
+               "expected_sign": 1, "exposure_unit": "county_fips"},
+      "why": "Financial vulnerability under local economic stress (Tuckman and Chang)."
+    }
+  ]
+}
