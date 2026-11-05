@@ -1,10 +1,22 @@
 """LLM access for the CP4 agents: one client, one hash-checked cache.
 
 Every call goes through LLMClient.complete(). The request (model, system, prompt,
-temperature) is hashed; the response is stored in data/llm_cache/<key>.json with
-its own sha256. In replay mode a missing entry is an error, and an entry whose
-stored text no longer matches its hash is rejected, so a cached run cannot change
-silently. The agents only ever send schemas, field names and summary statistics.
+max_tokens) is hashed; the response is stored in data/llm_cache/<key>.json with
+its own sha256 and the tokens of that one call. In replay mode a missing entry is
+an error, and an entry whose stored text no longer matches its hash is rejected,
+so a cached run cannot change silently. The agents only ever send schemas, field
+names and summary statistics.
+
+Changes from the TA version (CP4 audit W7, W16):
+- No temperature. Claude Sonnet 5.5 rejects non-default sampling values with a
+  400, so the TA client could not make a single call. Runs are reproducible
+  through the cache, not through sampling settings.
+- Each cache entry stores that call's tokens (the TA stored the running total),
+  so the cost of a run can be recomputed from the cache alone.
+- One price table, from the Claude API model table (cached 2026-10-06). The TA
+  hard-coded $3/$15 per million tokens, the old Sonnet 4.6 price; Sonnet 5.5 is
+  $2/$10.
+- A refusal or a response cut off at max_tokens raises LLMError and is not cached.
 """
 
 from __future__ import annotations
@@ -19,25 +31,47 @@ from theorylab.catalog import REPO_ROOT
 
 CACHE_DIR = REPO_ROOT / "data" / "llm_cache"
 DEFAULT_MODEL = "claude-sonnet-5-5"
+# US$ per million (input, output) tokens, Claude API first-party rates.
+PRICES_USD_PER_MTOK = {
+    "claude-sonnet-5-5": (2.00, 10.00),
+    "claude-opus-5-5": (4.00, 20.00),
+    "claude-haiku-5-5": (0.10, 0.50),
+}
 
 
 class CacheError(RuntimeError):
     """A cache entry is missing in replay mode, or fails its hash check."""
 
 
+class LLMError(RuntimeError):
+    """The model refused or its answer was cut off; nothing is cached."""
+
+
 def _sha(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def price(model: str) -> tuple:
+    if model not in PRICES_USD_PER_MTOK:
+        raise KeyError(f"no price for model {model!r}; add it to PRICES_USD_PER_MTOK")
+    return PRICES_USD_PER_MTOK[model]
+
+
 @dataclass
 class Usage:
-    calls: int = 0
+    calls: int = 0              # live API calls made by this client
     cache_hits: int = 0
-    input_tokens: int = 0
+    input_tokens: int = 0       # tokens of the live calls
     output_tokens: int = 0
+    cached_input_tokens: int = 0   # tokens the replayed entries cost when they were made
+    cached_output_tokens: int = 0
 
-    def cost_usd(self, in_per_mtok: float = 3.0, out_per_mtok: float = 15.0) -> float:
-        return self.input_tokens / 1e6 * in_per_mtok + self.output_tokens / 1e6 * out_per_mtok
+    def cost_usd(self, model: str, include_cached: bool = True) -> float:
+        """Cost of the calls this client served; with include_cached, as if none were cached."""
+        p_in, p_out = price(model)
+        tin = self.input_tokens + (self.cached_input_tokens if include_cached else 0)
+        tout = self.output_tokens + (self.cached_output_tokens if include_cached else 0)
+        return tin / 1e6 * p_in + tout / 1e6 * p_out
 
 
 @dataclass
@@ -45,19 +79,18 @@ class LLMClient:
     model: str = DEFAULT_MODEL
     cache_dir: Path = CACHE_DIR
     replay_only: bool = False          # True: never call the API, cache entries must exist
-    temperature: float = 0.0
-    max_tokens: int = 4000
+    max_tokens: int = 8000
     usage: Usage = field(default_factory=Usage)
     _api: object = None
 
     def key(self, system: str, prompt: str) -> str:
         return _sha(json.dumps({"model": self.model, "system": system, "prompt": prompt,
-                                "temperature": self.temperature}, sort_keys=True))
+                                "max_tokens": self.max_tokens}, sort_keys=True))
 
     def _path(self, key: str) -> Path:
         return Path(self.cache_dir) / f"{key}.json"
 
-    def _read_cache(self, key: str) -> str | None:
+    def _read_cache(self, key: str) -> dict | None:
         path = self._path(key)
         if not path.exists():
             return None
@@ -66,40 +99,48 @@ class LLMClient:
             raise CacheError(f"{path.name}: stored response does not match its sha256")
         if entry["request_sha256"] != key:
             raise CacheError(f"{path.name}: request hash does not match the file name")
-        return entry["text"]
+        return entry
 
-    def _write_cache(self, key: str, system: str, prompt: str, text: str) -> None:
+    def _write_cache(self, key: str, system: str, prompt: str, reply: dict) -> None:
         Path(self.cache_dir).mkdir(parents=True, exist_ok=True)
-        entry = {"request_sha256": key, "model": self.model, "temperature": self.temperature,
-                 "system": system, "prompt": prompt, "text": text, "response_sha256": _sha(text),
-                 "input_tokens": self.usage.input_tokens, "output_tokens": self.usage.output_tokens}
+        entry = {"request_sha256": key, "model": self.model, "max_tokens": self.max_tokens,
+                 "system": system, "prompt": prompt, "text": reply["text"],
+                 "response_sha256": _sha(reply["text"]), "stop_reason": reply["stop_reason"],
+                 "input_tokens": reply["input_tokens"], "output_tokens": reply["output_tokens"]}
         self._path(key).write_text(json.dumps(entry, indent=2), encoding="utf-8")
 
-    def _call_api(self, system: str, prompt: str) -> str:
+    def _call_api(self, system: str, prompt: str) -> dict:
         if self._api is None:
             import anthropic  # imported late so offline replay needs no SDK or key
             if not os.environ.get("ANTHROPIC_API_KEY"):
                 raise CacheError("ANTHROPIC_API_KEY is not set and the request is not cached")
             self._api = anthropic.Anthropic()
-        msg = self._api.messages.create(model=self.model, max_tokens=self.max_tokens,
-                                        temperature=self.temperature, system=system,
+        msg = self._api.messages.create(model=self.model, max_tokens=self.max_tokens, system=system,
                                         messages=[{"role": "user", "content": prompt}])
-        self.usage.input_tokens += int(msg.usage.input_tokens)
-        self.usage.output_tokens += int(msg.usage.output_tokens)
-        return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
+        reply = {"text": "".join(b.text for b in msg.content if getattr(b, "type", "") == "text"),
+                 "stop_reason": msg.stop_reason,
+                 "input_tokens": int(msg.usage.input_tokens),
+                 "output_tokens": int(msg.usage.output_tokens)}
+        self.usage.calls += 1
+        self.usage.input_tokens += reply["input_tokens"]
+        self.usage.output_tokens += reply["output_tokens"]
+        if reply["stop_reason"] in ("refusal", "max_tokens"):
+            raise LLMError(f"model stopped with {reply['stop_reason']!r}; response not cached")
+        return reply
 
     def complete(self, system: str, prompt: str) -> str:
         key = self.key(system, prompt)
         cached = self._read_cache(key)
         if cached is not None:
             self.usage.cache_hits += 1
-            return cached
+            self.usage.cached_input_tokens += int(cached.get("input_tokens", 0))
+            self.usage.cached_output_tokens += int(cached.get("output_tokens", 0))
+            return cached["text"]
         if self.replay_only:
             raise CacheError(f"no cache entry {key[:12]} for this request (replay-only mode)")
-        text = self._call_api(system, prompt)
-        self.usage.calls += 1
-        self._write_cache(key, system, prompt, text)
-        return text
+        reply = self._call_api(system, prompt)
+        self._write_cache(key, system, prompt, reply)
+        return reply["text"]
 
     def verify_cache(self) -> dict:
         """Hash-check every entry; returns {'ok': n, 'bad': [file names]}."""

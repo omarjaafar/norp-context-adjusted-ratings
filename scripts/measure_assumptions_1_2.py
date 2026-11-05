@@ -37,8 +37,8 @@ def main():
                          "note": "schema validity only; the manual review (variables, sign, unit) is separate"},
         "assumption_2": {"planning_calls": llm.usage.calls, "cache_hits": llm.usage.cache_hits,
                          "input_tokens": llm.usage.input_tokens, "output_tokens": llm.usage.output_tokens,
-                         "planning_cost_usd": llm.usage.cost_usd(), "planning_seconds": time.time() - t0,
-                         "projected_20_theories_usd": llm.usage.cost_usd() * 20 / n,
+                         "planning_cost_usd": llm.usage.cost_usd(llm.model), "planning_seconds": time.time() - t0,
+                         "projected_20_theories_usd": llm.usage.cost_usd(llm.model) * 20 / n,
                          "limit_usd": 15},
         "columns_offered": len(available_columns()),
     }

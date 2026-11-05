@@ -29,7 +29,7 @@ class FakeAPI:
         class U: input_tokens, output_tokens = 100, 50
         class B: type, text_ = "text", text
         b = B(); b.text = text
-        return type("M", (), {"usage": U, "content": [b]})()
+        return type("M", (), {"usage": U, "content": [b], "stop_reason": "end_turn"})()
 
 
 def _client(tmp_path, texts, replay=False):
