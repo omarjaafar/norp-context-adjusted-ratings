@@ -26,6 +26,44 @@ class SpecError(ValueError):
     """A theory spec is malformed or names something the panel does not have."""
 
 
+# The gate every agent-written spec runs under (CP4 audit W2, W3). It is the
+# validator block of the hand-written ratings spec, which CP3 tested with planted
+# effects and placebos. The Planner does not choose any of it: its validator block
+# is replaced by this one, and every difference is logged as an override.
+GATE_POLICY = {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {"keep_paths": True},   # shuffle whole county histories (CP3, V4)
+    "holdout": {"by": "state", "folds": 5},
+    "holdout_year": 2022,                  # reported for information only
+}
+
+
+def lock_gate(spec: dict) -> tuple[dict, list]:
+    """Copy of spec under GATE_POLICY, and the list of what the Planner had set differently.
+
+    Also clusters H2 by the exposure unit: clustering at a finer level than the
+    unit the exposure is assigned at understates the standard error.
+    """
+    out = json.loads(json.dumps(spec))
+    overrides = []
+    proposed = out.get("validator") or {}
+    for key, value in GATE_POLICY.items():
+        if key in proposed and proposed[key] != value:
+            overrides.append({"field": f"validator.{key}", "planner": proposed[key], "policy": value})
+    for key in sorted(set(proposed) - set(GATE_POLICY)):
+        overrides.append({"field": f"validator.{key}", "planner": proposed[key], "policy": None})
+    out["validator"] = json.loads(json.dumps(GATE_POLICY))
+    unit = out.get("exposure_unit")
+    for h in out.get("hypotheses", []):
+        if h.get("id") == "H2" and unit and h.get("cluster") != unit:
+            overrides.append({"field": "H2.cluster", "planner": h.get("cluster"), "policy": unit})
+            h["cluster"] = unit
+    return out, overrides
+
+
 def spec_columns(spec: dict) -> set:
     """Every panel column a spec refers to."""
     cols = {spec.get("outcome"), spec.get("exposure"), spec.get("exposure_unit"),

@@ -25,7 +25,7 @@ def main(argv=None) -> int:
                         n_permutations=args.permutations)
     summary = orch.run_theories([args.theory], out_dir=RUNS_DIR)
     print(json.dumps(summary, indent=2))
-    return 1 if summary["plan_failures"] else 0
+    return 1 if summary["plan_failures"] or summary["run_errors"] else 0
 
 
 if __name__ == "__main__":
