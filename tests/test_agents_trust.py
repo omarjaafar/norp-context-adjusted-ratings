@@ -188,6 +188,9 @@ def test_orchestrator_end_to_end_loads_every_theorys_columns(tmp_path, monkeypat
     verdicts = {t["theory_id"]: t["verdict"] for t in summary["theories"]}
     assert set(verdicts) == {"ratings_fairness", "poverty_margin"}
     assert verdicts["poverty_margin"] == "unsupported"  # pure noise
+    by_theory = {t["theory_id"]: t for t in summary["theories"]}
+    assert by_theory["poverty_margin"]["years_H1_holds"] == []  # per-year output for every theory
+    assert set(by_theory["ratings_fairness"]["trend"]) == {"change_per_year", "change_per_year_sd", "p_value"}
     assert (tmp_path / "runs" / "poverty_margin.spec.json").exists()
     assert llm.usage.calls == 4
 

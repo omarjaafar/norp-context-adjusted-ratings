@@ -19,10 +19,11 @@ def main(argv=None) -> int:
     t.add_argument("--no-scout", action="store_true", help="Planner reads catalog fields directly")
     t.add_argument("--drill", default="state", choices=["state", "sector", "size", "none"])
     t.add_argument("--permutations", type=int, default=None)
+    t.add_argument("--no-by-year", action="store_true", help="skip the per-year results and trend")
     args = ap.parse_args(argv)
     orch = Orchestrator(LLMClient(replay_only=args.replay), use_scout=not args.no_scout,
                         drill_by=None if args.drill == "none" else args.drill,
-                        n_permutations=args.permutations)
+                        n_permutations=args.permutations, by_year=not args.no_by_year)
     summary = orch.run_theories([args.theory], out_dir=RUNS_DIR)
     print(json.dumps(summary, indent=2))
     return 1 if summary["plan_failures"] or summary["run_errors"] else 0

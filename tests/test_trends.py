@@ -85,3 +85,34 @@ def test_meta_trend_needs_three_years():
     two = {"2021": {"H2": {"effect": -0.1, "std_error": 0.1}},
            "2022": {"H2": {"effect": -0.2, "std_error": 0.1}}}
     assert "error" in meta_trend(two)
+
+
+def _continuous_spec(spec):
+    s = copy.deepcopy(spec)
+    s.update({"theory_id": "poverty_rating", "exposure": "poverty_rate", "exposure_type": "continuous"})
+    s["hypotheses"][0]["method"] = "correlation"
+    return s
+
+
+def test_continuous_exposure_is_standardized_and_its_growing_slope_is_found(spec):
+    """Slope per SD of poverty grows -0.1 -> -0.5; each year's change and the trend recover it.
+
+    The county effects happen to correlate with poverty in this draw (100 counties), which
+    shifts every year's slope by the same amount, so the check is on the change from 2018.
+    """
+    slopes = {2018: -0.1, 2019: -0.2, 2020: -0.3, 2021: -0.4, 2022: -0.5}
+    panel = _panel({t: 0.0 for t in YEARS}, seed=3)
+    rng = np.random.default_rng(3)
+    pov = {c: rng.normal(0.15, 0.05) for c in panel["county_fips"].unique()}
+    panel["poverty_rate"] = panel["county_fips"].map(pov)
+    z = (panel["poverty_rate"] - panel["poverty_rate"].mean()) / panel["poverty_rate"].std(ddof=1)
+    panel["standard_rating"] += panel["tax_year"].map(slopes) * z
+    report = run_by_year(panel, _continuous_spec(spec))
+    assert report["exposure_type"] == "continuous"
+    base = report["by_year"]["2018"]["H2"]["effect"]
+    for year, slope in slopes.items():
+        r = report["by_year"][str(year)]
+        assert r["H1"]["method"] == "correlation" and r["exposed_units"] is None
+        assert r["H2"]["effect"] - base == pytest.approx(slope - slopes[2018], abs=0.1)  # ~2 SE of one year
+    assert report["trend"]["gap_change_per_year"] == pytest.approx(-0.1, abs=0.04)
+    assert report["trend"]["p_value"] < 0.01

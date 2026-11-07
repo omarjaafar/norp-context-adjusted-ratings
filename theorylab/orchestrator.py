@@ -10,6 +10,10 @@ CP4 audit change (W8): every theory is planned first and the panel is loaded onc
 with the columns all of them need (the TA version loaded only the first theory's
 columns and reused them). A spec the agents fail to produce is a plan failure; an
 error after the spec exists is a run error, so it never counts against the Planner.
+
+CP3 feedback: every theory also gets H1/H2 for each tax year and a test of whether
+its effect shifts over time (theorylab.trends); summary.json lists each trend. The
+per-year results are reported next to the verdict and never change it.
 """
 
 from __future__ import annotations
@@ -27,6 +31,7 @@ from theorylab.llm import LLMClient
 from theorylab.spec import validate_spec
 from theorylab.theory_run import (available_columns, load_panel, run_spec, spec_columns,
                                   write_report, RUNS_DIR)
+from theorylab.trends import run_by_year
 
 SPEC_TEMPLATE = REPO_ROOT / "specs" / "ratings_fairness.json"
 DEFAULT_DRILL = "state"
@@ -36,7 +41,8 @@ DRILL_COLUMNS = {"state": ["state"], "sector": ["category"], "size": ["log_reven
 class Orchestrator:
     def __init__(self, llm: LLMClient, panel: pd.DataFrame | None = None, *,
                  template_path: Path = SPEC_TEMPLATE, use_scout: bool = True,
-                 drill_by: str | None = DEFAULT_DRILL, n_permutations: int | None = None):
+                 drill_by: str | None = DEFAULT_DRILL, n_permutations: int | None = None,
+                 by_year: bool = True):
         if drill_by is not None and drill_by not in STRATIFIERS:
             raise ValueError(f"drill-down by {drill_by!r}; choose one of {sorted(STRATIFIERS)}")
         self.llm = llm
@@ -46,6 +52,7 @@ class Orchestrator:
         self.planner = Planner(llm, str(template_path))
         self.drill_by = drill_by
         self.n_permutations = n_permutations
+        self.by_year = by_year
 
     def needed_columns(self, specs: list) -> list:
         cols = set()
@@ -76,6 +83,8 @@ class Orchestrator:
         if self.drill_by and report["verdict"] in SURVIVOR_VERDICTS:
             report["drill_down"] = drill_down(panel, spec, report, self.drill_by,
                                               n_permutations=self.n_permutations)
+        if self.by_year:
+            report["by_year"] = run_by_year(panel, spec, n_permutations=self.n_permutations)
         return report
 
     def run_theory(self, theory: str) -> dict:
@@ -108,10 +117,21 @@ class Orchestrator:
                                                                     encoding="utf-8")
         summary = {"theories": [{"theory_id": r["spec"]["theory_id"], "verdict": r["report"]["verdict"],
                                  "verdict_within_theory": r["report"]["verdict_within_theory"],
-                                 "gate_overrides": r["spec"].get("gate_overrides", [])}
+                                 "gate_overrides": r["spec"].get("gate_overrides", []),
+                                 **_trend_summary(r["report"].get("by_year"))}
                                 for r in results],
                    "plan_failures": plan_failures,
                    "run_errors": run_errors,
                    "llm_usage": vars(self.llm.usage).copy()}
         write_report(summary, out_dir / "summary.json")
         return summary
+
+
+def _trend_summary(by_year: dict | None) -> dict:
+    """The per-year line of summary.json: years where H1/H2 pass the gate and the trend test."""
+    if not by_year:
+        return {}
+    t = by_year["trend"]
+    return {"years_H1_holds": by_year["years_H1_holds"], "years_H2_holds": by_year["years_H2_holds"],
+            "trend": {"change_per_year": t["gap_change_per_year"],
+                      "change_per_year_sd": t["gap_change_per_year_sd"], "p_value": t["p_value"]}}

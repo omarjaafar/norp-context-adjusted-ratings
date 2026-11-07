@@ -19,15 +19,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--replay", action="store_true")
     ap.add_argument("--sweep", action="store_true")
+    ap.add_argument("--permutations", type=int, default=None, help="default: the gate policy's 999")
+    ap.add_argument("--no-by-year", action="store_true", help="skip the per-year results and trend")
     args = ap.parse_args()
     columns = available_columns()
     theories = [t["text"] for t in load_theories() if runnable(t, columns)]
     llm = LLMClient(replay_only=args.replay)
-    panel = load_panel()
-    summary = Orchestrator(llm, panel).run_theories(theories, RUNS_DIR / "cp4")
+    orch = Orchestrator(llm, n_permutations=args.permutations, by_year=not args.no_by_year)
+    summary = orch.run_theories(theories, RUNS_DIR / "cp4")  # loads only the columns the specs need
     print(json.dumps(summary, indent=2))
     if args.sweep:
-        write_report(run_sweep(panel), RUNS_DIR / "cp4" / "ratio_need_sweep.json")
+        write_report(run_sweep(load_panel()), RUNS_DIR / "cp4" / "ratio_need_sweep.json")
 
 
 if __name__ == "__main__":

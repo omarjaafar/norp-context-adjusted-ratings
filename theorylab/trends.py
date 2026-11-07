@@ -1,8 +1,10 @@
 """H1 and H2 for each tax year, and a test of whether the gap shifts over time (CP2 feedback).
 
     population (theory_run.select_population, the same rows as the pooled run)
+      -> continuous exposure: standardized once on the pooled population, as in run_spec,
+         so every year's coefficient and the trend are per pooled SD of the exposure
       -> for each tax year:
-           H1  difference in means, permutation with counties shuffled
+           H1  difference in means (binary) or Pearson r (continuous), counties shuffled
            H2  fixed effects (spec controls; tax_year dropped from absorb), clustered by
                county, permutation on the same coefficient
          Benjamini-Hochberg over the five H1 and, separately, the five H2 p-values
@@ -27,7 +29,11 @@ from theorylab.executor import Residualizer, fixed_effects, fwl_coefficient, to_
 from theorylab.spec import spec_columns
 from theorylab.theory_run import add_derived, select_population
 from theorylab.validator import (GateInput, UnitPermuter, benjamini_hochberg, difference_in_means,
-                                 permutation_test)
+                                 pearson_r, permutation_test)
+
+
+def _continuous(spec: dict) -> bool:
+    return spec.get("exposure_type", "binary") == "continuous"
 
 
 def _year_tests(pop: pd.DataFrame, spec: dict, n_perm: int, seed: int) -> dict:
@@ -41,20 +47,26 @@ def _year_tests(pop: pd.DataFrame, spec: dict, n_perm: int, seed: int) -> dict:
     sd_y = float(np.std(y, ddof=1))
     permuter = UnitPermuter(pop, exposure, unit=unit)
 
-    h1 = difference_in_means(y, x)
-    h1_perm = permutation_test(lambda xv: difference_in_means(y, xv), permuter, n_perm, seed)
+    continuous = _continuous(spec)
+    h1_stat = (lambda xv: pearson_r(y, xv)) if continuous else (lambda xv: difference_in_means(y, xv))
+    h1 = h1_stat(x)
+    h1_perm = permutation_test(h1_stat, permuter, n_perm, seed)
     fit = fixed_effects(pop, outcome, exposure, controls=controls, absorb=absorb, cluster=cluster)
     resid = Residualizer.from_panel(pop, controls, absorb)
     y_resid = resid(y)
     h2_perm = permutation_test(lambda xv: fwl_coefficient(y_resid, resid(xv)), permuter, n_perm, seed + 1)
+    if continuous:  # a correlation is already standardized
+        h1_out = {"method": "correlation", "effect": h1, "standardized_effect": h1}
+    else:
+        h1_out = {"method": "difference_in_means", "effect": h1,
+                  "standardized_effect": h1 / sd_y if sd_y > 0 else float("nan"),
+                  "mean_exposed": float(y[x == 1].mean()), "mean_unexposed": float(y[x == 0].mean())}
     return {
         "rows": int(len(pop)),
         "units": int(pop[unit].nunique()),
-        "exposed_units": int(pop.loc[x == 1, unit].nunique()),
+        "exposed_units": None if continuous else int(pop.loc[x == 1, unit].nunique()),
         "outcome_sd": sd_y,
-        "H1": {"effect": h1, "standardized_effect": h1 / sd_y if sd_y > 0 else float("nan"),
-               "mean_exposed": float(y[x == 1].mean()), "mean_unexposed": float(y[x == 0].mean()),
-               "p_value": h1_perm["p_value"]},
+        "H1": {**h1_out, "p_value": h1_perm["p_value"]},
         "H2": {"effect": fit.effect, "standardized_effect": fit.standardized_effect,
                "std_error": fit.std_error, "clustered_p_value": fit.p_value,
                "p_value": h2_perm["p_value"], "absorb": absorb},
@@ -109,6 +121,10 @@ def run_by_year(panel: pd.DataFrame, spec: dict, *, n_permutations: int | None =
     seed, sign = int(v["seed"]), int(spec["expected_sign"])
     df = add_derived(panel, spec_columns(spec))
     pop, pop_log = select_population(df, spec)
+    if _continuous(spec):
+        xs = to_float(pop[spec["exposure"]])
+        pop = pop.copy()
+        pop[spec["exposure"]] = (xs - xs.mean()) / xs.std(ddof=1)
     years = to_float(pop["tax_year"])
 
     by_year = {}
@@ -126,6 +142,7 @@ def run_by_year(panel: pd.DataFrame, spec: dict, *, n_permutations: int | None =
     return to_jsonable({
         "generated_at": datetime.datetime.now().isoformat(timespec="seconds"),
         "theory_id": spec["theory_id"],
+        "exposure_type": "continuous" if _continuous(spec) else "binary",
         "settings": {"alpha": alpha, "effect_floor_sd": floor, "n_permutations": n_perm, "seed": seed,
                      "expected_sign": sign, "permutation_unit": spec["exposure_unit"],
                      "fdr_families": ["H1 over years", "H2 over years"],
