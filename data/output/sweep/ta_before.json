@@ -1,0 +1,907 @@
+{
+  "scheme": "ta",
+  "permutation_keep_paths": false,
+  "state_fixed_effects": false,
+  "n_permutations": 199,
+  "alpha": 0.05,
+  "effect_floor_sd": 0.1,
+  "fdr_family": "all H1 and H2 of the 40 cells (80 hypotheses)",
+  "summary": {
+    "cells": 40,
+    "verdicts": {
+      "supported": 0,
+      "weak": 0,
+      "unsupported": 40,
+      "reversed": 0
+    },
+    "cells_with_family_q_below_alpha": 21,
+    "cells_stopped_only_by_floor": 21,
+    "max_abs_std_effect": 0.06088500596624476
+  },
+  "cells": [
+    {
+      "cell": "sweep_program_expense_ratio_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.007 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1308697,
+      "counties": 3087,
+      "h1_r": 0.0067007927480530185,
+      "h1_p": 0.01,
+      "h1_null_sd": 0.0027184033438395114,
+      "h2_std_effect": 0.009420002197577753,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.02308124155953123,
+      "family_q_h1": 0.023529411764705882,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_poverty_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.8053)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1308702,
+      "counties": 3087,
+      "h1_r": -0.0008484237395339026,
+      "h1_p": 0.745,
+      "h1_null_sd": 0.0025103729178013938,
+      "h2_std_effect": -0.0007335404908991441,
+      "h2_p": 0.63,
+      "h2_clustered_p": 0.8715271513591107,
+      "family_q_h1": 0.8053333333333333,
+      "family_q_h2": 0.7753846153846153,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_unemployment_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap -0.017 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1308702,
+      "counties": 3087,
+      "h1_r": -0.016586410396281018,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.0023920729397851775,
+      "h2_std_effect": -0.017641633392671243,
+      "h2_p": 0.005,
+      "h2_clustered_p": 7.671992417389467e-05,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap -0.022 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1288805,
+      "counties": 3076,
+      "h1_r": -0.022185428360872526,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.0027083133662826396,
+      "h2_std_effect": -0.02370037188263868,
+      "h2_p": 0.005,
+      "h2_clustered_p": 2.9206826769742373e-09,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_food_desert_share",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.1366)",
+        "H1 gap -0.005 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1288805,
+      "counties": 3076,
+      "h1_r": -0.004648259747383603,
+      "h1_p": 0.07,
+      "h1_null_sd": 0.0026506140656429368,
+      "h2_std_effect": -0.006374064057993721,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.5231803501414523,
+      "family_q_h1": 0.13658536585365855,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.007 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1308766,
+      "counties": 3087,
+      "h1_r": 0.006575382737037731,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.00202886675772357,
+      "h2_std_effect": 0.0021882902939134364,
+      "h2_p": 0.18,
+      "h2_clustered_p": 0.5609811218933098,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.29387755102040813,
+      "significant_after_family_bh": [
+        "H1"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_poverty_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.007 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1308771,
+      "counties": 3087,
+      "h1_r": 0.007201703813720554,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.0019233756266524029,
+      "h2_std_effect": 0.007699234558261143,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.04583373341064076,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_unemployment_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.021 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1308771,
+      "counties": 3087,
+      "h1_r": 0.020774176538712566,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.0019736759126383722,
+      "h2_std_effect": 0.022817820292110137,
+      "h2_p": 0.005,
+      "h2_clustered_p": 4.194350582883793e-11,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.018 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1288872,
+      "counties": 3076,
+      "h1_r": 0.01762929056934185,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.0021287925300254237,
+      "h2_std_effect": 0.021277220568571478,
+      "h2_p": 0.005,
+      "h2_clustered_p": 9.736134906351516e-11,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_food_desert_share",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.05556)",
+        "H1 gap +0.005 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1288872,
+      "counties": 3076,
+      "h1_r": 0.004821082107388094,
+      "h1_p": 0.025,
+      "h1_null_sd": 0.0022112125672079774,
+      "h2_std_effect": 0.00567030512155764,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.3751931310394756,
+      "family_q_h1": 0.05555555555555555,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_expense_ratio_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap -0.038 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1309074,
+      "counties": 3087,
+      "h1_r": -0.03825903698971274,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.00425908787736372,
+      "h2_std_effect": -0.03402273388115206,
+      "h2_p": 0.005,
+      "h2_clustered_p": 1.0368173591086137e-18,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_expense_ratio_x_poverty_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap -0.018 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1309079,
+      "counties": 3087,
+      "h1_r": -0.01760689657105496,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.0037289929779258818,
+      "h2_std_effect": -0.019355783327867526,
+      "h2_p": 0.005,
+      "h2_clustered_p": 4.503607261911239e-05,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_expense_ratio_x_unemployment_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap -0.009 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1309079,
+      "counties": 3087,
+      "h1_r": -0.009030747112363203,
+      "h1_p": 0.015,
+      "h1_null_sd": 0.00336429349748464,
+      "h2_std_effect": -0.01163723636509434,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.021675402262986504,
+      "family_q_h1": 0.03428571428571429,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_expense_ratio_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.016 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1289176,
+      "counties": 3076,
+      "h1_r": 0.016385176869793624,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.003634170858145945,
+      "h2_std_effect": 0.01063806128147905,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.025797035200638134,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_fundraising_expense_ratio_x_food_desert_share",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.9316)",
+        "H1 gap +0.000 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1289176,
+      "counties": 3076,
+      "h1_r": 0.0002968589661177614,
+      "h1_p": 0.92,
+      "h1_null_sd": 0.003767171668271919,
+      "h2_std_effect": 0.0030286642966195518,
+      "h2_p": 0.155,
+      "h2_clustered_p": 0.8129123697616659,
+      "family_q_h1": 0.9316455696202532,
+      "family_q_h2": 0.25833333333333336,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.6903)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1120367,
+      "counties": 3083,
+      "h1_r": -0.0006799549927931569,
+      "h1_p": 0.52,
+      "h1_null_sd": 0.0009859916856283675,
+      "h2_std_effect": -0.0006798893168375319,
+      "h2_p": 0.335,
+      "h2_clustered_p": 0.6228574801838996,
+      "family_q_h1": 0.6903225806451614,
+      "family_q_h2": 0.4962962962962963,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_poverty_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.7175)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1120371,
+      "counties": 3083,
+      "h1_r": -0.0005304830353811028,
+      "h1_p": 0.565,
+      "h1_null_sd": 0.0009662301938115707,
+      "h2_std_effect": -0.00040345852637959804,
+      "h2_p": 0.64,
+      "h2_clustered_p": 0.7263745266620533,
+      "family_q_h1": 0.7174603174603174,
+      "family_q_h2": 0.7757575757575758,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_unemployment_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.6903)",
+        "H1 gap +0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1120371,
+      "counties": 3083,
+      "h1_r": 0.0006310622985089038,
+      "h1_p": 0.535,
+      "h1_null_sd": 0.000940679695647954,
+      "h2_std_effect": 0.0007881270928092145,
+      "h2_p": 0.1,
+      "h2_clustered_p": 0.5379213362133185,
+      "family_q_h1": 0.6903225806451614,
+      "family_q_h2": 0.18604651162790697,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.8156)",
+        "H1 gap +0.000 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1103445,
+      "counties": 3072,
+      "h1_r": 0.0002608357350613632,
+      "h1_p": 0.785,
+      "h1_null_sd": 0.0010371024017555895,
+      "h2_std_effect": 0.000392664962267674,
+      "h2_p": 0.525,
+      "h2_clustered_p": 0.7283029970492481,
+      "family_q_h1": 0.8155844155844156,
+      "family_q_h2": 0.6903225806451614,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_food_desert_share",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.8053)",
+        "H1 gap +0.000 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1103445,
+      "counties": 3072,
+      "h1_r": 0.0003101003515435517,
+      "h1_p": 0.755,
+      "h1_null_sd": 0.0010023235324456896,
+      "h2_std_effect": 0.0003773704605094349,
+      "h2_p": 0.685,
+      "h2_clustered_p": 0.7219613244722228,
+      "family_q_h1": 0.8053333333333333,
+      "family_q_h2": 0.7999999999999999,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_operating_margin_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.5455)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1486152,
+      "counties": 3102,
+      "h1_r": -0.000726222190614644,
+      "h1_p": 0.375,
+      "h1_null_sd": 0.0007786282702930177,
+      "h2_std_effect": -0.00021472663896251247,
+      "h2_p": 0.72,
+      "h2_clustered_p": 0.8539372107925198,
+      "family_q_h1": 0.5454545454545454,
+      "family_q_h2": 0.7999999999999999,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_operating_margin_x_poverty_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.4)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1486157,
+      "counties": 3102,
+      "h1_r": -0.0009500095115229991,
+      "h1_p": 0.255,
+      "h1_null_sd": 0.0008429311162325528,
+      "h2_std_effect": -0.0017391154187320007,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.1610033824548301,
+      "family_q_h1": 0.39999999999999997,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_operating_margin_x_unemployment_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.1714)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1486157,
+      "counties": 3102,
+      "h1_r": -0.0013686220865773027,
+      "h1_p": 0.09,
+      "h1_null_sd": 0.0008316781730343624,
+      "h2_std_effect": -0.002398139832327119,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.02340705616759711,
+      "family_q_h1": 0.1714285714285714,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_operating_margin_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.6759)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463425,
+      "counties": 3091,
+      "h1_r": -0.000617499882238646,
+      "h1_p": 0.49,
+      "h1_null_sd": 0.0008985751133211628,
+      "h2_std_effect": -0.0019402892057089926,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.002670019797249475,
+      "family_q_h1": 0.6758620689655173,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_operating_margin_x_food_desert_share",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.8769)",
+        "H1 gap +0.000 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463425,
+      "counties": 3091,
+      "h1_r": 0.00014623480954495166,
+      "h1_p": 0.855,
+      "h1_null_sd": 0.0007839020606897781,
+      "h2_std_effect": 0.0002746895197286704,
+      "h2_p": 0.705,
+      "h2_clustered_p": 0.8325224137213508,
+      "family_q_h1": 0.876923076923077,
+      "family_q_h2": 0.7999999999999999,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_equity_ratio_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.1026)",
+        "H1 gap -0.002 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1486152,
+      "counties": 3102,
+      "h1_r": -0.0016416287374794827,
+      "h1_p": 0.05,
+      "h1_null_sd": 0.0007983819966565945,
+      "h2_std_effect": -0.0018498439749842805,
+      "h2_p": 0.01,
+      "h2_clustered_p": 0.016072579159075565,
+      "family_q_h1": 0.10256410256410256,
+      "family_q_h2": 0.023529411764705882,
+      "significant_after_family_bh": [
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_equity_ratio_x_poverty_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.2261)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1486157,
+      "counties": 3102,
+      "h1_r": -0.0010919232069419656,
+      "h1_p": 0.13,
+      "h1_null_sd": 0.0007572437193379113,
+      "h2_std_effect": -0.0009834835821924512,
+      "h2_p": 0.115,
+      "h2_clustered_p": 0.3115290133667149,
+      "family_q_h1": 0.22608695652173913,
+      "family_q_h2": 0.2090909090909091,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_equity_ratio_x_unemployment_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.8)",
+        "H1 gap -0.000 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1486157,
+      "counties": 3102,
+      "h1_r": -0.00025410050544250707,
+      "h1_p": 0.705,
+      "h1_null_sd": 0.000723249991483195,
+      "h2_std_effect": -3.8864720609710784e-05,
+      "h2_p": 0.935,
+      "h2_clustered_p": 0.9444430947181953,
+      "family_q_h1": 0.7999999999999999,
+      "family_q_h2": 0.9350000000000002,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_equity_ratio_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.4462)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463425,
+      "counties": 3091,
+      "h1_r": -0.0009091422599938195,
+      "h1_p": 0.29,
+      "h1_null_sd": 0.0008785469390787265,
+      "h2_std_effect": -0.0004620151664403218,
+      "h2_p": 0.395,
+      "h2_clustered_p": 0.4646786675615058,
+      "family_q_h1": 0.4461538461538461,
+      "family_q_h2": 0.5543859649122808,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_equity_ratio_x_food_desert_share",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.7562)",
+        "H1 gap -0.000 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463425,
+      "counties": 3091,
+      "h1_r": -0.0004605996441469354,
+      "h1_p": 0.605,
+      "h1_null_sd": 0.0008373693608361749,
+      "h2_std_effect": -0.0003745254277246725,
+      "h2_p": 0.675,
+      "h2_clustered_p": 0.8729305724964547,
+      "family_q_h1": 0.75625,
+      "family_q_h2": 0.7999999999999999,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.483)",
+        "H1 gap +0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463635,
+      "counties": 3102,
+      "h1_r": 0.0008000894272276709,
+      "h1_p": 0.32,
+      "h1_null_sd": 0.0008102595609707663,
+      "h2_std_effect": 0.000766494340900678,
+      "h2_p": 0.245,
+      "h2_clustered_p": 0.2880386378456875,
+      "family_q_h1": 0.4830188679245283,
+      "family_q_h2": 0.392,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_poverty_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.2133)",
+        "H1 gap +0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463640,
+      "counties": 3102,
+      "h1_r": 0.0012981625550358591,
+      "h1_p": 0.12,
+      "h1_null_sd": 0.0007991095597801053,
+      "h2_std_effect": 0.001214127170082345,
+      "h2_p": 0.07,
+      "h2_clustered_p": 0.10221622020432874,
+      "family_q_h1": 0.21333333333333332,
+      "family_q_h2": 0.13658536585365855,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_unemployment_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.2468)",
+        "H1 gap +0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463640,
+      "counties": 3102,
+      "h1_r": 0.0011764497356501068,
+      "h1_p": 0.145,
+      "h1_null_sd": 0.0008377200736498757,
+      "h2_std_effect": 0.0012218776342997188,
+      "h2_p": 0.035,
+      "h2_clustered_p": 0.03486261372178655,
+      "family_q_h1": 0.24680851063829787,
+      "family_q_h2": 0.07567567567567568,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.004 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1441156,
+      "counties": 3091,
+      "h1_r": 0.003794698702384042,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.0008598491938388818,
+      "h2_std_effect": 0.0038589550689411434,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.06230808776503302,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_food_desert_share",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.8)",
+        "H1 gap +0.000 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1441156,
+      "counties": 3091,
+      "h1_r": 0.00027159124399133854,
+      "h1_p": 0.73,
+      "h1_null_sd": 0.0008291366321960214,
+      "h2_std_effect": 0.00023569089530314883,
+      "h2_p": 0.725,
+      "h2_clustered_p": 0.7912154493829546,
+      "family_q_h1": 0.7999999999999999,
+      "family_q_h2": 0.7999999999999999,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_revenue_concentration_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.8156)",
+        "H1 gap +0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1486152,
+      "counties": 3102,
+      "h1_r": 0.0012224389373786755,
+      "h1_p": 0.775,
+      "h1_null_sd": 0.0045823240818387186,
+      "h2_std_effect": -0.0019967345303548486,
+      "h2_p": 0.535,
+      "h2_clustered_p": 0.7349230546292678,
+      "family_q_h1": 0.8155844155844156,
+      "family_q_h2": 0.6903225806451614,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_revenue_concentration_x_poverty_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.022 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1486157,
+      "counties": 3102,
+      "h1_r": 0.021563245158297807,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.0038199091370101686,
+      "h2_std_effect": 0.02103453191381169,
+      "h2_p": 0.005,
+      "h2_clustered_p": 0.001403492012764589,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_revenue_concentration_x_unemployment_rate",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.044 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1486157,
+      "counties": 3102,
+      "h1_r": 0.04402200781159177,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.004099111778130438,
+      "h2_std_effect": 0.04474548241652842,
+      "h2_p": 0.005,
+      "h2_clustered_p": 6.226984828489907e-13,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_revenue_concentration_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.059 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463425,
+      "counties": 3091,
+      "h1_r": 0.059281527295541966,
+      "h1_p": 0.005,
+      "h1_null_sd": 0.004001332607428082,
+      "h2_std_effect": 0.06088500596624476,
+      "h2_p": 0.005,
+      "h2_clustered_p": 2.1763426461131808e-19,
+      "family_q_h1": 0.0125,
+      "family_q_h2": 0.0125,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_revenue_concentration_x_food_desert_share",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.1026)",
+        "H1 gap +0.007 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463425,
+      "counties": 3091,
+      "h1_r": 0.007275773285295989,
+      "h1_p": 0.05,
+      "h1_null_sd": 0.00370922433488794,
+      "h2_std_effect": 0.003161787381713182,
+      "h2_p": 0.395,
+      "h2_clustered_p": 0.8352259679207532,
+      "family_q_h1": 0.10256410256410256,
+      "family_q_h2": 0.5543859649122808,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    }
+  ],
+  "errors": [],
+  "survivors": [],
+  "seconds": 3692.8
+}

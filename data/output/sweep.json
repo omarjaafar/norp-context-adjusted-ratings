@@ -1,0 +1,137 @@
+{
+  "parts": {
+    "main": {
+      "scheme": "fixed",
+      "n_permutations": 999,
+      "seconds": 8157.8,
+      "cells": 8,
+      "verdicts": {
+        "supported": 0,
+        "weak": 0,
+        "unsupported": 8,
+        "reversed": 0
+      },
+      "cells_with_family_q_below_alpha": 3,
+      "cells_stopped_only_by_floor": 3,
+      "max_abs_std_effect": 0.022185428360872526
+    },
+    "ta_before": {
+      "scheme": "ta",
+      "n_permutations": 199,
+      "seconds": 3692.8,
+      "cells": 40,
+      "verdicts": {
+        "supported": 0,
+        "weak": 0,
+        "unsupported": 40,
+        "reversed": 0
+      },
+      "cells_with_family_q_below_alpha": 21,
+      "cells_stopped_only_by_floor": 21,
+      "max_abs_std_effect": 0.06088500596624476
+    },
+    "ta_after": {
+      "scheme": "fixed",
+      "n_permutations": 199,
+      "seconds": 1498.2,
+      "cells": 40,
+      "verdicts": {
+        "supported": 0,
+        "weak": 0,
+        "unsupported": 40,
+        "reversed": 0
+      },
+      "cells_with_family_q_below_alpha": 16,
+      "cells_stopped_only_by_floor": 16,
+      "max_abs_std_effect": 0.059281527295541966
+    }
+  },
+  "main_cells": [
+    {
+      "cell": "sweep_program_expense_ratio_x_need_index",
+      "verdict": "unsupported",
+      "h1_r": 0.0067007927480530185,
+      "h2_std_effect": 0.00764195511820767,
+      "family_q_h1": 0.28159999999999996,
+      "family_q_h2": 0.05485714285714286
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "h1_r": -0.022185428360872526,
+      "h2_std_effect": -0.018557837525870986,
+      "family_q_h1": 0.0032,
+      "family_q_h2": 0.0032
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_need_index",
+      "verdict": "unsupported",
+      "h1_r": 0.006575382737037731,
+      "h2_std_effect": 0.0036137754214395027,
+      "family_q_h1": 0.136,
+      "family_q_h2": 0.28159999999999996
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "h1_r": 0.01762929056934185,
+      "h2_std_effect": 0.01581026183747573,
+      "family_q_h1": 0.0032,
+      "family_q_h2": 0.0032
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_need_index",
+      "verdict": "unsupported",
+      "h1_r": -0.0006799549927931569,
+      "h2_std_effect": -0.0005931297514732804,
+      "family_q_h1": 0.6141538461538462,
+      "family_q_h2": 0.6013333333333334
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "h1_r": 0.0002608357350613632,
+      "h2_std_effect": -0.00016095809530588412,
+      "family_q_h1": 0.821,
+      "family_q_h2": 0.821
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_need_index",
+      "verdict": "unsupported",
+      "h1_r": 0.0008000894272276709,
+      "h2_std_effect": 0.0002069386763186923,
+      "family_q_h1": 0.6013333333333334,
+      "family_q_h2": 0.821
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "h1_r": 0.003794698702384042,
+      "h2_std_effect": 0.002946083317506258,
+      "family_q_h1": 0.005333333333333333,
+      "family_q_h2": 0.0032
+    }
+  ],
+  "before_after": {
+    "cells_significant_before": 21,
+    "cells_significant_after": 16,
+    "still_significant_after": [
+      "sweep_admin_expense_ratio_x_avg_housing_burden",
+      "sweep_admin_expense_ratio_x_food_desert_share",
+      "sweep_admin_expense_ratio_x_poverty_rate",
+      "sweep_admin_expense_ratio_x_unemployment_rate",
+      "sweep_fundraising_expense_ratio_x_need_index",
+      "sweep_fundraising_expense_ratio_x_poverty_rate",
+      "sweep_fundraising_expense_ratio_x_unemployment_rate",
+      "sweep_liabilities_to_assets_x_avg_housing_burden",
+      "sweep_operating_margin_x_poverty_rate",
+      "sweep_operating_margin_x_unemployment_rate",
+      "sweep_program_expense_ratio_x_avg_housing_burden",
+      "sweep_program_expense_ratio_x_food_desert_share",
+      "sweep_program_expense_ratio_x_unemployment_rate",
+      "sweep_revenue_concentration_x_avg_housing_burden",
+      "sweep_revenue_concentration_x_poverty_rate",
+      "sweep_revenue_concentration_x_unemployment_rate"
+    ]
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "scheme": "fixed",
+  "permutation_keep_paths": true,
+  "state_fixed_effects": true,
+  "n_permutations": 999,
+  "alpha": 0.05,
+  "effect_floor_sd": 0.1,
+  "fdr_family": "all H1 and H2 of the 8 cells (16 hypotheses)",
+  "summary": {
+    "cells": 8,
+    "verdicts": {
+      "supported": 0,
+      "weak": 0,
+      "unsupported": 8,
+      "reversed": 0
+    },
+    "cells_with_family_q_below_alpha": 3,
+    "cells_stopped_only_by_floor": 3,
+    "max_abs_std_effect": 0.022185428360872526
+  },
+  "cells": [
+    {
+      "cell": "sweep_program_expense_ratio_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.2816)",
+        "H1 gap +0.007 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1308697,
+      "counties": 3087,
+      "h1_r": 0.0067007927480530185,
+      "h1_p": 0.176,
+      "h1_null_sd": 0.0050182386191336345,
+      "h2_std_effect": 0.00764195511820767,
+      "h2_p": 0.024,
+      "h2_clustered_p": 0.08659693488362304,
+      "family_q_h1": 0.28159999999999996,
+      "family_q_h2": 0.05485714285714286,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap -0.022 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1288805,
+      "counties": 3076,
+      "h1_r": -0.022185428360872526,
+      "h1_p": 0.001,
+      "h1_null_sd": 0.0051206626102651654,
+      "h2_std_effect": -0.018557837525870986,
+      "h2_p": 0.001,
+      "h2_clustered_p": 0.002136417435406169,
+      "family_q_h1": 0.0032,
+      "family_q_h2": 0.0032,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.136)",
+        "H1 gap +0.007 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1308766,
+      "counties": 3087,
+      "h1_r": 0.006575382737037731,
+      "h1_p": 0.068,
+      "h1_null_sd": 0.003583546933590161,
+      "h2_std_effect": 0.0036137754214395027,
+      "h2_p": 0.168,
+      "h2_clustered_p": 0.3432709788809381,
+      "family_q_h1": 0.136,
+      "family_q_h2": 0.28159999999999996,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.018 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1288872,
+      "counties": 3076,
+      "h1_r": 0.01762929056934185,
+      "h1_p": 0.001,
+      "h1_null_sd": 0.003703468636843206,
+      "h2_std_effect": 0.01581026183747573,
+      "h2_p": 0.001,
+      "h2_clustered_p": 0.0004960483236602721,
+      "family_q_h1": 0.0032,
+      "family_q_h2": 0.0032,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": true
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.6142)",
+        "H1 gap -0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1120367,
+      "counties": 3083,
+      "h1_r": -0.0006799549927931569,
+      "h1_p": 0.499,
+      "h1_null_sd": 0.0009582199910994797,
+      "h2_std_effect": -0.0005931297514732804,
+      "h2_p": 0.451,
+      "h2_clustered_p": 0.5997389323227846,
+      "family_q_h1": 0.6141538461538462,
+      "family_q_h2": 0.6013333333333334,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.821)",
+        "H1 gap +0.000 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1103445,
+      "counties": 3072,
+      "h1_r": 0.0002608357350613632,
+      "h1_p": 0.781,
+      "h1_null_sd": 0.0009486495265603614,
+      "h2_std_effect": -0.00016095809530588412,
+      "h2_p": 0.81,
+      "h2_clustered_p": 0.8962968281825278,
+      "family_q_h1": 0.821,
+      "family_q_h2": 0.821,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_need_index",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 not significant after FDR (q = 0.6013)",
+        "H1 gap +0.001 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1463635,
+      "counties": 3102,
+      "h1_r": 0.0008000894272276709,
+      "h1_p": 0.423,
+      "h1_null_sd": 0.0010332081193755757,
+      "h2_std_effect": 0.0002069386763186923,
+      "h2_p": 0.821,
+      "h2_clustered_p": 0.7806088905981486,
+      "family_q_h1": 0.6013333333333334,
+      "family_q_h2": 0.821,
+      "significant_after_family_bh": [],
+      "stopped_only_by_floor": false,
+      "replicated_held_out_states": false
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_avg_housing_burden",
+      "verdict": "unsupported",
+      "reasons": [
+        "H1 gap +0.004 SD is below the 0.1 SD floor"
+      ],
+      "n_rows": 1441156,
+      "counties": 3091,
+      "h1_r": 0.003794698702384042,
+      "h1_p": 0.002,
+      "h1_null_sd": 0.0011020079721321204,
+      "h2_std_effect": 0.002946083317506258,
+      "h2_p": 0.001,
+      "h2_clustered_p": 0.11277003878064376,
+      "family_q_h1": 0.005333333333333333,
+      "family_q_h2": 0.0032,
+      "significant_after_family_bh": [
+        "H1",
+        "H2"
+      ],
+      "stopped_only_by_floor": true,
+      "replicated_held_out_states": false
+    }
+  ],
+  "errors": [],
+  "survivors": [],
+  "seconds": 8157.8
+}
