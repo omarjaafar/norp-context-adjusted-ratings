@@ -1,0 +1,40 @@
+{
+  "theories": [
+    {
+      "theory_id": "hard_pressed_county_rating_penalty",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "gate_overrides": [],
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.010412186033385546,
+        "change_per_year_sd": -0.004837319989928942,
+        "p_value": 0.13686445937876496
+      }
+    },
+    {
+      "theory_id": "unemployment_leverage_link",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "gate_overrides": [],
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.10861196196149693,
+        "change_per_year_sd": -0.0007041330331583017,
+        "p_value": 0.1495348560960592
+      }
+    }
+  ],
+  "plan_failures": [],
+  "run_errors": [],
+  "llm_usage": {
+    "calls": 0,
+    "cache_hits": 5,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cached_input_tokens": 7892,
+    "cached_output_tokens": 2722
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "model": "claude-sonnet-5-5",
+  "replayed": false,
+  "assumption_1": {
+    "texts": 4,
+    "schema_valid": 4,
+    "pass_schema_and_review": 4,
+    "rate": 1.0,
+    "needed_rate": 0.85,
+    "skipped_theories": [
+      "health_margin",
+      "education_fundraising",
+      "crime_overhead"
+    ],
+    "rows": [
+      {
+        "theory_id": "ratings_fairness",
+        "variant": "text",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "ratings_fairness",
+        "variant": "paraphrase",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "unemployment_vulnerability",
+        "variant": "text",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "unemployment_vulnerability",
+        "variant": "paraphrase",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      }
+    ]
+  },
+  "assumption_2": {
+    "live_calls": 9,
+    "cache_hits": 0,
+    "input_tokens": 14456,
+    "output_tokens": 5792,
+    "planning_cost_usd": 0.08683199999999999,
+    "planning_seconds_this_run": 48.3259711265564,
+    "projected_20_theories_usd": 0.43416,
+    "limit_usd": 15.0,
+    "note": "cost counts every planning call, cached or not, at the model's list price; the statistics after the spec make no LLM calls"
+  }
+}
