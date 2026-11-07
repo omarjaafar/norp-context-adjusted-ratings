@@ -213,3 +213,33 @@ def test_residualizer_matches_fixed_effects_coefficient():
     fe = fixed_effects(df, "y", "x", controls=["c"], absorb=["year", "cat"])
     res = Residualizer.from_panel(df, controls=["c"], absorb=["year", "cat"])
     assert fwl_coefficient(res(df["y"]), res(df["x"])) == pytest.approx(fe.effect, rel=1e-6)
+
+
+def test_dummy_projector_matches_alternating_projections():
+    from theorylab.executor import DummyProjector
+    rng = np.random.default_rng(7)
+    n = 5000
+    state = rng.integers(0, 12, n)
+    category = (state + rng.integers(0, 3, n)) % 9     # correlated with state, so sweeps iterate
+    year = rng.integers(0, 5, n)
+    codes = [year, category, state]
+    X = np.column_stack([rng.normal(size=n) + 0.5 * state, rng.normal(size=n)])
+    slow, sweeps = demean(X, codes, tol=1e-13)
+    assert sweeps > 1
+    fast = DummyProjector(codes).residual(X)
+    assert np.allclose(fast, slow, atol=1e-8)
+    for c in codes:  # no group mean left in any factor
+        assert np.abs(np.bincount(c, weights=fast[:, 0]) / np.bincount(c)).max() < 1e-9
+
+
+def test_residualizer_uses_the_exact_projection_for_several_small_factors():
+    rng = np.random.default_rng(8)
+    df = pd.DataFrame({"a": rng.integers(0, 6, 3000), "b": rng.integers(0, 4, 3000),
+                       "c": rng.normal(size=3000)})
+    res = Residualizer.from_panel(df, controls=["c"], absorb=["a", "b"])
+    assert res.direct is not None
+    v = rng.normal(size=3000) + df["a"].to_numpy()
+    X = np.column_stack([np.ones(3000), df["c"], pd.get_dummies(df["a"], drop_first=True),
+                         pd.get_dummies(df["b"], drop_first=True)]).astype(float)
+    ols = v - X @ np.linalg.lstsq(X, v, rcond=None)[0]
+    assert np.allclose(res(v), ols, atol=1e-8)

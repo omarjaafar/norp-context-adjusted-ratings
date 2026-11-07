@@ -15,7 +15,8 @@ Conventions shared by every method:
   deviation in the estimation sample, so the Validator's effect-size floor is in
   outcome SD units for every method.
 - Fixed effects are absorbed by alternating projections (demeaning), so a
-  2.4M-row panel never builds a dummy matrix. Standard errors are clustered
+  2.4M-row panel never builds a dummy matrix. The Residualizer (called once per
+  permutation draw) projects exactly instead when the factors have few levels. Standard errors are clustered
   (CR1, the same small-sample factor statsmodels uses) when `cluster` is given.
 """
 
@@ -386,6 +387,47 @@ def lagged_outcome(df: pd.DataFrame, outcome: str, exposure: str, controls=(), e
 
 # ---------------------------------------------------------------- partialling out
 
+class DummyProjector:
+    """Exact residuals on the indicators of several factors with few levels in all.
+
+    Solves the normal equations of the dummy regression (G = D'D is levels x levels,
+    built from cross-tab counts; pinv handles the collinearity between factors), so
+    a call is a few bincounts. One refinement pass removes rounding left by the solve.
+    Gives the same residuals as demean() to its tolerance, without iterating.
+    """
+
+    MAX_LEVELS = 5000
+
+    def __init__(self, codes: list):
+        codes = [np.asarray(c) for c in codes]
+        sizes = [int(c.max()) + 1 for c in codes]
+        offsets = np.cumsum([0] + sizes[:-1])
+        # Rows with the same level of every factor get the same fitted value, so work on
+        # the observed combinations: A (combinations x levels) is the dummy matrix per combination.
+        combos, self.combo = np.unique(np.column_stack(codes), axis=0, return_inverse=True)
+        self.combo = self.combo.ravel()
+        self.A = np.zeros((len(combos), sum(sizes)))
+        for k, o in enumerate(offsets):
+            self.A[np.arange(len(combos)), o + combos[:, k]] = 1.0
+        counts = np.bincount(self.combo, minlength=len(combos)).astype("float64")
+        G = self.A.T @ (self.A * counts[:, None])     # D'D
+        self.G_inv = np.linalg.pinv(G)
+
+    def _fitted(self, X: np.ndarray) -> np.ndarray:
+        sums = np.column_stack([np.bincount(self.combo, weights=X[:, j], minlength=len(self.A))
+                                for j in range(X.shape[1])])
+        return (self.A @ (self.G_inv @ (self.A.T @ sums)))[self.combo]
+
+    def residual(self, values: np.ndarray) -> np.ndarray:
+        X = np.array(values, dtype="float64", copy=True)
+        squeeze = X.ndim == 1
+        if squeeze:
+            X = X[:, None]
+        for _ in range(2):
+            X -= self._fitted(X)
+        return X[:, 0] if squeeze else X
+
+
 class Residualizer:
     """Removes absorbed fixed effects and numeric controls from any column (Frisch-Waugh-Lovell).
 
@@ -397,8 +439,12 @@ class Residualizer:
     def __init__(self, codes: list, controls: np.ndarray | None, tol: float = 1e-10):
         self.codes = codes
         self.tol = tol
+        # Several factors with few levels in all (tax year x category x state is ~80):
+        # project exactly, once per call, instead of alternating projections per draw.
+        self.direct = (DummyProjector(codes) if len(codes) > 1
+                       and sum(int(c.max()) + 1 for c in codes) <= DummyProjector.MAX_LEVELS else None)
         if controls is not None and controls.size:
-            self.C, _ = demean(controls, codes, tol=tol)
+            self.C = self._absorb(np.asarray(controls, dtype="float64"))
             self.CtC_inv = np.linalg.pinv(self.C.T @ self.C)
         else:
             self.C = None
@@ -420,8 +466,13 @@ class Residualizer:
             raise ValueError("absorbed factors have missing values; select the population first")
         return cls([pd.factorize(df[a], sort=True)[0] for a in absorb], C, tol=tol)
 
+    def _absorb(self, v: np.ndarray) -> np.ndarray:
+        if self.direct is not None:
+            return self.direct.residual(v)
+        return demean(v, self.codes, tol=self.tol)[0]
+
     def __call__(self, v) -> np.ndarray:
-        r, _ = demean(np.asarray(v, dtype="float64"), self.codes, tol=self.tol)
+        r = self._absorb(np.asarray(v, dtype="float64"))
         if self.C is not None:
             r = r - self.C @ (self.CtC_inv @ (self.C.T @ r))
         return r
