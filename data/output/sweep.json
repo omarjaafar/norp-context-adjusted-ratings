@@ -3,17 +3,17 @@
     "main": {
       "scheme": "fixed",
       "n_permutations": 999,
-      "seconds": 8157.8,
-      "cells": 8,
+      "seconds": 4572.6,
+      "cells": 28,
       "verdicts": {
         "supported": 0,
         "weak": 0,
-        "unsupported": 8,
+        "unsupported": 28,
         "reversed": 0
       },
-      "cells_with_family_q_below_alpha": 3,
-      "cells_stopped_only_by_floor": 3,
-      "max_abs_std_effect": 0.022185428360872526
+      "cells_with_family_q_below_alpha": 7,
+      "cells_stopped_only_by_floor": 7,
+      "max_abs_std_effect": 0.03971413727050564
     },
     "ta_before": {
       "scheme": "ta",
@@ -33,7 +33,7 @@
     "ta_after": {
       "scheme": "fixed",
       "n_permutations": 199,
-      "seconds": 1498.2,
+      "seconds": 1886.7,
       "cells": 40,
       "verdicts": {
         "supported": 0,
@@ -41,93 +41,249 @@
         "unsupported": 40,
         "reversed": 0
       },
-      "cells_with_family_q_below_alpha": 16,
-      "cells_stopped_only_by_floor": 16,
-      "max_abs_std_effect": 0.059281527295541966
+      "cells_with_family_q_below_alpha": 12,
+      "cells_stopped_only_by_floor": 12,
+      "max_abs_std_effect": 0.05928152729554198
     }
   },
   "main_cells": [
     {
       "cell": "sweep_program_expense_ratio_x_need_index",
       "verdict": "unsupported",
-      "h1_r": 0.0067007927480530185,
-      "h2_std_effect": 0.00764195511820767,
-      "family_q_h1": 0.28159999999999996,
-      "family_q_h2": 0.05485714285714286
+      "h1_r": 0.006700792748053017,
+      "h2_std_effect": 0.007641955118207668,
+      "family_q_h1": 0.2986666666666667,
+      "family_q_h2": 0.3408695652173913
     },
     {
       "cell": "sweep_program_expense_ratio_x_avg_housing_burden",
       "verdict": "unsupported",
-      "h1_r": -0.022185428360872526,
-      "h2_std_effect": -0.018557837525870986,
-      "family_q_h1": 0.0032,
-      "family_q_h2": 0.0032
+      "h1_r": -0.02218542836087253,
+      "h2_std_effect": -0.018557837525870976,
+      "family_q_h1": 0.006222222222222223,
+      "family_q_h2": 0.051333333333333335
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_chr_hs_completion",
+      "verdict": "unsupported",
+      "h1_r": 0.004607414979720218,
+      "h2_std_effect": -0.0026572498694509067,
+      "family_q_h1": 0.5561379310344827,
+      "family_q_h2": 0.8536585365853658
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_chr_poor_fair_health",
+      "verdict": "unsupported",
+      "h1_r": 0.015595021124569139,
+      "h2_std_effect": 0.011231619970719,
+      "family_q_h1": 0.17230769230769233,
+      "family_q_h2": 0.22088888888888886
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_chr_some_college",
+      "verdict": "unsupported",
+      "h1_r": -0.02897414127360835,
+      "h2_std_effect": -0.03349577463878745,
+      "family_q_h1": 0.006222222222222223,
+      "family_q_h2": 0.006222222222222223
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_chr_uninsured",
+      "verdict": "unsupported",
+      "h1_r": 0.006592471090688695,
+      "h2_std_effect": 0.0032615602831997867,
+      "family_q_h1": 0.54,
+      "family_q_h2": 0.867404255319149
+    },
+    {
+      "cell": "sweep_program_expense_ratio_x_chr_violent_crime_rate",
+      "verdict": "unsupported",
+      "h1_r": -0.037504002988349654,
+      "h2_std_effect": -0.03971413727050564,
+      "family_q_h1": 0.006222222222222223,
+      "family_q_h2": 0.006222222222222223
     },
     {
       "cell": "sweep_admin_expense_ratio_x_need_index",
       "verdict": "unsupported",
-      "h1_r": 0.006575382737037731,
-      "h2_std_effect": 0.0036137754214395027,
-      "family_q_h1": 0.136,
-      "family_q_h2": 0.28159999999999996
+      "h1_r": 0.00657538273703773,
+      "h2_std_effect": 0.0036137754214395044,
+      "family_q_h1": 0.217,
+      "family_q_h2": 0.6408888888888888
     },
     {
       "cell": "sweep_admin_expense_ratio_x_avg_housing_burden",
       "verdict": "unsupported",
-      "h1_r": 0.01762929056934185,
-      "h2_std_effect": 0.01581026183747573,
-      "family_q_h1": 0.0032,
-      "family_q_h2": 0.0032
+      "h1_r": 0.017629290569341843,
+      "h2_std_effect": 0.01581026183747574,
+      "family_q_h1": 0.006222222222222223,
+      "family_q_h2": 0.015272727272727273
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_chr_hs_completion",
+      "verdict": "unsupported",
+      "h1_r": -0.011091119663652973,
+      "h2_std_effect": -0.005117816479937942,
+      "family_q_h1": 0.015272727272727273,
+      "family_q_h2": 0.5384615384615384
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_chr_poor_fair_health",
+      "verdict": "unsupported",
+      "h1_r": -0.0038828793499986695,
+      "h2_std_effect": 0.004047947548663452,
+      "family_q_h1": 0.9385185185185185,
+      "family_q_h2": 0.6408888888888888
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_chr_some_college",
+      "verdict": "unsupported",
+      "h1_r": 0.007220396937139113,
+      "h2_std_effect": 0.016383575226018115,
+      "family_q_h1": 0.212,
+      "family_q_h2": 0.006222222222222223
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_chr_uninsured",
+      "verdict": "unsupported",
+      "h1_r": -0.0019237161885782012,
+      "h2_std_effect": 0.003775563932558053,
+      "family_q_h1": 0.8536585365853658,
+      "family_q_h2": 0.8341052631578947
+    },
+    {
+      "cell": "sweep_admin_expense_ratio_x_chr_violent_crime_rate",
+      "verdict": "unsupported",
+      "h1_r": 0.026755071134474916,
+      "h2_std_effect": 0.031046848093115486,
+      "family_q_h1": 0.006222222222222223,
+      "family_q_h2": 0.006222222222222223
     },
     {
       "cell": "sweep_fundraising_efficiency_x_need_index",
       "verdict": "unsupported",
-      "h1_r": -0.0006799549927931569,
+      "h1_r": -0.0006799549927931571,
       "h2_std_effect": -0.0005931297514732804,
-      "family_q_h1": 0.6141538461538462,
-      "family_q_h2": 0.6013333333333334
+      "family_q_h1": 0.8673777777777777,
+      "family_q_h2": 0.8673777777777777
     },
     {
       "cell": "sweep_fundraising_efficiency_x_avg_housing_burden",
       "verdict": "unsupported",
-      "h1_r": 0.0002608357350613632,
-      "h2_std_effect": -0.00016095809530588412,
-      "family_q_h1": 0.821,
-      "family_q_h2": 0.821
+      "h1_r": 0.0002608357350613638,
+      "h2_std_effect": -0.0001609580953058839,
+      "family_q_h1": 0.9078461538461539,
+      "family_q_h2": 0.9385185185185185
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_chr_hs_completion",
+      "verdict": "unsupported",
+      "h1_r": -0.0007408506444280623,
+      "h2_std_effect": -0.0010558559006022515,
+      "family_q_h1": 0.8536585365853658,
+      "family_q_h2": 0.6408888888888888
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_chr_poor_fair_health",
+      "verdict": "unsupported",
+      "h1_r": 0.0004180414969331546,
+      "h2_std_effect": 0.00047166172426908677,
+      "family_q_h1": 0.9062857142857144,
+      "family_q_h2": 0.9062857142857144
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_chr_some_college",
+      "verdict": "unsupported",
+      "h1_r": -7.938857033060286e-05,
+      "h2_std_effect": -0.000534964105210387,
+      "family_q_h1": 0.966,
+      "family_q_h2": 0.8673777777777777
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_chr_uninsured",
+      "verdict": "unsupported",
+      "h1_r": 0.00011661251920918807,
+      "h2_std_effect": 0.0023198004307110735,
+      "family_q_h1": 0.966,
+      "family_q_h2": 0.48832000000000003
+    },
+    {
+      "cell": "sweep_fundraising_efficiency_x_chr_violent_crime_rate",
+      "verdict": "unsupported",
+      "h1_r": 0.00016984332708001615,
+      "h2_std_effect": -0.00039809472475865623,
+      "family_q_h1": 0.9078461538461539,
+      "family_q_h2": 0.8673777777777777
     },
     {
       "cell": "sweep_liabilities_to_assets_x_need_index",
       "verdict": "unsupported",
-      "h1_r": 0.0008000894272276709,
-      "h2_std_effect": 0.0002069386763186923,
-      "family_q_h1": 0.6013333333333334,
-      "family_q_h2": 0.821
+      "h1_r": 0.000800089427227671,
+      "h2_std_effect": 0.00020693867631869177,
+      "family_q_h1": 0.54,
+      "family_q_h2": 0.9078461538461539
     },
     {
       "cell": "sweep_liabilities_to_assets_x_avg_housing_burden",
       "verdict": "unsupported",
-      "h1_r": 0.003794698702384042,
-      "h2_std_effect": 0.002946083317506258,
-      "family_q_h1": 0.005333333333333333,
-      "family_q_h2": 0.0032
+      "h1_r": 0.0037946987023840415,
+      "h2_std_effect": 0.0029460833175062578,
+      "family_q_h1": 0.224,
+      "family_q_h2": 0.33854545454545454
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_chr_hs_completion",
+      "verdict": "unsupported",
+      "h1_r": -0.0019946082890563207,
+      "h2_std_effect": -0.001318147336879292,
+      "family_q_h1": 0.22088888888888886,
+      "family_q_h2": 0.6265
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_chr_poor_fair_health",
+      "verdict": "unsupported",
+      "h1_r": 0.001826041503680984,
+      "h2_std_effect": 0.0013309078960806507,
+      "family_q_h1": 0.217,
+      "family_q_h2": 0.6408888888888888
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_chr_some_college",
+      "verdict": "unsupported",
+      "h1_r": -0.0003016742312022584,
+      "h2_std_effect": 0.0006592659274643211,
+      "family_q_h1": 0.867404255319149,
+      "family_q_h2": 0.6265
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_chr_uninsured",
+      "verdict": "unsupported",
+      "h1_r": 0.0026567187225490798,
+      "h2_std_effect": 0.00165017535618852,
+      "family_q_h1": 0.2986666666666667,
+      "family_q_h2": 0.7340540540540541
+    },
+    {
+      "cell": "sweep_liabilities_to_assets_x_chr_violent_crime_rate",
+      "verdict": "unsupported",
+      "h1_r": 0.0007691239880510408,
+      "h2_std_effect": 0.001286052828926472,
+      "family_q_h1": 0.6265,
+      "family_q_h2": 0.40599999999999997
     }
   ],
   "before_after": {
     "cells_significant_before": 21,
-    "cells_significant_after": 16,
+    "cells_significant_after": 12,
     "still_significant_after": [
       "sweep_admin_expense_ratio_x_avg_housing_burden",
       "sweep_admin_expense_ratio_x_food_desert_share",
-      "sweep_admin_expense_ratio_x_poverty_rate",
       "sweep_admin_expense_ratio_x_unemployment_rate",
+      "sweep_equity_ratio_x_need_index",
       "sweep_fundraising_expense_ratio_x_need_index",
       "sweep_fundraising_expense_ratio_x_poverty_rate",
       "sweep_fundraising_expense_ratio_x_unemployment_rate",
-      "sweep_liabilities_to_assets_x_avg_housing_burden",
-      "sweep_operating_margin_x_poverty_rate",
-      "sweep_operating_margin_x_unemployment_rate",
       "sweep_program_expense_ratio_x_avg_housing_burden",
-      "sweep_program_expense_ratio_x_food_desert_share",
       "sweep_program_expense_ratio_x_unemployment_rate",
       "sweep_revenue_concentration_x_avg_housing_burden",
       "sweep_revenue_concentration_x_poverty_rate",
