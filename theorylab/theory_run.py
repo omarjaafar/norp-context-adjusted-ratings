@@ -27,13 +27,13 @@ import pandas as pd
 from scipy import stats
 
 from theorylab.catalog import REPO_ROOT
-from theorylab.executor import (Residualizer, correlation, fixed_effects, fwl_coefficient,
+from theorylab.executor import (Residualizer, correlation, fixed_effects,
                                 lagged_outcome, multilevel, to_float, to_jsonable,
                                 two_stage_group_means)
 from theorylab.ratios import RATING_ANCHORS, RATING_MIN_COMPONENTS, standard_rating
 from theorylab.spec import SpecError, spec_columns
 from theorylab.validator import (GateInput, pearson_r, UnitPermuter, benjamini_hochberg, decide_verdict,
-                                 difference_in_means, held_out_group_replication,
+                                 difference_in_means, gate_statistic, held_out_group_replication,
                                  held_out_year_replication, permutation_test)
 
 PANEL_PATH = REPO_ROOT / "data" / "derived" / "org_year_panel.csv.gz"
@@ -197,17 +197,22 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
     x = to_float(pop[exposure]).to_numpy()
     sd_y = float(np.std(y, ddof=1))
     keep_paths = bool((v.get("permutation") or {}).get("keep_paths", False))
+    # studentized: permute t = slope / county-clustered SE, not the raw slope (CP4 V3)
+    studentized = bool((v.get("permutation") or {}).get("studentized", False))
     permuter = UnitPermuter(pop, exposure, unit=unit, within=within, keep_paths=keep_paths)
+    unit_codes = pd.factorize(pop[unit], sort=True)[0]
 
     # H1: the gap exists.
     if continuous:
+        h1_effect = pearson_r(y, x)
         h1_stat = lambda xv: pearson_r(y, xv)  # noqa: E731
-        h1_effect = h1_stat(x)
         welch = None
     else:
+        h1_effect = difference_in_means(y, x)
         h1_stat = lambda xv: difference_in_means(y, xv)  # noqa: E731
-        h1_effect = h1_stat(x)
         welch = stats.ttest_ind(y[x == 1], y[x == 0], equal_var=False)
+    if studentized:  # slope of y on x = difference in means (binary) / per-SD slope (continuous)
+        h1_stat = gate_statistic(y - y.mean(), None, unit_codes, True)
     h1_perm = permutation_test(h1_stat, permuter, n_perm, seed)
 
     # H2: the gap survives the controls.
@@ -220,7 +225,9 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
     h2_fit = fit_h2(pop)
     resid = Residualizer.from_panel(pop, controls, absorb)
     y_resid = resid(y)
-    h2_perm = permutation_test(lambda xv: fwl_coefficient(y_resid, resid(xv)), permuter, n_perm, seed + 1)
+    h2_clusters = pd.factorize(pop[cluster], sort=True)[0] if cluster else None
+    h2_perm = permutation_test(gate_statistic(y_resid, resid, h2_clusters, studentized),
+                               permuter, n_perm, seed + 1)
 
     q, _ = benjamini_hochberg([h1_perm["p_value"], h2_perm["p_value"]], alpha)
     holdout = v["holdout"]
@@ -252,6 +259,7 @@ def run_spec(panel: pd.DataFrame, spec: dict, *, anchors: dict | None = None,
                       "holdout_year_for_information": v.get("holdout_year"),
                       "permutation_unit": unit, "permutation_within": within,
                       "permutation_keep_paths": keep_paths,
+                      "permutation_studentized": studentized,
                       "fdr_family": ["H1", "H2"]},
         "rating": rating,
         "population": pop_log,

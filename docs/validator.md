@@ -9,7 +9,7 @@ The Validator decides whether a theory's finding stands. It is deterministic Pyt
 | Population | Full-990 filers with a county and need data, complete in every column the spec uses | `population` |
 | H1 | Difference in mean outcome, exposed vs. other rows | `hypotheses[H1]` |
 | H2 | Fixed-effects coefficient on the exposure, with numeric controls, absorbed factors and SEs clustered by county | `hypotheses[H2]` |
-| p-values | Permutation test for H1 and H2: the exposure is reassigned across counties, and the same statistic is recomputed | `n_permutations`, `seed`, `permutation` |
+| p-values | Permutation test for H1 and H2: the exposure is reassigned across counties, and the **studentized** statistic (slope / county jackknife SE, CP4 section 2.5) is recomputed | `n_permutations`, `seed`, `permutation` |
 | Multiple testing | Benjamini–Hochberg over {H1, H2} | `alpha` |
 | Effect floor | \|effect\| ≥ 0.1 SD of the outcome | `effect_floor_sd` |
 | Replication | H2 is refit with states held out, in 5 folds | `holdout` |
@@ -60,7 +60,7 @@ The null is about 1.8 times wider, close to the √5 ≈ 2.2 expected when five 
 
 `keep_paths` is an option of `UnitPermuter`, off by default, and on in `specs/ratings_fairness.json`. Any theory whose exposure persists over years should turn it on. The per-year runs in `theorylab/trends.py` are unaffected, because each tests one year.
 
-**Still open.** Even with whole histories, the H2 permutation null SD (0.028) is smaller than H2's county-clustered SE (0.049). Both say H2 is not significant (p = 0.44 and p = 0.61), so no conclusion depends on which one is used. A plausible cause is that a few very large counties carry much of the weight, which a permutation null and a sandwich SE treat differently. We note this for CP4 rather than resolve it now.
+**Resolved in CP4 (section 2.5).** Even with whole histories, the H2 permutation null SD (0.028) was smaller than H2's county-clustered SE (0.049). Section 2.5 measures why and changes the statistic the gate permutes.
 
 ### 2.2 Permute-X versus Freedman–Lane (U7)
 
@@ -87,6 +87,49 @@ Today the family is {H1, H2} of one theory. That is right for a single theory an
 ### 2.4 An asymmetry in the verdict rule
 
 "Supported" needs H1, H2 and replication. "Reversed" needs only H1, with the opposite sign. So a gap in the unexpected direction is easier to declare than one in the expected direction, and it is never checked against the controls or held-out states. In the synthetic controls test, a small panel (10 organizations per county) produced a chance "reversed" verdict (seed 2) for exactly this reason. That panel was enlarged; on the real panel the noise is far below the floor, and none of the 20 negative-control runs was reversed. For CP4 we suggest that "reversed" should also require H2 and replication with the opposite sign, and otherwise be "weak". We have not changed it in CP3, so the CP3 verdicts follow the rule as written above.
+
+### 2.5 The H2 null/SE gap: permute the studentized slope (CP4 V3, CP3 feedback F5)
+
+**The gap.** For the ratings theory, H2's permutation null had SD 0.029, and the county-clustered SE of the same coefficient was 0.049. Under the null both measure the spread of the coefficient, so one of them was wrong. The sweep showed it matters. On liabilities/assets × housing burden, the permutation q was 0.003 and the clustered p was 0.11.
+
+**What we measured.** `scripts/h2_null_check.py` → `data/output/h2_null_check.json`, on the real panel, 999 permutations per scheme, for three H2 models: ratings (binary `high_need`), T5 (unemployment → liabilities/assets) and that sweep cell (both continuous).
+
+| | Ratings | T5 | Sweep cell |
+|---|---|---|---|
+| Clustered SE at the real exposure (county) | 0.0485 | 0.0977 | 0.2887 |
+| Clustered SE, by state | 0.0532 | 0.1098 | 0.2890 |
+| Permutation null SD, whole histories (CP3 gate) | 0.0288 | 0.1002 | 0.1174 |
+| Mean clustered SE over the permuted draws | 0.0277 | 0.0886 | 0.1057 |
+| SD of the permuted t (clustered SE) | 1.08 | 1.06 | 1.05 |
+| Null SD, histories shuffled within state | 0.0218 | 0.1206 | 0.1530 |
+| Real SE / mean permuted SE | 1.75 | 1.10 | 2.73 |
+| Top 10 counties: share of rows / of clustered variance | 13% / 89% | 13% / 73% | 13% / 95% |
+| p: coefficient permutation (CP3 gate) | 0.436 | 0.439 | **0.001** |
+| p: clustered t, normal | 0.613 | 0.449 | 0.113 |
+| p: permuted t, county jackknife SE (CP4 gate) | **0.656** | **0.514** | **0.133** |
+
+The four candidate causes, one at a time:
+
+1. **Spatial correlation across counties: no.** Clustering by state barely moves the SE (0.053 vs 0.049; 0.289 vs 0.289). Shuffling only within states makes the ratings null *narrower* (0.022), and it widens the continuous nulls only a little (0.15 against an SE of 0.29).
+2. **Row-level heteroskedasticity: no.** Residual variance is the same in exposed and other rows (4.61 vs 4.52 for ratings).
+3. **A few very large counties: yes.** The clustered SE is calibrated for random exposures: averaged over the permuted draws it equals the null SD (0.028 vs 0.029, 0.106 vs 0.117), the permuted t has SD 1.05–1.08, and the clustered test rejects 5–7% of the null draws. At the **real** exposure the SE is 1.75 times (ratings) and 2.73 times (sweep cell) its typical permuted value. Ten counties (Los Angeles, New York, Cook, DC, Harris, King, San Diego, Maricopa, Orange, Suffolk MA) hold 13% of the rows but 89–95% of the clustered variance. The real exposure puts weight on some of them, and random exposures mostly do not. High-need counties are small (146 rows on average, against 504), so the real exposure covers 8% of rows, while a random set of the same number of counties covers about 23%. The permutation keeps the number of exposed counties, not the number of exposed rows, so a raw-coefficient null describes a design with about three times as many exposed rows. It is too narrow. With the 10 counties dropped, the coefficient permutation calls ratings H2 significant (p = 0.014) and the clustered SE does not change (0.047). That p is the narrow null at work, not a finding.
+4. **The Residualizer: correct.** The permuted exposure is residualized on the same controls and absorbed effects as the fit. The FWL coefficient equals the fixed-effects coefficient to 1e-8, the recomputed CR1 SE equals the fit's, and a permuted, residualized exposure has mean 5e-15 inside every absorbed level and correlation 7e-18 with log revenue.
+
+**Decision: permute the studentized slope.** From CP4 on, the permutation test for H1 and H2 recomputes t = slope / SE in every draw and compares the real t with the permuted t's (`validator.ClusteredSlopeT`, switched on by `"permutation": {"studentized": true}` in `spec.GATE_POLICY` and `specs/ratings_fairness.json`). The reported effects are unchanged. The coefficient's own permutation null is still reported under `permutation.coefficient`, for comparison.
+
+- Permuting t is exact when counties really are exchangeable, as a coefficient permutation is, and it stays valid when they are not (Chung & Romano 2013; DiCiccio & Romano 2017). Each draw is scaled by its own SE, so a draw that happens to put the exposure on a big noisy county is judged against that county's noise.
+- **The SE is the county jackknife, not the CR1 sandwich.** With a few dominant counties the sandwich understates the variance, because a high-leverage county's own residuals are shrunk by the fit. The leave-one-county-out slope does not have that problem. In a simulation with no effect and the real panel's pattern (skewed county sizes; the exposed set is the smallest counties plus a few of the largest; 300 or 1,000 counties; 150 runs; 5% level), the share of runs that rejected was:
+
+  | | Coefficient permutation | Permuted t, CR1 | Clustered t, normal | Permuted t, jackknife |
+  |---|---|---|---|---|
+  | 300 counties, 3 big exposed | 0.28 | 0.18 | 0.25 | **0.12** |
+  | 1,000 counties, 8 big exposed | 0.33 | 0.14 | 0.16 | **0.11** |
+  | no big county exposed | 0.00 | 0.02–0.03 | 0.02–0.05 | **0.02–0.03** |
+
+  No method reaches 5% when the very largest counties are exposed; the jackknife comes closest. The test `test_studentized_permutation_cuts_false_positives_when_big_counties_are_exposed` keeps this result (35% vs 12% on 60 runs).
+- **Alternatives we did not take.** Shuffling within state does not fix the gap (point 1). Taking the larger of the permutation p and the clustered p uses the CR1 SE, which the simulation shows is too small under leverage. A wild cluster bootstrap would answer the same question with a different resampling. The studentized permutation reuses the county-history shuffle we already validated in CP3 (section 2.1), and adds two bincounts per draw.
+- **What it changes.** Nothing is significant either way for ratings H2 or T5. The sweep cell goes from p = 0.001 to 0.133, in line with its clustered p of 0.113. With the 10 largest counties dropped, ratings H2 goes from a spurious p = 0.014 to 0.306. Every CP4 theory and sweep result must be rerun under the new gate.
+- **Approximation.** The jackknife drops a county from the already-residualized vectors and does not refit the controls and absorbed effects without it. Those effects are estimated from all 3,000+ counties, so one county moves them very little.
 
 ## 3. Evidence that the gate works (V2)
 

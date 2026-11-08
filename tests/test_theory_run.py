@@ -94,7 +94,12 @@ def test_planted_penalty_is_supported(spec):
     assert report["verdict"] == "supported"
     assert report["H1"]["effect"] == pytest.approx(-1.0, abs=0.25)
     assert report["H2"]["fit"]["effect"] == pytest.approx(-1.0, abs=0.25)
-    assert report["H2"]["permutation"]["observed"] == pytest.approx(report["H2"]["fit"]["effect"], rel=1e-6)
+    perm = report["H2"]["permutation"]
+    assert perm["statistic"].startswith("t")  # the gate permutes the studentized slope (V3)
+    assert perm["coefficient"]["observed"] == pytest.approx(report["H2"]["fit"]["effect"], rel=1e-6)
+    # t = slope / county-clustered SE; the fit's SE carries the CR1 factor, so allow its size
+    assert abs(perm["observed"]) == pytest.approx(
+        abs(report["H2"]["fit"]["effect"] / report["H2"]["fit"]["std_error"]), rel=0.05)
     assert report["replication"]["replicated"] is True
     assert report["replication"]["by"] == "state"
     assert report["validator"]["permutation_keep_paths"] is True   # whole county histories

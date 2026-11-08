@@ -1,0 +1,334 @@
+{
+  "generated_at": "2026-11-08T13:26:26",
+  "question": "H2 permutation null SD 0.029 vs county-clustered SE 0.049 (ratings_fairness.json)",
+  "cases": {
+    "ratings": {
+      "spec": "ratings_fairness",
+      "outcome": "standard_rating",
+      "exposure": "high_need",
+      "exposure_type": "binary",
+      "controls": [
+        "log_revenue"
+      ],
+      "absorb": [
+        "tax_year",
+        "category"
+      ],
+      "observed": {
+        "coefficient": -0.024582729416012816,
+        "se_county": 0.048538823989187116,
+        "se_state": 0.05323874712855686,
+        "p_cluster_county_normal": 0.6125372823835301,
+        "null_sd_gate": 0.028780586691916726,
+        "se_county_over_null_sd": 1.6865126659429657,
+        "se_county_over_mean_permuted_se": 1.753537155695133
+      },
+      "nulls": {
+        "whole_county_histories (gate)": {
+          "p_permutation_coefficient": 0.436,
+          "p_permutation_studentized": 0.651,
+          "p_permutation_studentized_jackknife (gate)": 0.656,
+          "null_sd_of_t": 1.0792568663303097,
+          "se_jackknife_observed": 0.05140869486797839,
+          "mean_permuted_se_jackknife": 0.028421150001039473,
+          "n_permutations": 999,
+          "units_permuted": 3087,
+          "null_sd": 0.028780586691916726,
+          "null_mean": 0.002054163990859181,
+          "mean_permuted_se_county": 0.027680522098743596,
+          "mean_permuted_se_state": 0.027080754824486224,
+          "null_sd_over_mean_se_county": 1.0397414683599144,
+          "share_of_draws_with_county_p_below_0_05": 0.06706706706706707
+        },
+        "whole_county_histories_within_state": {
+          "p_permutation_coefficient": 0.42,
+          "p_permutation_studentized": 0.687,
+          "p_permutation_studentized_jackknife (gate)": 0.697,
+          "null_sd_of_t": 0.9025423601645626,
+          "se_jackknife_observed": 0.05140869486797839,
+          "mean_permuted_se_jackknife": 0.025780850582562957,
+          "n_permutations": 999,
+          "units_permuted": 3087,
+          "null_sd": 0.021849718987057117,
+          "null_mean": 0.017874799589603765,
+          "mean_permuted_se_county": 0.025187800508777565,
+          "mean_permuted_se_state": 0.03151144489717248,
+          "null_sd_over_mean_se_county": 0.8674722899858931,
+          "share_of_draws_with_county_p_below_0_05": 0.09009009009009009
+        }
+      },
+      "heteroskedasticity": {
+        "rows": 1303953,
+        "counties": 3087,
+        "top10_counties_share_of_cluster_variance": 0.8859948107506597,
+        "top10_counties_share_of_rows": 0.12760122489077444,
+        "residual_var_exposed_rows": 4.61124369813679,
+        "residual_var_other_rows": 4.522653048768936,
+        "exposed_share_of_counties": 0.22837706511175898,
+        "exposed_share_of_rows": 0.08098221331597075,
+        "exposed_counties_share_of_cluster_variance": 0.8742378015240664,
+        "mean_rows_per_county_exposed": 145.6595744680851,
+        "mean_rows_per_county_other": 504.30856423173805
+      },
+      "leverage": {
+        "dropped": [
+          "06037",
+          "36061",
+          "17031",
+          "11001",
+          "48201",
+          "53033",
+          "06073",
+          "04013",
+          "06059",
+          "25017"
+        ],
+        "rows_dropped": 166386,
+        "coefficient": -0.053029745446883214,
+        "se_county": 0.04743996057788982,
+        "p_permutation_coefficient": 0.014,
+        "p_permutation_studentized": 0.292,
+        "p_permutation_studentized_jackknife (gate)": 0.306,
+        "null_sd_of_t": 1.0205500811224966,
+        "se_jackknife_observed": 0.05030807875342742,
+        "mean_permuted_se_jackknife": 0.021362224863391018,
+        "n_permutations": 499,
+        "units_permuted": 3077,
+        "null_sd": 0.02136912288621189,
+        "null_mean": -3.196034201738312e-05,
+        "mean_permuted_se_county": 0.02114194406153739,
+        "mean_permuted_se_state": 0.02072362570020854,
+        "null_sd_over_mean_se_county": 1.0107454084644845,
+        "share_of_draws_with_county_p_below_0_05": 0.06613226452905811
+      },
+      "residualizer": {
+        "fwl_coefficient": -0.024582729416012816,
+        "fixed_effects_coefficient": -0.024582729416012458,
+        "coefficients_equal": true,
+        "cr1_se_here": 0.048538823989187116,
+        "cr1_se_fixed_effects": 0.04853884260183781,
+        "se_equal": true,
+        "permuted_x_max_abs_mean_within_absorbed_levels": 5.1224417949090255e-15,
+        "permuted_x_max_abs_corr_with_controls": 7.206606201992648e-18
+      },
+      "seconds": 112.1
+    },
+    "t5": {
+      "spec": "unemployment_leverage_link",
+      "outcome": "liabilities_to_assets",
+      "exposure": "unemployment_rate",
+      "exposure_type": "continuous",
+      "controls": [
+        "log_revenue"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state",
+        "return_type"
+      ],
+      "observed": {
+        "coefficient": 0.0739627002512423,
+        "se_county": 0.09774178896791758,
+        "se_state": 0.10975587217050364,
+        "p_cluster_county_normal": 0.4492204888296587,
+        "null_sd_gate": 0.10017938444430775,
+        "se_county_over_null_sd": 0.9756676936087055,
+        "se_county_over_mean_permuted_se": 1.1034504890097407
+      },
+      "nulls": {
+        "whole_county_histories (gate)": {
+          "p_permutation_coefficient": 0.439,
+          "p_permutation_studentized": 0.516,
+          "p_permutation_studentized_jackknife (gate)": 0.514,
+          "null_sd_of_t": 1.061559598593965,
+          "se_jackknife_observed": 0.09789310540693984,
+          "mean_permuted_se_jackknife": 0.08979322681792518,
+          "n_permutations": 999,
+          "units_permuted": 3102,
+          "null_sd": 0.10017938444430775,
+          "null_mean": -0.0058565240652275145,
+          "mean_permuted_se_county": 0.08857831859373508,
+          "mean_permuted_se_state": 0.08967688436955887,
+          "null_sd_over_mean_se_county": 1.1309695875328254,
+          "share_of_draws_with_county_p_below_0_05": 0.056056056056056056
+        },
+        "whole_county_histories_within_state": {
+          "p_permutation_coefficient": 0.526,
+          "p_permutation_studentized": 0.507,
+          "p_permutation_studentized_jackknife (gate)": 0.505,
+          "null_sd_of_t": 1.0302922367888598,
+          "se_jackknife_observed": 0.09789310540693984,
+          "mean_permuted_se_jackknife": 0.11282085882494582,
+          "n_permutations": 999,
+          "units_permuted": 3102,
+          "null_sd": 0.12061754795736584,
+          "null_mean": 0.008940359597502001,
+          "mean_permuted_se_county": 0.11150739916023145,
+          "mean_permuted_se_state": 0.11279121581267336,
+          "null_sd_over_mean_se_county": 1.0816999487544634,
+          "share_of_draws_with_county_p_below_0_05": 0.05305305305305305
+        }
+      },
+      "heteroskedasticity": {
+        "rows": 1463640,
+        "counties": 3102,
+        "top10_counties_share_of_cluster_variance": 0.7258880975464898,
+        "top10_counties_share_of_rows": 0.12818999207455387,
+        "residual_var_rows_exposure_beyond_1sd": 9059.752083491045,
+        "residual_var_rows_exposure_within_1sd": 29608.923630554018,
+        "counties_beyond_1sd_share_of_cluster_variance": 0.3485296419823078
+      },
+      "leverage": {
+        "dropped": [
+          "06037",
+          "36061",
+          "17031",
+          "11001",
+          "48201",
+          "53033",
+          "06073",
+          "04013",
+          "06059",
+          "25017"
+        ],
+        "rows_dropped": 187624,
+        "coefficient": 0.05236598353392198,
+        "se_county": 0.09809915966576262,
+        "p_permutation_coefficient": 0.622,
+        "p_permutation_studentized": 0.65,
+        "p_permutation_studentized_jackknife (gate)": 0.65,
+        "null_sd_of_t": 1.08949333836601,
+        "se_jackknife_observed": 0.09821269952016895,
+        "mean_permuted_se_jackknife": 0.09775362625633659,
+        "n_permutations": 499,
+        "units_permuted": 3092,
+        "null_sd": 0.11150660834483762,
+        "null_mean": 0.00041158312648301404,
+        "mean_permuted_se_county": 0.09643713503808327,
+        "mean_permuted_se_state": 0.09783896439477563,
+        "null_sd_over_mean_se_county": 1.1562621421800159,
+        "share_of_draws_with_county_p_below_0_05": 0.06412825651302605
+      },
+      "residualizer": {
+        "fwl_coefficient": 0.0739627002512423,
+        "fixed_effects_coefficient": 0.07396270025124009,
+        "coefficients_equal": true,
+        "cr1_se_here": 0.09774178896791758,
+        "cr1_se_fixed_effects": 0.09774182222823036,
+        "se_equal": true,
+        "permuted_x_max_abs_mean_within_absorbed_levels": 3.848773152033876e-15,
+        "permuted_x_max_abs_corr_with_controls": 3.4354080978969855e-17
+      },
+      "seconds": 124.9
+    },
+    "sweep_cell": {
+      "spec": "sweep_liabilities_to_assets_x_avg_housing_burden",
+      "outcome": "liabilities_to_assets",
+      "exposure": "avg_housing_burden",
+      "exposure_type": "continuous",
+      "controls": [
+        "log_revenue"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "observed": {
+        "coefficient": 0.4579603893594912,
+        "se_county": 0.28869426108945334,
+        "se_state": 0.2890213136146412,
+        "p_cluster_county_normal": 0.11266759440108147,
+        "null_sd_gate": 0.11738159607382546,
+        "se_county_over_null_sd": 2.459450806137303,
+        "se_county_over_mean_permuted_se": 2.7315168390013493
+      },
+      "nulls": {
+        "whole_county_histories (gate)": {
+          "p_permutation_coefficient": 0.001,
+          "p_permutation_studentized": 0.131,
+          "p_permutation_studentized_jackknife (gate)": 0.133,
+          "null_sd_of_t": 1.0481449377622336,
+          "se_jackknife_observed": 0.29403944612756744,
+          "mean_permuted_se_jackknife": 0.10665086192080722,
+          "n_permutations": 999,
+          "units_permuted": 3091,
+          "null_sd": 0.11738159607382546,
+          "null_mean": 0.0012653635645271735,
+          "mean_permuted_se_county": 0.10569009019728424,
+          "mean_permuted_se_state": 0.10719667474118283,
+          "null_sd_over_mean_se_county": 1.1106206443264217,
+          "share_of_draws_with_county_p_below_0_05": 0.04904904904904905
+        },
+        "whole_county_histories_within_state": {
+          "p_permutation_coefficient": 0.001,
+          "p_permutation_studentized": 0.14,
+          "p_permutation_studentized_jackknife (gate)": 0.143,
+          "null_sd_of_t": 1.0882503118106148,
+          "se_jackknife_observed": 0.29403944612756744,
+          "mean_permuted_se_jackknife": 0.13243019569227552,
+          "n_permutations": 999,
+          "units_permuted": 3091,
+          "null_sd": 0.15304119144589526,
+          "null_mean": 0.0031028876129767105,
+          "mean_permuted_se_county": 0.13055217873382094,
+          "mean_permuted_se_state": 0.131791786851045,
+          "null_sd_over_mean_se_county": 1.1722607231084707,
+          "share_of_draws_with_county_p_below_0_05": 0.04604604604604605
+        }
+      },
+      "heteroskedasticity": {
+        "rows": 1441156,
+        "counties": 3091,
+        "top10_counties_share_of_cluster_variance": 0.9536814965918089,
+        "top10_counties_share_of_rows": 0.13018993086105876,
+        "residual_var_rows_exposure_beyond_1sd": 27471.8180089734,
+        "residual_var_rows_exposure_within_1sd": 22838.207579662274,
+        "counties_beyond_1sd_share_of_cluster_variance": 0.9364899831733023
+      },
+      "leverage": {
+        "dropped": [
+          "06037",
+          "36061",
+          "17031",
+          "11001",
+          "48201",
+          "53033",
+          "06073",
+          "04013",
+          "06059",
+          "25017"
+        ],
+        "rows_dropped": 187624,
+        "coefficient": 0.5155068124473082,
+        "se_county": 0.3155826636260817,
+        "p_permutation_coefficient": 0.002,
+        "p_permutation_studentized": 0.1,
+        "p_permutation_studentized_jackknife (gate)": 0.11,
+        "null_sd_of_t": 1.0315919369604338,
+        "se_jackknife_observed": 0.3220186337114513,
+        "mean_permuted_se_jackknife": 0.12089000143427094,
+        "n_permutations": 499,
+        "units_permuted": 3081,
+        "null_sd": 0.13231534582251148,
+        "null_mean": 0.0021302304478830877,
+        "mean_permuted_se_county": 0.11956931228952652,
+        "mean_permuted_se_state": 0.12202285663020447,
+        "null_sd_over_mean_se_county": 1.1065995387020506,
+        "share_of_draws_with_county_p_below_0_05": 0.04208416833667335
+      },
+      "residualizer": {
+        "fwl_coefficient": 0.4579603893594912,
+        "fixed_effects_coefficient": 0.4579603893594939,
+        "coefficients_equal": true,
+        "cr1_se_here": 0.28869426108945334,
+        "cr1_se_fixed_effects": 0.28869436098237694,
+        "se_equal": true,
+        "permuted_x_max_abs_mean_within_absorbed_levels": 3.0953745902963395e-16,
+        "permuted_x_max_abs_corr_with_controls": 3.431966462349252e-18
+      },
+      "seconds": 125.3
+    }
+  }
+}

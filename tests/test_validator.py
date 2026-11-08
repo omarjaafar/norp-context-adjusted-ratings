@@ -225,3 +225,81 @@ def test_verdict_rule(h1, h2, replicated, expected):
                          replicated=replicated)
     assert out["verdict"] == expected
     assert out["reasons"]
+
+
+def test_group_keeps_every_shuffle_inside_the_group():
+    # two states, 6 counties each, 3 years; exposure persists per county
+    rng = np.random.default_rng(1)
+    rows = []
+    for s in ("A", "B"):
+        for c in range(6):
+            exposed = int(c < (2 if s == "A" else 4))
+            for year in (2018, 2019, 2020):
+                rows.append({"state": s, "county_fips": f"{s}{c}", "tax_year": year,
+                             "high_need": exposed})
+    df = pd.DataFrame(rows)
+    for keep_paths in (False, True):
+        perm = UnitPermuter(df, "high_need", unit="county_fips", within="tax_year",
+                            keep_paths=keep_paths, group="state")
+        for _ in range(20):
+            v = perm.draw(rng)
+            by_state_year = pd.Series(v).groupby([df["state"], df["tax_year"]]).sum()
+            # each state keeps its own exposed count in every year
+            assert (by_state_year.xs("A", level=0) == 2).all()
+            assert (by_state_year.xs("B", level=0) == 4).all()
+            if keep_paths:  # whole histories move: a county is exposed in all years or none
+                assert pd.Series(v).groupby(df["county_fips"]).nunique().max() == 1
+
+
+def test_group_must_be_constant_inside_unit():
+    df = pd.DataFrame({"county_fips": ["1", "1", "2"], "tax_year": [2018, 2019, 2018],
+                       "state": ["A", "B", "A"], "high_need": [1, 1, 0]})
+    with pytest.raises(ValueError, match="varies inside"):
+        UnitPermuter(df, "high_need", unit="county_fips", within="tax_year", group="state")
+
+
+# --- Studentized permutation (CP4 V3) -------------------------------------------
+
+from theorylab.validator import ClusteredSlopeT  # noqa: E402
+
+
+def _leverage_panel(rep, counties=300, exposed=70, big_exposed=3):
+    """No effect anywhere; county sizes are skewed and the exposed set is the smallest
+    counties plus a few of the largest, as for high_need on the real panel."""
+    rng = np.random.default_rng(rep)
+    sizes = np.sort(np.maximum(2, rng.lognormal(2.5, 1.3, counties)).astype(int))
+    expset = set(range(exposed - big_exposed)) | set(range(counties - 3 * big_exposed, counties, 3))
+    c = np.repeat(np.arange(counties), sizes * 2)
+    years = np.concatenate([np.repeat([2018, 2019], n) for n in sizes])
+    u = rng.normal(0, 1.0, counties)
+    y = u[c] + rng.normal(0, 1.0, len(c))
+    df = pd.DataFrame({"county_fips": c, "tax_year": years,
+                       "high_need": np.isin(c, list(expset)).astype(int)})
+    return df, y
+
+
+def test_studentized_t_matches_difference_in_means_and_cluster_se():
+    df, y = _leverage_panel(0)
+    x = df["high_need"].to_numpy().astype(float)
+    codes = df["county_fips"].to_numpy()
+    t, b = ClusteredSlopeT(y - y.mean(), codes, se="cr1")(x)
+    assert b == pytest.approx(difference_in_means(y, x))
+    fit = fixed_effects(df.assign(y=y), "y", "high_need", cluster="county_fips")
+    g, n = codes.max() + 1, len(y)
+    cr1 = np.sqrt(g / (g - 1) * (n - 1) / (n - 2))  # the constant the permutation statistic leaves out
+    assert abs(t) / cr1 == pytest.approx(abs(fit.effect / fit.std_error), rel=1e-6)
+
+
+def test_studentized_permutation_cuts_false_positives_when_big_counties_are_exposed():
+    """Plain permutation of the slope over-rejects a true null here (the H2 null/SE gap);
+    permuting the jackknife t rejects far less often."""
+    reps, plain, stud = 60, 0, 0
+    for r in range(reps):
+        df, y = _leverage_panel(r)
+        perm = UnitPermuter(df, "high_need", unit="county_fips", within="tax_year", keep_paths=True)
+        res = permutation_test(ClusteredSlopeT(y - y.mean(), df["county_fips"].to_numpy()),
+                               perm, n_permutations=99, seed=r)
+        plain += res["coefficient"]["p_value"] <= 0.05
+        stud += res["p_value"] <= 0.05
+    assert plain / reps >= 0.15            # plain permutation: far above 5%
+    assert stud <= 0.6 * plain             # studentized: much closer to nominal

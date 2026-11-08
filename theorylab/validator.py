@@ -1,6 +1,9 @@
 """Validator (CP3): the deterministic gate every finding must pass.
 
 Pieces, each usable on its own:
+- ClusteredSlopeT: the studentized statistic the gate permutes (CP4 V3): the
+  slope over its county jackknife SE, so a few dominant counties cannot make
+  the null too narrow.
 - UnitPermuter + permutation_test: shuffle the exposure across the units it is
   assigned to (counties, within each tax year), re-estimate, and count how often
   a shuffled estimate is at least as large as the real one. Organizations in one
@@ -33,7 +36,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from theorylab.executor import MethodResult, to_float
+from theorylab.executor import MethodResult, fwl_coefficient, to_float
 
 VERDICTS = ("supported", "weak", "unsupported", "reversed")
 
@@ -55,19 +58,27 @@ class UnitPermuter:
     stays persistent in every draw. Shuffling each year separately breaks that
     persistence, and when organizations and counties carry over between years
     the resulting null is too narrow (see docs/validator.md).
+
+    group (e.g. "state") restricts every shuffle to units of the same group, so a
+    county only ever takes the exposure of another county in its own state. The
+    group must be constant inside each unit. Used by the H2 null check (V3) to
+    test whether spatial clustering across counties narrows the null.
     """
 
     def __init__(self, df: pd.DataFrame, column: str, unit: str | None = None,
-                 within: str | None = None, keep_paths: bool = False):
+                 within: str | None = None, keep_paths: bool = False, group: str | None = None):
         values = to_float(df[column]).to_numpy()
         if np.isnan(values).any():
             raise ValueError(f"{column} has missing values; select the population first")
-        for key in (unit, within):
+        for key in (unit, within, group):
             if key is not None and df[key].isna().any():
                 raise ValueError(f"{key} has missing values; select the population first")
         if keep_paths and (unit is None or within is None):
             raise ValueError("keep_paths needs both unit and within")
+        if group is not None and unit is None:
+            raise ValueError("group needs unit")
         self.column = column
+        self.group = group
         self.keep_paths = bool(keep_paths)
         self._values = values
         if unit is None:
@@ -79,6 +90,10 @@ class UnitPermuter:
             keys = ([within] if within else []) + [unit]
             frame = df[keys].copy()
             frame["_v"] = values
+            if group is not None:
+                frame["_g"] = df[group].to_numpy()
+                if int((frame.groupby(unit)["_g"].nunique() > 1).sum()):
+                    raise ValueError(f"{group} varies inside {unit} units")
             grouped = frame.groupby(keys, sort=True)
             self._codes = grouped.ngroup().to_numpy()
             agg = grouped["_v"].agg(["first", "nunique"])
@@ -89,6 +104,10 @@ class UnitPermuter:
             level = agg["first"].to_numpy(dtype="float64")
             strata = (pd.factorize(agg.index.get_level_values(0), sort=True)[0] if within
                       else np.zeros(len(agg), dtype="int64"))
+            if group is not None:
+                g = pd.factorize(grouped["_g"].first().to_numpy(), sort=True)[0]
+                strata = strata * (int(g.max()) + 1) + g
+                self._unit_group = frame.groupby(unit, sort=True)["_g"].first()
         self._level = level
         self._strata = [np.flatnonzero(strata == s) for s in np.unique(strata)]
         self.n_units = int(len(level))
@@ -102,6 +121,9 @@ class UnitPermuter:
         pos = np.full((len(units), int(w.max()) + 1), -1, dtype="int64")
         pos[u, w] = np.arange(len(w))
         patterns = pd.factorize(pd.Series([row.tobytes() for row in pos >= 0]))[0]
+        if self.group is not None:  # histories are only swapped inside a group
+            g = pd.factorize(self._unit_group.reindex(units).to_numpy(), sort=True)[0]
+            patterns = patterns * (int(g.max()) + 1) + g
         self._u, self._w, self._pos = u, w, pos
         self._unit_strata = [np.flatnonzero(patterns == p) for p in np.unique(patterns)]
         self.n_units = int(len(units))
@@ -125,35 +147,126 @@ def permutation_test(statistic, permuter: UnitPermuter, n_permutations: int = 99
                      alternative: str = "two-sided") -> dict:
     """p-value of statistic(exposure) against its permutation distribution.
 
-    statistic: function of the exposure vector (row-aligned) returning a float.
+    statistic: function of the exposure vector (row-aligned) returning a float, or
+    a pair (test statistic, coefficient) such as ClusteredSlopeT returns. With a
+    pair, the p-value comes from the test statistic and the coefficient's own
+    permutation null is reported under "coefficient" for information.
     p = (1 + number of draws at least as extreme) / (n_permutations + 1), so it is
     never 0. alternative: "two-sided" compares absolute values, "less"/"greater"
     one tail.
     """
     if n_permutations < 1:
         raise ValueError("n_permutations must be at least 1")
-    observed = float(statistic(permuter.observed()))
+
+    def _p(obs, null):
+        slack = 1e-12 * max(abs(obs), 1.0)
+        if alternative == "two-sided":
+            extreme = np.abs(null) >= abs(obs) - slack
+        elif alternative == "less":
+            extreme = null <= obs + slack
+        elif alternative == "greater":
+            extreme = null >= obs - slack
+        else:
+            raise ValueError(f"unknown alternative {alternative!r}")
+        return float((1 + int(extreme.sum())) / (len(null) + 1))
+
+    first = statistic(permuter.observed())
+    paired = isinstance(first, tuple)
     rng = np.random.default_rng(seed)
-    null = np.array([statistic(permuter.draw(rng)) for _ in range(n_permutations)], dtype="float64")
-    slack = 1e-12 * max(abs(observed), 1.0)
-    if alternative == "two-sided":
-        extreme = np.abs(null) >= abs(observed) - slack
-    elif alternative == "less":
-        extreme = null <= observed + slack
-    elif alternative == "greater":
-        extreme = null >= observed - slack
-    else:
-        raise ValueError(f"unknown alternative {alternative!r}")
-    return {
+    draws = np.array([statistic(permuter.draw(rng)) for _ in range(n_permutations)], dtype="float64")
+    obs = np.atleast_1d(np.asarray(first, dtype="float64"))
+    draws = draws.reshape(n_permutations, -1)
+    observed, null = float(obs[0]), draws[:, 0]
+    out = {
         "observed": observed,
-        "p_value": float((1 + int(extreme.sum())) / (n_permutations + 1)),
+        "p_value": _p(observed, null),
         "n_permutations": int(n_permutations),
         "units_permuted": permuter.n_units,
         "null_mean": float(null.mean()),
         "null_sd": float(null.std(ddof=1)) if n_permutations > 1 else float("nan"),
         "seed": int(seed),
         "alternative": alternative,
+        "statistic": "t, county jackknife SE (studentized)" if paired else "coefficient",
     }
+    if paired:
+        coef = draws[:, 1]
+        out["coefficient"] = {
+            "observed": float(obs[1]), "p_value": _p(float(obs[1]), coef),
+            "null_mean": float(coef.mean()),
+            "null_sd": float(coef.std(ddof=1)) if n_permutations > 1 else float("nan"),
+        }
+    return out
+
+
+class ClusteredSlopeT:
+    """Studentized statistic for the permutation test (CP4 V3, docs/validator.md).
+
+    Called on an exposure vector, returns (t, slope): the slope of y_resid on the
+    residualized exposure, and that slope over its cluster jackknife standard error.
+    residualize is the H2 Residualizer; None demeans, which makes the slope a
+    difference in means for a binary exposure and a per-SD slope for a
+    standardized continuous one (H1).
+
+    Why studentize: permuting the raw slope assumes counties are exchangeable. They
+    are not. Ten counties hold 13% of the rows but 89% of H2's clustered variance,
+    and the real exposure puts weight on some of them, so the raw-slope null is too
+    narrow (null SD 0.029 against a clustered SE of 0.049). The clustered SE
+    is right for random exposures (its mean over draws equals the null SD), and
+    permuting t is still exact when counties are exchangeable
+    (data/output/h2_null_check.json; Chung & Romano 2013; DiCiccio & Romano 2017).
+
+    Why the jackknife (se="jackknife", the default): with a few dominant
+    counties, the CR1 sandwich understates the variance, because a high-leverage
+    county's own residuals are shrunk by the fit. The leave-one-cluster-out slope
+    (CR3-type) does not have that problem; it rejected least often in our
+    simulation (tests/test_validator.py). It drops each county from the
+    residualized vectors without re-fitting the controls, which have far more
+    support than any one county. se="cr1" gives the sandwich (without its
+    constant small-sample factor, which does not change a permutation p).
+    """
+
+    def __init__(self, y_resid: np.ndarray, clusters: np.ndarray, residualize=None,
+                 se: str = "jackknife"):
+        if se not in ("jackknife", "cr1"):
+            raise ValueError("se must be 'jackknife' or 'cr1'")
+        self.y = np.asarray(y_resid, dtype="float64")
+        self.clusters = np.asarray(clusters)
+        self.residualize = residualize
+        self.se = se
+
+    def standard_error(self, xr: np.ndarray, b: float) -> float:
+        if self.se == "cr1":
+            s = np.bincount(self.clusters, weights=xr * (self.y - b * xr))
+            return float(np.sqrt(s @ s)) / float(xr @ xr)
+        sxy = np.bincount(self.clusters, weights=xr * self.y)
+        sxx = np.bincount(self.clusters, weights=xr * xr)
+        rest = sxx.sum() - sxx
+        ok = rest > 0
+        b_minus = (sxy.sum() - sxy[ok]) / rest[ok]
+        g = int(ok.sum())
+        return float(np.sqrt((g - 1) / g * ((b_minus - b_minus.mean()) ** 2).sum())) if g > 1 else float("nan")
+
+    def __call__(self, xv) -> tuple:
+        xv = np.asarray(xv, dtype="float64")
+        xr = self.residualize(xv) if self.residualize is not None else xv - xv.mean()
+        sxx = float(xr @ xr)
+        if sxx <= 0:
+            return float("nan"), float("nan")
+        b = float(xr @ self.y) / sxx
+        se = self.standard_error(xr, b)
+        return (b / se if se > 0 else float("nan")), b
+
+
+def gate_statistic(y_resid: np.ndarray, residualize, clusters, studentized: bool):
+    """The statistic the gate permutes for a slope: studentized (t, slope) or the raw slope.
+
+    residualize None means demean (H1); clusters None falls back to the raw slope.
+    """
+    if studentized and clusters is not None:
+        return ClusteredSlopeT(y_resid, clusters, residualize)
+    if residualize is None:
+        return lambda xv: fwl_coefficient(y_resid, np.asarray(xv, float) - np.mean(xv))
+    return lambda xv: fwl_coefficient(y_resid, residualize(xv))
 
 
 def difference_in_means(y: np.ndarray, exposure: np.ndarray) -> float:

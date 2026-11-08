@@ -11,10 +11,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from theorylab.executor import Residualizer, fixed_effects, fwl_coefficient, to_float, to_jsonable
+from theorylab.executor import Residualizer, fixed_effects, to_float, to_jsonable
 from theorylab.theory_run import add_derived, select_population
 from theorylab.spec import spec_columns
-from theorylab.validator import UnitPermuter, benjamini_hochberg, passes_effect_floor, permutation_test
+from theorylab.validator import (UnitPermuter, benjamini_hochberg, gate_statistic,
+                                 passes_effect_floor, permutation_test)
 
 STRATIFIERS = {"state": "state", "sector": "category", "size": "size_tercile"}
 SURVIVOR_VERDICTS = ("supported", "weak")
@@ -40,6 +41,7 @@ def drill_down(panel: pd.DataFrame, spec: dict, report: dict, by: str, *,
     exposure, outcome, unit = spec["exposure"], spec["outcome"], spec["exposure_unit"]
     within = spec.get("exposure_varies_by")
     keep_paths = bool((v.get("permutation") or {}).get("keep_paths", False))
+    studentized = bool((v.get("permutation") or {}).get("studentized", False))
 
     df = add_derived(panel, spec_columns(spec))
     pop, _ = select_population(df, spec)
@@ -61,7 +63,8 @@ def drill_down(panel: pd.DataFrame, spec: dict, report: dict, by: str, *,
             resid = Residualizer.from_panel(part, controls, [a for a in absorb if a != col])
             y_resid = resid(to_float(part[outcome]).to_numpy())
             permuter = UnitPermuter(part, exposure, unit=unit, within=within, keep_paths=keep_paths)
-            perm = permutation_test(lambda xv: fwl_coefficient(y_resid, resid(xv)), permuter,
+            clusters = pd.factorize(part[cluster], sort=True)[0] if cluster else None
+            perm = permutation_test(gate_statistic(y_resid, resid, clusters, studentized), permuter,
                                     n_perm, int(v["seed"]) + 100)
         except ValueError as exc:  # e.g. no exposure variation inside this stratum
             skipped.append({"level": str(level), "reason": str(exc)})

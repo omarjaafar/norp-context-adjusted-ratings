@@ -35,7 +35,8 @@ GATE_POLICY = {
     "effect_floor_sd": 0.1,
     "n_permutations": 999,
     "seed": 6235,
-    "permutation": {"keep_paths": True},   # shuffle whole county histories (CP3, V4)
+    # shuffle whole county histories (CP3, V4); permute t with a county-clustered SE (CP4, V3)
+    "permutation": {"keep_paths": True, "studentized": True},
     "holdout": {"by": "state", "folds": 5},
     "holdout_year": 2022,                  # reported for information only
 }
@@ -118,8 +119,10 @@ def validate_spec(spec: dict, available_columns=None) -> list:
     if "n_permutations" in v and int(v["n_permutations"]) < 19:
         errors.append("validator.n_permutations must be at least 19 (p can reach 0.05)")
     if "permutation" in v and not (isinstance(v["permutation"], dict)
-                                   and isinstance(v["permutation"].get("keep_paths", False), bool)):
-        errors.append('validator.permutation must be an object like {"keep_paths": true}')
+                                   and isinstance(v["permutation"].get("keep_paths", False), bool)
+                                   and isinstance(v["permutation"].get("studentized", False), bool)):
+        errors.append('validator.permutation must be an object like '
+                      '{"keep_paths": true, "studentized": true}')
     if "holdout" in v:
         h = v["holdout"]
         if not isinstance(h, dict) or not h.get("by"):
