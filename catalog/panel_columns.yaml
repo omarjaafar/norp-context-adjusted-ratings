@@ -45,6 +45,11 @@ columns:
   acs_estimated: {level: county-year, role: filter, description: "True for county rows estimated (rebuilt Connecticut regions), not published by ACS"}
   avg_housing_burden: {level: county-year, role: exposure, description: "Population-weighted mean housing-cost burden of the county's tracts, percent (NORP disadvantaged communities)"}
   food_desert_share: {level: county-year, role: exposure, description: "Population-weighted share of the county's tracts flagged as food deserts (NORP disadvantaged communities)"}
+  chr_poor_fair_health: {level: county-year, role: exposure, description: "Share of adults reporting poor or fair health, 0-1, age-adjusted (County Health Rankings, BRFSS-based; data year = tax year). Level shifts down from tax year 2020: compare within year"}
+  chr_uninsured: {level: county-year, role: exposure, description: "Share of people under 65 without health insurance, 0-1 (County Health Rankings, Census SAHIE; data year = tax year)"}
+  chr_some_college: {level: county-year, role: exposure, description: "Share of adults aged 25-44 with some post-secondary education, 0-1 (County Health Rankings, ACS 5-year ending in the tax year)"}
+  chr_hs_completion: {level: county-year, role: exposure, description: "Share of adults aged 25 and over with a high-school diploma or equivalent, 0-1 (County Health Rankings, ACS 5-year ending in the tax year; missing for tax year 2018)"}
+  chr_violent_crime_rate: {level: county-year, role: exposure, description: "Violent crimes reported per 100,000 people (County Health Rankings, FBI UCR 2014 and 2016 average); one snapshot, same value every tax year; about 9% of counties missing"}
   has_need: {level: organization-year, role: filter, description: "True when the organization's county has need-table data for that year"}
   program_expense_ratio: {level: organization-year, role: outcome, description: "Program expenses / total functional expenses, 0-1; higher = more spent on programs"}
   admin_expense_ratio: {level: organization-year, role: outcome, description: "Management and general expenses / total functional expenses, 0-1 (administrative overhead)"}

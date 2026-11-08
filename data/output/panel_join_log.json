@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-24T19:46:37",
+  "generated_at": "2026-11-08T13:13:12",
   "parts": {
     "nccs_p01": {
       "rows_in": 2460174,
@@ -194,6 +194,11 @@
       "acs_estimated",
       "avg_housing_burden",
       "food_desert_share",
+      "chr_poor_fair_health",
+      "chr_uninsured",
+      "chr_some_college",
+      "chr_hs_completion",
+      "chr_violent_crime_rate",
       "has_need",
       "program_expense_ratio",
       "admin_expense_ratio",
@@ -207,9 +212,9 @@
       "rating_components",
       "revenue_growth"
     ],
-    "size_mb": 397.25,
-    "sha256_csv": "7d0e2bdadb2524081ccb84b5e22fa9d4e58e8e55b0cd8cde68b79a14263a2e92",
-    "sha256_gz": "520fa966f7292bdfb2a592cb82139941f802916ccde181cc5710984554caa9bd"
+    "size_mb": 455.83,
+    "sha256_csv": "3dfa5eb19c30a65b1635b5fe460216ecbf0467a93715458ab0c8fac6be893bec",
+    "sha256_gz": "8eb228285e454e3cc146e1b77694faf046582bd7a5b7cf3453781f2c6333e257"
   },
   "assumption_4": {
     "threshold": 0.8,

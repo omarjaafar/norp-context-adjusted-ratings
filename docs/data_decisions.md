@@ -132,3 +132,39 @@ A county → planning-region lookup cannot fix this, because the nine regions cu
 **Decision.** Every analysis that uses Part IX ratios, including the standard rating, keeps `return_type == "990"`. The theory specs do this in `population.return_type` (`specs/ratings_fairness.json`).
 
 **Evidence.** `data/output/part9_coverage.json`: `by_tax_year`, `not_full_990_return_types`.
+
+## D8. County Health Rankings release ↔ tax year, one lag per measure (CP4 V2, Vien)
+
+**Problem.** CP3 feedback asked for health, education and crime indicators next to the economic need index. County Health Rankings (CHR) publishes one national file per release year (`analytic_data<YEAR>.csv`), but a release does not describe its own year: each measure carries data from earlier years, with a different lag per source. The column labels also change case between releases ("Some college" vs "Some College").
+
+**Decision.** Five columns, read by CHR measure code (the second header row, stable across releases), joined on `(county_fips, tax_year)`. Tax year T uses release T + lag:
+
+| Column | CHR code | Source | Release for tax year T | Data years for T |
+|---|---|---|---|---|
+| `chr_poor_fair_health` | v002 | BRFSS | T + 3 | T |
+| `chr_uninsured` | v085 | Census SAHIE | T + 3 | T |
+| `chr_some_college` | v069 | ACS 5-year | T + 2 | T−4 to T |
+| `chr_hs_completion` | v168 | ACS 5-year | T + 2 | T−4 to T |
+| `chr_violent_crime_rate` | v043 | FBI UCR | 2022 for every T | 2014 and 2016 |
+
+So tax years 2018–2022 use releases 2020–2025 (`theorylab/need.py::CHR_MEASURES`, `chr_release_for`).
+
+Why:
+- **Same rule as D4.** The ACS-based measures use the 5-year window ending in the tax year, the way `need_index` does, and the BRFSS/SAHIE measures use the tax year itself. No column uses data from after the tax year.
+- **The lags are from CHR's own documentation.** The 2025 "Select Measures and Data Sources" table lists Poor or Fair Health BRFSS 2022, Uninsured SAHIE 2022, and Some College and High School Completion ACS 2019–2023. That gives a lag of 3 and 2. We read the table for 2025 only and assume the lag is the same in 2020–2024. The year-to-year correlations below are consistent with this (no sudden drop for SAHIE or the ACS measures).
+- **Crime is frozen in CHR.** We measured that every county's v043 value is identical in the 2019, 2020, 2021 and 2022 releases (2,951 counties, 100% identical), and v043 is absent from the 2023, 2024 and 2025 files. We did not confirm the reason from CHR's documentation; the FBI's switch from UCR to NIBRS in 2021 is the likely one. The 2014/2016 data years come from CHR's labeling of the measure in those releases. We use release 2022 for every tax year. Like D6, the column varies across counties but not across years.
+
+**Gaps (reported, not imputed).** Coverage per year and column is in the `chr` block of `data/output/county_need_report.json` (`match_rate_by_year`, `unmatched_by_state_by_year`).
+- **Puerto Rico:** CHR has no Puerto Rico rows (78 need rows per year).
+- **Connecticut:** releases 2020–2024 report the 8 legacy counties; the 2025 release adds the 9 planning regions. CT organizations sit in planning regions (D5), so they get CHR values only for `chr_poor_fair_health` and `chr_uninsured` in tax year 2022 (release 2025): 9 rows. The regions cut across counties, so legacy values cannot be reassigned without town-level data. The legacy-county rows in the need table do carry CHR values (they are kept for 2018–2021, D5).
+- **`chr_hs_completion` is missing for tax year 2018.** v168 starts in the 2021 release; the 2020 release has only v021 (the cohort graduation rate, a different measure). Using release 2021 for 2018 would break the no-look-ahead rule.
+- **Violent crime** is missing for about 8.6% of county rows (`match_rate_by_year` 0.913–0.914), spread over 28 states, the most in Mississippi (50 counties), Indiana (29) and Nebraska (20). This is UCR non-reporting.
+- About 97.3% of need rows match for the other four columns.
+
+**Series break: poor or fair health.** The median county value drops from 0.201 (tax 2019, release 2022) to 0.153 (tax 2020, release 2023), then rises to 0.189 by 2022. The county ranking holds (correlation 0.97 between those years), so this is a level shift between releases, most likely a change in CHR's estimation method; we have not confirmed the cause. **Analyses must compare this column within a tax year:** use tax-year effects, or standardize within year. A pooled exposure without year effects would read the shift as signal.
+
+**Evidence.**
+- Extract: `data/extracts/chr/chr_county.csv` (releases 2020–2025, county rows, the five codes; sha256 in `county_need_report.json` → `chr.extract_sha256`, raw file hashes in `chr.raw_files_sha256`). Contract: catalog `chr_county`, exact rows per release (3,142; 3,143 in 2024 with Alaska's 02063/02066; 3,152 in 2025 with both CT geographies).
+- Values in range: shares in 0–1, crime ≥ 0 (`chr.range_violations`, all 0).
+- Rebuild: `python scripts/build_county_need.py --chr-only --chr-dir data/raw/chr` refreshes only the CHR columns and checks that every ACS and NORP column is unchanged.
+- Tests: `tests/test_need.py`, the `test_chr_*` and `test_read_chr_*` and `test_add_chr_need_*` tests (vintage rule, code-based reading, missing measures, CT handling, ranges, rerun safety).

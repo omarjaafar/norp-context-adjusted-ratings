@@ -232,6 +232,36 @@ sources:
     expected_rows: [169, 180]
     extract: null
 
+  chr_county:
+    description: County Health Rankings national analytic data (health, education, crime), one row per county per release year
+    origin_kind: url
+    origin: https://www.countyhealthrankings.org/sites/default/files/media/document/analytic_data{year}.csv
+    # Release years, not tax years: theorylab/need.py::CHR_MEASURES maps release to tax year (D8).
+    years: [2020, 2021, 2022, 2023, 2024, 2025]
+    keys:
+      county_fips: fipscode
+    # Columns are the CHR measure codes (second header row); the labels change case across releases.
+    fields:
+      v002_rawvalue: chr_poor_fair_health
+      v085_rawvalue: chr_uninsured
+      v069_rawvalue: chr_some_college
+      v168_rawvalue: chr_hs_completion
+      v043_rawvalue: chr_violent_crime_rate
+    attributes:
+      state: chr_state
+      county: chr_county_name
+    verified: [fipscode, v002_rawvalue, v085_rawvalue, v069_rawvalue, v168_rawvalue, v043_rawvalue]
+    # County rows (countycode != 000), measured on the downloaded files 2026-11-08.
+    # 2024 adds Alaska's 02063/02066; 2025 lists Connecticut both ways (8 counties + 9 regions).
+    expected_rows:
+      2020: [3142, 3142]
+      2021: [3142, 3142]
+      2022: [3142, 3142]
+      2023: [3142, 3142]
+      2024: [3143, 3143]
+      2025: [3152, 3152]
+    extract: data/extracts/chr/chr_county.csv
+
   norp_disadvantaged:
     description: NORP disadvantaged-communities table (tract-level need), one row per census tract, no year
     origin_kind: norp_raw

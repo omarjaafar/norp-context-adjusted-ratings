@@ -10,16 +10,25 @@ data/derived/county_need.csv plus data/output/county_need_report.json. The
 raw API responses are cached in data/raw/acs/ (git-ignored) so a rerun does
 not hit the API again.
 
+County Health Rankings (CP4, D8): health, education and crime columns
+(chr_*) come from the committed extract data/extracts/chr/chr_county.csv.
+--chr-dir rebuilds that extract from the national analytic_data<YEAR>.csv
+files (download them into a folder first; data/raw/chr/ is git-ignored).
+--chr-only refreshes just the chr_* columns of the existing need table and the
+"chr" block of the report, leaving every ACS and NORP column as it is.
+
 Usage:
     python scripts/build_county_need.py --norp-raw-dir <path to NORP data/raw>
-        [--years 2018 2022] [--api-key KEY]
+        [--years 2018 2022] [--api-key KEY] [--chr-dir DIR]
     (or set CENSUS_API_KEY; the Census API rejects requests without a key)
+    python scripts/build_county_need.py --chr-only [--chr-dir DIR]
 """
 
 from __future__ import annotations
 
 import argparse
 import datetime
+import hashlib
 import json
 import os
 import sys
@@ -30,13 +39,88 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from theorylab.catalog import REPO_ROOT, check_contract, load_catalog  # noqa: E402
-from theorylab.need import (NORP_NEED_COLUMNS, acs_rows_to_frame, add_norp_need,  # noqa: E402
+from theorylab.need import (CHR_COLUMNS, CHR_MEASURES, NORP_NEED_COLUMNS,  # noqa: E402
+                            add_chr_need, chr_by_tax_year, chr_range_violations,
+                            chr_release_for, read_chr_release,
+                            acs_rows_to_frame, add_norp_need,
                             aggregate_tract_need, ct_region_rows, fetch_acs_rows,
                             load_norp_tracts, to_canonical, to_need_table, town_region_map,
                             vintage_correlation)
 
 CACHE = REPO_ROOT / "data" / "raw" / "acs"
 REPORT = REPO_ROOT / "data" / "output" / "county_need_report.json"
+
+
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def load_chr_extract(source, chr_dir: str | None):
+    """The long CHR extract: rebuilt from raw release files when chr_dir is given."""
+    out = source.extract_path()
+    raw_files, contracts = {}, {}
+    if chr_dir:
+        frames = []
+        for release in source.years:
+            path = Path(chr_dir) / f"analytic_data{release}.csv"
+            df = read_chr_release(path, release)
+            contracts[str(release)] = check_contract(df, source, label=f"chr_county-{release}",
+                                                     year=release)
+            raw_files[path.name] = sha256_file(path)
+            frames.append(df)
+        extract = pd.concat(frames, ignore_index=True)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        extract.to_csv(out, index=False, lineterminator="\n")
+    extract = pd.read_csv(out, dtype={"fipscode": str, "state": str, "county": str})
+    if not contracts:
+        for release, df in extract.groupby("chr_release"):
+            contracts[str(release)] = check_contract(df, source, label=f"chr_county-{release}",
+                                                     year=int(release))
+    return extract, contracts, raw_files
+
+
+def chr_report(need, extract, source, contracts, raw_files):
+    """Coverage of the CHR columns in the need table, per tax year and column."""
+    years = sorted(need["acs_year"].unique())
+    rows = need.groupby("acs_year").size()
+    published = need[~need["acs_estimated"].astype(bool)]
+    ct_regions = need["county_fips"].str.match(r"^091[1-9]0$")
+    report = {
+        "extract": source.extract_path().relative_to(REPO_ROOT).as_posix(),
+        "extract_sha256": sha256_file(source.extract_path()),
+        "raw_files_sha256": raw_files or "unchanged (extract read as committed)",
+        "contracts": contracts,
+        "vintage_rule": {c: {"chr_code": code, "source": src,
+                             "release_by_tax_year": {str(y): chr_release_for(c, y) for y in years}}
+                         for c, (code, _, _, src) in CHR_MEASURES.items()},
+        "need_rows_by_year": {str(y): int(n) for y, n in rows.items()},
+        "matched_by_year": {c: {str(y): int(n) for y, n in
+                                need[c].notna().groupby(need["acs_year"]).sum().items()}
+                            for c in CHR_COLUMNS},
+        "match_rate_by_year": {c: {str(y): round(float(r), 4) for y, r in
+                                   need[c].notna().groupby(need["acs_year"]).mean().items()}
+                               for c in CHR_COLUMNS},
+        "unmatched_by_state_by_year": {
+            c: {str(y): {s: int(n) for s, n in g.str[:2].value_counts().sort_index().items()}
+                for y, g in need.loc[need[c].isna(), "county_fips"].groupby(need["acs_year"])}
+            for c in CHR_COLUMNS},
+        "ct_planning_region_rows_matched": {
+            c: {str(y): int(n) for y, n in
+                need.loc[ct_regions, c].notna().groupby(need.loc[ct_regions, "acs_year"]).sum().items()}
+            for c in CHR_COLUMNS},
+        "median_by_year": {c: {str(y): round(float(v), 4) for y, v in
+                               published.groupby("acs_year")[c].median().items()}
+                           for c in CHR_COLUMNS},
+        "range_violations": chr_range_violations(need),
+        # Year-to-year correlation over counties in both years; a drop marks a series break.
+        "vintage_correlation": vintage_correlation(published, list(CHR_COLUMNS[:4]),
+                                   list(zip(years, years[1:]))),
+    }
+    return report
 
 
 CT_TOWNS = {"geo_for": "county subdivision:*", "geo_in": "state:09"}
@@ -89,10 +173,17 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--years", nargs="+", type=int)
     ap.add_argument("--api-key", default=os.environ.get("CENSUS_API_KEY"))
-    ap.add_argument("--norp-raw-dir", required=True)
+    ap.add_argument("--norp-raw-dir")
+    ap.add_argument("--chr-dir", help="folder with CHR analytic_data<YEAR>.csv files")
+    ap.add_argument("--chr-only", action="store_true",
+                    help="refresh only the chr_* columns of the existing need table")
     args = ap.parse_args()
 
     catalog = load_catalog()
+    if args.chr_only:
+        return chr_only(catalog, args.chr_dir)
+    if not args.norp_raw_dir:
+        ap.error("--norp-raw-dir is required unless --chr-only is given")
     source = catalog["acs_county"]
     norp_src = catalog["norp_disadvantaged"]
     tract_path = Path(args.norp_raw_dir) / norp_src.origin
@@ -130,6 +221,8 @@ def main() -> int:
     norp_contract = check_contract(tracts, norp_src)
     county_norp = aggregate_tract_need(tracts, norp_src)
     need = add_norp_need(need, county_norp)
+    chr_extract, chr_contracts, chr_raw = load_chr_extract(catalog["chr_county"], args.chr_dir)
+    need = add_chr_need(need, chr_by_tax_year(chr_extract, sorted(need["acs_year"].unique())))
     matched = need["county_fips"].isin(county_norp["county_fips"])
     pop = pd.to_numeric(tracts["Population"], errors="coerce")
     flag = pd.to_numeric(tracts["Food Desert Pct"], errors="coerce")
@@ -170,11 +263,38 @@ def main() -> int:
             "null_rates": {c: round(float(need[c].isna().mean()), 4) for c in NORP_NEED_COLUMNS},
         },
     }
+    report["chr"] = chr_report(need, chr_extract, catalog["chr_county"], chr_contracts, chr_raw)
     REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report["rows_by_year"], indent=2))
-    violations = [v for c in (*contracts.values(), norp_contract) for v in c["violations"]]
+    violations = [v for c in (*contracts.values(), norp_contract, *chr_contracts.values())
+                  for v in c["violations"]]
     violations += ct_violations
+    if violations:
+        print("\n".join(violations), file=sys.stderr)
+        return 1
+    return 0
+
+
+def chr_only(catalog, chr_dir) -> int:
+    """Refresh the chr_* columns of the existing need table and the report's chr block."""
+    source = catalog["chr_county"]
+    path = catalog["acs_county"].extract_path()
+    need = pd.read_csv(path, dtype={"county_fips": str})
+    before = need.drop(columns=[c for c in CHR_COLUMNS if c in need.columns])
+    extract, contracts, raw_files = load_chr_extract(source, chr_dir)
+    need = add_chr_need(before, chr_by_tax_year(extract, sorted(need["acs_year"].unique())))
+    # the ACS and NORP columns must come through untouched
+    pd.testing.assert_frame_equal(need[list(before.columns)], before)
+    need.to_csv(path, index=False)
+    report = json.loads(REPORT.read_text(encoding="utf-8")) if REPORT.exists() else {}
+    report["chr"] = chr_report(need, extract, source, contracts, raw_files)
+    report["chr"]["generated_at"] = datetime.datetime.now().isoformat(timespec="seconds")
+    REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(json.dumps(report["chr"]["match_rate_by_year"], indent=2))
+    violations = [v for c in contracts.values() for v in c["violations"]]
+    if any(report["chr"]["range_violations"].values()):
+        violations.append(f"CHR values out of range: {report['chr']['range_violations']}")
     if violations:
         print("\n".join(violations), file=sys.stderr)
         return 1

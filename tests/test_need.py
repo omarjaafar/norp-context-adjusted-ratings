@@ -216,3 +216,103 @@ def test_vintage_correlation_uses_counties_present_in_both_years():
     })
     out = vintage_correlation(need, ["poverty_rate"], [(2018, 2019)])
     assert out == {"2018_vs_2019": {"counties": 3, "poverty_rate": 1.0}}
+
+
+# --- County Health Rankings (CP4, D8) --------------------------------------
+
+from theorylab.need import (CHR_COLUMNS, CHR_CRIME_RELEASE, add_chr_need,  # noqa: E402
+                            chr_by_tax_year, chr_range_violations, chr_release_for,
+                            read_chr_release)
+
+_CHR_LABELS = ["State FIPS Code", "County FIPS Code", "5-digit FIPS Code", "State Abbreviation",
+               "Name", "Poor or Fair Health raw value", "Uninsured raw value",
+               "Some College raw value", "High School Completion raw value",
+               "Violent Crime raw value"]
+_CHR_CODES = ["statecode", "countycode", "fipscode", "state", "county", "v002_rawvalue",
+              "v085_rawvalue", "v069_rawvalue", "v168_rawvalue", "v043_rawvalue"]
+
+
+def _write_chr(path, rows, drop=()):
+    keep = [i for i, c in enumerate(_CHR_CODES) if c not in drop]
+    lines = [",".join(_CHR_LABELS[i] for i in keep), ",".join(_CHR_CODES[i] for i in keep)]
+    lines += [",".join(str(r[i]) for i in keep) for r in rows]
+    path.write_text("\n".join(lines) + "\n", encoding="latin-1")
+    return path
+
+
+def _chr_rows(shift=0.0):
+    # state row (countycode 000) must be dropped; codes keep leading zeros
+    return [["13", "000", "13000", "GA", "Georgia", 0.2, 0.1, 0.6, 0.9, 300],
+            ["13", "001", "13001", "GA", "A County", 0.25 + shift, 0.12, 0.5, 0.85, 400],
+            ["09", "001", "9001", "CT", "Fairfield County", 0.11 + shift, 0.07, 0.7, 0.92, 150],
+            ["09", "110", "09110", "CT", "Capitol Planning Region", 0.13 + shift, 0.06, 0.68, 0.9, ""]]
+
+
+def test_chr_release_rule_lags_by_measure():
+    # survey/model measures: data year = tax year (release - 3)
+    assert chr_release_for("chr_poor_fair_health", 2018) == 2021
+    assert chr_release_for("chr_uninsured", 2022) == 2025
+    # ACS 5-year measures: window ends in the tax year, as in D4 (release - 2)
+    assert chr_release_for("chr_some_college", 2018) == 2020
+    assert chr_release_for("chr_hs_completion", 2022) == 2024
+    # crime is frozen: one release for every year
+    assert {chr_release_for("chr_violent_crime_rate", y) for y in range(2018, 2023)} == {
+        CHR_CRIME_RELEASE}
+
+
+def test_read_chr_release_uses_codes_drops_state_rows_and_pads_fips(tmp_path):
+    df = read_chr_release(_write_chr(tmp_path / "a.csv", _chr_rows()), 2024)
+    assert list(df["fipscode"]) == ["13001", "09001", "09110"]
+    assert (df["chr_release"] == 2024).all()
+    assert df.loc[df["fipscode"] == "09110", "v043_rawvalue"].isna().all()
+
+
+def test_read_chr_release_missing_measure_is_nan(tmp_path):
+    # v168 starts in the 2021 release, v043 stops after 2022
+    df = read_chr_release(_write_chr(tmp_path / "a.csv", _chr_rows(),
+                                     drop=("v168_rawvalue", "v043_rawvalue")), 2020)
+    assert df["v168_rawvalue"].isna().all() and df["v043_rawvalue"].isna().all()
+
+
+def test_chr_by_tax_year_takes_each_column_from_its_release(tmp_path):
+    releases = {r: read_chr_release(_write_chr(tmp_path / f"{r}.csv", _chr_rows(shift=r / 1e4)), r)
+                for r in (2020, 2021, 2022, 2024)}
+    extract = pd.concat(releases.values(), ignore_index=True)
+    wide = chr_by_tax_year(extract, [2018])
+    a = wide[wide["county_fips"] == "13001"].iloc[0]
+    assert a["acs_year"] == 2018
+    assert a["chr_poor_fair_health"] == pytest.approx(0.25 + 2021 / 1e4)  # release 2021
+    assert a["chr_violent_crime_rate"] == 400                              # release 2022
+    assert list(wide.columns) == ["county_fips", "acs_year", *CHR_COLUMNS]
+
+
+def test_chr_shares_are_in_unit_interval_and_violations_are_counted():
+    wide = pd.DataFrame({"chr_poor_fair_health": [0.2, 1.2], "chr_uninsured": [0.1, -0.1],
+                         "chr_some_college": [0.5, 0.6], "chr_hs_completion": [0.9, 0.9],
+                         "chr_violent_crime_rate": [450.0, 1200.0]})
+    v = chr_range_violations(wide)
+    assert v == {"chr_poor_fair_health": 1, "chr_uninsured": 1, "chr_some_college": 0,
+                 "chr_hs_completion": 0, "chr_violent_crime_rate": 0}
+
+
+def test_add_chr_need_ct_regions_match_only_when_published_and_rerun_is_safe(tmp_path):
+    need = pd.DataFrame({"county_fips": ["13001", "09110", "09001"], "acs_year": [2022] * 3,
+                         "need_index": [0.1, 0.2, 0.3]})
+    # legacy-only release: the planning region 09110 gets nothing
+    legacy = [r for r in _chr_rows() if r[2] != "09110"]
+    extract = pd.concat([read_chr_release(_write_chr(tmp_path / f"{r}.csv", legacy), r)
+                         for r in (2022, 2024, 2025)], ignore_index=True)
+    out = add_chr_need(need, chr_by_tax_year(extract, [2022]))
+    assert out.set_index("county_fips").loc["09110", list(CHR_COLUMNS)].isna().all()
+    assert out.set_index("county_fips").loc["09001", "chr_uninsured"] == pytest.approx(0.07)
+    # running twice replaces, never duplicates, the CHR columns
+    again = add_chr_need(out, chr_by_tax_year(extract, [2022]))
+    assert list(again.columns) == list(out.columns)
+    pd.testing.assert_frame_equal(again, out)
+    pd.testing.assert_frame_equal(out[list(need.columns)], need)
+
+
+def test_chr_catalog_block_is_valid():
+    src = load_catalog()["chr_county"]
+    assert set(src.fields.values()) == set(CHR_COLUMNS)
+    assert src.row_bounds(2025) == (3152, 3152)

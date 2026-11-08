@@ -253,3 +253,102 @@ def add_norp_need(need: pd.DataFrame, county_norp: pd.DataFrame) -> pd.DataFrame
     """Attach the NORP county measures to every year of the need table."""
     cols = ["county_fips", *NORP_NEED_COLUMNS]
     return need.merge(county_norp[cols], on="county_fips", how="left", validate="many_to_one")
+
+
+# ---------------------------------------------------------------------------
+# County Health Rankings (CHR): health, education and crime (CP4, D8)
+#
+# Each CHR release year carries data from earlier years, and each measure has
+# its own lag. CHR_MEASURES maps a panel column to its CHR measure code and to
+# the lag between our tax year and the release that describes it:
+#   release = tax_year + lag
+# lag 3 for the survey/model measures (BRFSS, SAHIE): data year = tax year.
+# lag 2 for the ACS 5-year measures: the window ends in the tax year, as in D4.
+# Violent crime has no lag: CHR froze it (the same 2014 & 2016 UCR values in
+# every release 2019-2022, absent from 2023 on), so one release is used for
+# every tax year and the column is a static county attribute, like D6.
+# ---------------------------------------------------------------------------
+
+CHR_MEASURES = {
+    # column: (CHR code, lag in years or None for a fixed release, kind, source)
+    "chr_poor_fair_health": ("v002_rawvalue", 3, "share", "BRFSS"),
+    "chr_uninsured": ("v085_rawvalue", 3, "share", "SAHIE"),
+    "chr_some_college": ("v069_rawvalue", 2, "share", "ACS 5-year"),
+    "chr_hs_completion": ("v168_rawvalue", 2, "share", "ACS 5-year"),
+    "chr_violent_crime_rate": ("v043_rawvalue", None, "rate", "FBI UCR"),
+}
+CHR_COLUMNS = tuple(CHR_MEASURES)
+CHR_CRIME_RELEASE = 2022  # last release that carries v043
+CHR_EXTRACT_COLUMNS = ("chr_release", "fipscode", "state", "county",
+                       *(code for code, *_ in CHR_MEASURES.values()))
+
+
+def chr_release_for(column: str, tax_year: int) -> int:
+    """The CHR release year whose values describe `column` in `tax_year`."""
+    _, lag, _, _ = CHR_MEASURES[column]
+    return CHR_CRIME_RELEASE if lag is None else int(tax_year) + lag
+
+
+def read_chr_release(path, release: int) -> pd.DataFrame:
+    """Read one CHR analytic_data<release>.csv: county rows, measure codes as columns.
+
+    The file has two header rows (labels, then codes such as v002_rawvalue);
+    the codes are stable across releases while the labels change case, so the
+    code row is used. State and national rows (countycode 000) are dropped.
+    Measures missing from a release (v168 before 2021, v043 from 2023) come
+    back as NaN.
+    """
+    df = pd.read_csv(path, skiprows=[0], dtype=str, encoding="latin-1")
+    df = df[df["countycode"] != "000"].copy()
+    df["fipscode"] = df["fipscode"].str.strip().str.zfill(5)
+    df["chr_release"] = int(release)
+    for code, *_ in CHR_MEASURES.values():
+        df[code] = pd.to_numeric(df[code], errors="coerce") if code in df else np.nan
+    return df[list(CHR_EXTRACT_COLUMNS)].reset_index(drop=True)
+
+
+def chr_by_tax_year(extract: pd.DataFrame, tax_years) -> pd.DataFrame:
+    """Wide county x tax-year table of the CHR columns, by the D8 vintage rule.
+
+    extract is the long table of read_chr_release() frames (chr_release,
+    fipscode, codes...). Returns county_fips, acs_year and one column per
+    CHR_COLUMNS entry. A county/year with no value in the mapped release is NaN.
+    """
+    frames = []
+    for year in tax_years:
+        year_frame = None
+        for column, (code, *_) in CHR_MEASURES.items():
+            rel = extract[extract["chr_release"] == chr_release_for(column, year)]
+            part = (rel[["fipscode", code]].dropna()
+                    .rename(columns={"fipscode": "county_fips", code: column}))
+            if part["county_fips"].duplicated().any():
+                raise ValueError(f"CHR release has duplicate counties for {column}")
+            year_frame = part if year_frame is None else year_frame.merge(
+                part, on="county_fips", how="outer")
+        year_frame["acs_year"] = int(year)
+        frames.append(year_frame)
+    out = pd.concat(frames, ignore_index=True)
+    return out[["county_fips", "acs_year", *CHR_COLUMNS]].sort_values(
+        ["acs_year", "county_fips"]).reset_index(drop=True)
+
+
+def chr_range_violations(chr_wide: pd.DataFrame) -> dict:
+    """Count values outside their valid range: shares in [0, 1], rates >= 0."""
+    out = {}
+    for column, (_, _, kind, _) in CHR_MEASURES.items():
+        v = chr_wide[column]
+        bad = (v < 0) | (v > 1) if kind == "share" else (v < 0)
+        out[column] = int(bad.sum())
+    return out
+
+
+def add_chr_need(need: pd.DataFrame, chr_wide: pd.DataFrame) -> pd.DataFrame:
+    """Attach the CHR columns to the need table on (county_fips, acs_year).
+
+    Any CHR columns already in `need` are replaced, so rerunning is safe. Rows
+    of chr_wide with no need row (e.g. legacy Connecticut counties in years the
+    need table has planning regions only) are dropped; the report counts them.
+    """
+    base = need.drop(columns=[c for c in CHR_COLUMNS if c in need.columns])
+    return base.merge(chr_wide, on=["county_fips", "acs_year"], how="left",
+                      validate="one_to_one")
