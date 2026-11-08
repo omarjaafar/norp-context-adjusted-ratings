@@ -1,0 +1,229 @@
+{
+  "generated_at": "2026-11-08T13:11:08",
+  "machine": {
+    "os": "macOS-26.6.2-arm64-arm-64bit",
+    "machine": "arm64",
+    "python": "3.12.7",
+    "pandas": "3.1.0",
+    "numpy": "2.5.4"
+  },
+  "commit": "b8de60deba7decc976ef1aeb418e3b84030b6439",
+  "working_tree_clean": false,
+  "panel": {
+    "path": "data/derived/org_year_panel.csv.gz as built by scripts/build_panel.py at b8de60d (checked from a saved copy)",
+    "rows": 2390744,
+    "columns": 48,
+    "csv_bytes": 1045747668,
+    "sha256_csv": "ed5c05d769c6bee5ecf5d86369de5a96cfe22f947c1d43d395dd13f9af7cafcc"
+  },
+  "reference": {
+    "source": "data/output/panel_join_log.json @ b8de60d",
+    "rows": 2390744,
+    "sha256_csv": "7d0e2bdadb2524081ccb84b5e22fa9d4e58e8e55b0cd8cde68b79a14263a2e92",
+    "columns": 48
+  },
+  "match": {
+    "sha256_csv": false,
+    "rows": true,
+    "columns": true
+  },
+  "column_hashes": {
+    "ein": {
+      "sha256": "524d7620cf926fd04574bdafed41787b6f39b50cf90e5e8e4ccba2fdc9d0dfa9",
+      "bytes": 23907440
+    },
+    "tax_year": {
+      "sha256": "9b91c63fe84273492662fa1696dd240664beb46632ddfe287e239ab529bbba68",
+      "bytes": 11953720
+    },
+    "revenue_total": {
+      "sha256": "5b5821bcf50c903c41376db036f8b49eb0f5bf776a4ad5d19f8055de33927cd8",
+      "bytes": 20907662
+    },
+    "expenses_total": {
+      "sha256": "86314c60e1ca2a4fcf09a8b07d9c80ce82b2808129971e4af1275c0ab7c6cba1",
+      "bytes": 20792149
+    },
+    "fundraising_expense_p01": {
+      "sha256": "3e01318a588f37f761b30c795a183990b8d769db4011e522d35c6c883f0d6431",
+      "bytes": 8952576
+    },
+    "contributions": {
+      "sha256": "6999b4a5a6e6eb648401308c0b2f97aed01cc6a2ec43d17edf88d29fc776b0b6",
+      "bytes": 12933212
+    },
+    "program_revenue": {
+      "sha256": "0c7064a3511acf2cf8eeb559f74841a2d889f5fd692dbfe7844880401a6eaf95",
+      "bytes": 14217712
+    },
+    "salaries": {
+      "sha256": "02b4183bafb4b7224df11e680bce63385765b7ecaa1f9d4d4998e3753fa6e354",
+      "bytes": 13909035
+    },
+    "net_assets_boy": {
+      "sha256": "59cc2a0c8ac790812eb624cb3786bcf400c7c34c584188bb0cf12a8de3a70ed0",
+      "bytes": 20668992
+    },
+    "net_assets_eoy": {
+      "sha256": "daa085437da26449a8d9609e957a5c0d3877d15af0fd7c5f61e2e94383c11f0b",
+      "bytes": 21094845
+    },
+    "return_type": {
+      "sha256": "80a987b6621127abc8dca1d53a7e76852f668932d4703df17b6e595331dfec01",
+      "bytes": 11281858
+    },
+    "p09_total_expense": {
+      "sha256": "76fcc9800e63b6a821e1d8758c82ed85de8e0c0c9c1e386e70201a5bd08bf8fd",
+      "bytes": 14925391
+    },
+    "p09_program_expense": {
+      "sha256": "e7d826f4dba3bc5a76787c5e0dc81bc22d65e5dc8cfe1cb64065dde350ce8509",
+      "bytes": 13502128
+    },
+    "p09_management_expense": {
+      "sha256": "b7337a08737c1126c3b9a8a9da49c61237b958694ef9f41af42950bfcaf1b3db",
+      "bytes": 11738681
+    },
+    "p09_fundraising_expense": {
+      "sha256": "07275be21b881f501b3b150b18ba07927597b88ae419d500517a058de325ba5b",
+      "bytes": 8647883
+    },
+    "has_p09": {
+      "sha256": "ee58ef48cb4f2bdd460d685b9a96b24e4075b184abe8555cd425b4e37bdc9d57",
+      "bytes": 12274224
+    },
+    "total_assets_eoy": {
+      "sha256": "eb1011fa6ac927e9f0e3a632f2ceec422f0b72649e962fea9013b25f2538b84f",
+      "bytes": 21204335
+    },
+    "total_liabilities_eoy": {
+      "sha256": "f01ee02a600658790fcbf24679e85cd5886fa57516a06d7c01c4f23abf0e72b1",
+      "bytes": 14540112
+    },
+    "has_p10": {
+      "sha256": "88557d33ce6cfcafc92e06b6745c8b34b93de41a681a0fe383669e61bfcc973b",
+      "bytes": 11953720
+    },
+    "county_fips": {
+      "sha256": "5a42d9fff4eec31be1efe36dbb23c2b7d47e0aa8bbb0a4f8ae99770d4662d288",
+      "bytes": 14125014
+    },
+    "state": {
+      "sha256": "5843bfa3db74aa26d26b7fab7164ceed47d6cda6417559dd7845d474e7ec04a3",
+      "bytes": 7086104
+    },
+    "category": {
+      "sha256": "e147a5bcab459d5c44497b866a6f486bb28f9c77a7e103b4b9076432f38fe6d1",
+      "bytes": 55245382
+    },
+    "has_county": {
+      "sha256": "e7ad71bbb059e2a64abb5b556771a50fbb07868c2795560993b94a09969073a8",
+      "bytes": 11997610
+    },
+    "population": {
+      "sha256": "33946e6f6c010d83449828d44926f057c73f7108681e810bf20f27521c7f29d0",
+      "bytes": 21356653
+    },
+    "median_household_income": {
+      "sha256": "57b97dd063d7bddabdd3bed1d9505e367bf8f9861305f77f3d36a07047d9d2cb",
+      "bytes": 19073577
+    },
+    "poverty_universe": {
+      "sha256": "2b8e59d2899173692dba36f424e57413b44b8174cfea38085d6cef18ecdf4a21",
+      "bytes": 21281866
+    },
+    "below_poverty": {
+      "sha256": "96afdb794a7115956fa8403a48f3a77ea6836bf18438620008d8f372bea1ac9d",
+      "bytes": 19171218
+    },
+    "civilian_labor_force": {
+      "sha256": "f9dce3996da7efc91f20fe69570f3153971d3addca9b6697fe96cfff0b9b06ca",
+      "bytes": 20645640
+    },
+    "unemployed": {
+      "sha256": "2a34ecbdf69c2eed43cde2ce5b2b28d3a707e9e3c06b49041cf2c308a495a439",
+      "bytes": 17676923
+    },
+    "poverty_rate": {
+      "sha256": "3fe54c3fd3abaf991bcb405ce0e71fc303fc282eaa0533678411efff22ac8f72",
+      "bytes": 46437288
+    },
+    "unemployment_rate": {
+      "sha256": "a6eb7ad202471e59fbba478e2642cd1186a1015c224d1886dcee07616c402054",
+      "bytes": 47320874
+    },
+    "need_index": {
+      "sha256": "98578b51d0072aecefcf4f29400502697dc74b346ac1eb532ba5921244dbf842",
+      "bytes": 47058369
+    },
+    "high_need": {
+      "sha256": "41e64babd7397f69de002d89a5cb86b1b005eb42d83c45eee545a68ddffdfb81",
+      "bytes": 13943211
+    },
+    "acs_estimated": {
+      "sha256": "e550e4d5800422ca61b58be8b8a3a9ebb62466d29884969d88e2f19b244f4678",
+      "bytes": 14097921
+    },
+    "avg_housing_burden": {
+      "sha256": "53643a19989a817ae57d12649053bd9358a0bab0a7a0986cfcd129a1871ae516",
+      "bytes": 42573095
+    },
+    "food_desert_share": {
+      "sha256": "8fb95bf3859f1e0b855f8610d3b9ada88f0feece08315b0b9deb3144720d835a",
+      "bytes": 42606233
+    },
+    "has_need": {
+      "sha256": "d1dc85c48b9cd5801e53176aa9f01a4d71ef864004fa134e585c8d74dfe0366f",
+      "bytes": 11997669
+    },
+    "program_expense_ratio": {
+      "sha256": "845e5f9ea9a7afbac08c6e172498b3508b1e92da15f8b78c4fee58b91595bf84",
+      "bytes": 23303872
+    },
+    "admin_expense_ratio": {
+      "sha256": "58aabe75f3214ac072ca45ef2e0362b4d92ff465ed6f573cf64c984aa59403b4",
+      "bytes": 24251475
+    },
+    "fundraising_expense_ratio": {
+      "sha256": "6cc26b426769bb21933d94cb181f951530c108fce506be773a1711fe25677b02",
+      "bytes": 14489010
+    },
+    "fundraising_efficiency": {
+      "sha256": "798211b58b67d1ee86c46e3f21701908b9c6a36793380ce2d0e2fed0f0137ff0",
+      "bytes": 13644126
+    },
+    "operating_margin": {
+      "sha256": "5a2675b5fda9af827010b7128f2113e0336acea1cad99459865e3c40808fdb2e",
+      "bytes": 46166309
+    },
+    "equity_ratio": {
+      "sha256": "8b6b67e8e153e40b2f2914214d49850deb6fbe27f76b04a9fecb4d8ca89fe17d",
+      "bytes": 43428507
+    },
+    "liabilities_to_assets": {
+      "sha256": "2a35b555fc2911b8e3ea74df233ed05f35ab482e11724065c9a185dcc8d921bc",
+      "bytes": 29970516
+    },
+    "revenue_concentration": {
+      "sha256": "29642d4d18b41444ec7edaae12b457893de777e95d553a19b81cc6fa83e0ac87",
+      "bytes": 25812768
+    },
+    "standard_rating": {
+      "sha256": "c288084dec2664a9b41e666b23d3f5eee48eeaeb4c036c2aab08d7cda4cb6560",
+      "bytes": 21114603
+    },
+    "rating_components": {
+      "sha256": "abfe7b95093274b0e861091eb9f5c540cf0bb7bdf5dc217c9eb92b5a1c87f04a",
+      "bytes": 4781488
+    },
+    "revenue_growth": {
+      "sha256": "0e594cb601947677a6aeca9a4a1c3344ef9c664468703b911a67aa4b00dd79ff",
+      "bytes": 34354823
+    }
+  },
+  "cell_diff": {
+    "other_panel": "this machine's earlier build of 2026-10-25 (CP3), saved copy",
+    "by_column": {}
+  },
+  "finding": "Hash does not match the reference built on Omar's machine on 2026-10-24. Rows (2,390,744), the 48 columns and every join statistic in panel_join_log.json match; no panel code changed between 517a92b and b8de60d. Two builds on this machine (2026-10-25 and 2026-11-08) are identical cell for cell (cell_diff empty), so the build is deterministic here and the difference is between the two machines' environments. Which columns differ is open: it needs this script run once on Omar's machine, then --compare."
+}
