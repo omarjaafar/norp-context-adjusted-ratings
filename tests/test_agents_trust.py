@@ -19,7 +19,7 @@ from theorylab.agents import COLUMNS_PATH, DataScout, Planner, scout_disagreemen
 from theorylab.catalog import REPO_ROOT
 from theorylab.llm import LLMClient, LLMError
 from theorylab.orchestrator import Orchestrator
-from theorylab.spec import GATE_POLICY, lock_gate
+from theorylab.spec import GATE_POLICY, lock_gate, validate_spec
 from theorylab.theory_run import DERIVED, available_columns
 
 from test_theory_run import _panel
@@ -101,6 +101,15 @@ def test_planner_must_use_the_scouts_variables(tmp_path):
     with pytest.raises(ValueError, match="Scout mapped"):
         planner.plan("t", mapping, available_columns())
     assert scout_disagreements(spec, {"fields_available": []}) == []  # --no-scout
+
+
+@pytest.mark.parametrize("value", ["county_fips", "none"])  # both written by the live Planner for T4
+def test_exposure_varies_by_only_allows_tax_year(value):
+    spec = _ratings_spec()
+    spec["exposure_varies_by"] = value
+    assert any("exposure_varies_by" in e for e in validate_spec(spec))
+    spec["exposure_varies_by"] = "tax_year"
+    assert validate_spec(spec) == []
 
 
 def test_every_panel_column_has_a_description():

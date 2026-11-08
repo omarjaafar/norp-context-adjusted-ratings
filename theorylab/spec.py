@@ -96,6 +96,9 @@ def validate_spec(spec: dict, available_columns=None) -> list:
     etype = spec.get("exposure_type", "binary")
     if etype not in EXPOSURE_TYPES:
         errors.append(f"exposure_type must be one of {EXPOSURE_TYPES}")
+    if spec.get("exposure_varies_by", "tax_year") != "tax_year":  # a column name alone passed, then crashed the run
+        errors.append('exposure_varies_by must be "tax_year", also for an exposure that does not change '
+                      "over time: its whole history is shuffled either way")
     pop = spec["population"]
     if not isinstance(pop, dict):
         errors.append("population must be an object")
