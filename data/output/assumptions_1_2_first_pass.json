@@ -1,0 +1,108 @@
+{
+  "note": "First pass, kept as measured. It ran before spec.validate_spec checked exposure_varies_by, so crime_overhead/text counts as a pass here even though its spec ('county_fips') crashed at run time: 7 of 10 specs were usable. The current measurement is assumptions_1_2.json.",
+  "model": "claude-sonnet-5-5",
+  "replayed": false,
+  "assumption_1": {
+    "texts": 10,
+    "schema_valid": 9,
+    "pass_schema_and_review": 8,
+    "rate": 0.8,
+    "needed_rate": 0.85,
+    "skipped_theories": [],
+    "rows": [
+      {
+        "theory_id": "ratings_fairness",
+        "variant": "text",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "ratings_fairness",
+        "variant": "paraphrase",
+        "schema_valid": true,
+        "review": [
+          "exposure: Planner 'need_index', gold 'high_need'",
+          "exposure_type: Planner 'continuous', gold 'binary'"
+        ],
+        "gate_overrides": [],
+        "passes": false
+      },
+      {
+        "theory_id": "health_margin",
+        "variant": "text",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "health_margin",
+        "variant": "paraphrase",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "education_fundraising",
+        "variant": "text",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "education_fundraising",
+        "variant": "paraphrase",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "crime_overhead",
+        "variant": "text",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "crime_overhead",
+        "variant": "paraphrase",
+        "schema_valid": false,
+        "error": "Planner spec rejected after 2 attempts: [\"columns not in the panel or derived columns: ['none']\"]",
+        "passes": false
+      },
+      {
+        "theory_id": "unemployment_vulnerability",
+        "variant": "text",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      },
+      {
+        "theory_id": "unemployment_vulnerability",
+        "variant": "paraphrase",
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
+      }
+    ]
+  },
+  "assumption_2": {
+    "live_calls": 24,
+    "cache_hits": 0,
+    "input_tokens": 41980,
+    "output_tokens": 13775,
+    "planning_cost_usd": 0.22171000000000002,
+    "planning_seconds_this_run": 95.17777061462402,
+    "projected_20_theories_usd": 0.44342000000000004,
+    "limit_usd": 15.0,
+    "note": "cost counts every planning call, cached or not, at the model's list price; the statistics after the spec make no LLM calls"
+  }
+}
