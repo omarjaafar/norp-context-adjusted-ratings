@@ -75,7 +75,8 @@ def main() -> int:
     panel, log = build_panel(parts["nccs_p01"], parts["nccs_p09"], parts["nccs_p10"],
                              crosswalk, need)
     PANEL.parent.mkdir(parents=True, exist_ok=True)
-    panel.to_csv(PANEL, index=False, compression={"method": "gzip", "mtime": 0})
+    # lineterminator: pandas defaults to os.linesep, so Windows builds wrote CRLF and hashed differently
+    panel.to_csv(PANEL, index=False, lineterminator="\n", compression={"method": "gzip", "mtime": 0})
 
     log = {
         "generated_at": datetime.datetime.now().isoformat(timespec="seconds"),
