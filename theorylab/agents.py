@@ -117,7 +117,8 @@ class Planner:
     max_attempts: int = 2
     history: list = field(default_factory=list)
 
-    def prompt(self, theory: str, mapping: dict, errors: list | None = None) -> str:
+    def prompt(self, theory: str, mapping: dict, errors: list | None = None,
+               previous: dict | None = None) -> str:
         with open(self.template_path, encoding="utf-8") as f:
             example = f.read()
         text = (f"Theory: {theory}\n\nScout mapping: {json.dumps(mapping)}\n\n"
@@ -126,14 +127,15 @@ class Planner:
                 "Use the Scout's outcome, exposure, exposure_type and exposure_unit unchanged. "
                 "Give a fresh theory_id (snake_case).")
         if errors:
-            text += f"\n\nYour previous spec was rejected: {errors}. Fix exactly these problems."
+            text += (f"\n\nYour previous spec:\n{json.dumps(previous)}\n\nIt was rejected: {errors}. "
+                     "Return it with exactly these problems fixed and everything else unchanged.")
         return text
 
     def plan(self, theory: str, mapping: dict, columns=None) -> dict:
         columns = columns if columns is not None else available_columns()
-        errors = None
+        errors, proposed = None, None
         for attempt in range(1, self.max_attempts + 1):
-            proposed = extract_json(self.llm.complete(PLANNER_SYSTEM, self.prompt(theory, mapping, errors)))
+            proposed = extract_json(self.llm.complete(PLANNER_SYSTEM, self.prompt(theory, mapping, errors, proposed)))
             spec, overrides = lock_gate(proposed)
             spec.setdefault("source", "planner")
             spec["written_by"] = f"Planner agent ({self.llm.model})"

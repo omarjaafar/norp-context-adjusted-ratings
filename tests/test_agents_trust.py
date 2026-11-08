@@ -103,6 +103,13 @@ def test_planner_must_use_the_scouts_variables(tmp_path):
     assert scout_disagreements(spec, {"fields_available": []}) == []  # --no-scout
 
 
+def test_planner_retry_shows_the_rejected_spec(tmp_path):
+    planner = Planner(_client(tmp_path, []), str(TEMPLATE))
+    assert "previous spec" not in planner.prompt("t", {})
+    retry = planner.prompt("t", {}, ["bad field"], {"theory_id": "first_try"})
+    assert "first_try" in retry and "bad field" in retry
+
+
 @pytest.mark.parametrize("value", ["county_fips", "none"])  # both written by the live Planner for T4
 def test_exposure_varies_by_only_allows_tax_year(value):
     spec = _ratings_spec()
