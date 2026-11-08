@@ -3,9 +3,9 @@
   "replayed": false,
   "assumption_1": {
     "texts": 10,
-    "schema_valid": 9,
-    "pass_schema_and_review": 8,
-    "rate": 0.8,
+    "schema_valid": 10,
+    "pass_schema_and_review": 9,
+    "rate": 0.9,
     "needed_rate": 0.85,
     "skipped_theories": [],
     "rows": [
@@ -63,9 +63,10 @@
       {
         "theory_id": "crime_overhead",
         "variant": "text",
-        "schema_valid": false,
-        "error": "Planner spec rejected after 2 attempts: [\"a binary exposure needs H1 method 'difference_in_means'\", \"exposure_type is 'binary' but the Scout mapped 'continuous'\"]",
-        "passes": false
+        "schema_valid": true,
+        "review": [],
+        "gate_overrides": [],
+        "passes": true
       },
       {
         "theory_id": "crime_overhead",
@@ -94,13 +95,13 @@
     ]
   },
   "assumption_2": {
-    "live_calls": 2,
-    "cache_hits": 23,
-    "input_tokens": 43377,
-    "output_tokens": 14540,
-    "planning_cost_usd": 0.232154,
-    "planning_seconds_this_run": 17.583396196365356,
-    "projected_20_theories_usd": 0.464308,
+    "live_calls": 5,
+    "cache_hits": 20,
+    "input_tokens": 46996,
+    "output_tokens": 14886,
+    "planning_cost_usd": 0.242852,
+    "planning_seconds_this_run": 31.520429611206055,
+    "projected_20_theories_usd": 0.485704,
     "limit_usd": 15.0,
     "note": "cost counts every planning call, cached or not, at the model's list price; the statistics after the spec make no LLM calls"
   }
