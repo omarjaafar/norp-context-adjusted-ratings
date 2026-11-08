@@ -25,11 +25,11 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
-from theorylab.executor import Residualizer, fixed_effects, fwl_coefficient, to_float, to_jsonable
+from theorylab.executor import Residualizer, fixed_effects, to_float, to_jsonable
 from theorylab.spec import spec_columns
 from theorylab.theory_run import add_derived, select_population
 from theorylab.validator import (GateInput, UnitPermuter, benjamini_hochberg, difference_in_means,
-                                 pearson_r, permutation_test)
+                                 gate_statistic, pearson_r, permutation_test)
 
 
 def _continuous(spec: dict) -> bool:
@@ -50,11 +50,18 @@ def _year_tests(pop: pd.DataFrame, spec: dict, n_perm: int, seed: int) -> dict:
     continuous = _continuous(spec)
     h1_stat = (lambda xv: pearson_r(y, xv)) if continuous else (lambda xv: difference_in_means(y, xv))
     h1 = h1_stat(x)
+    # same statistic as the pooled gate: studentized slope when the policy says so (V3)
+    studentized = bool((spec["validator"].get("permutation") or {}).get("studentized", False))
+    unit_codes = pd.factorize(pop[unit], sort=True)[0]
+    if studentized:
+        h1_stat = gate_statistic(y - y.mean(), None, unit_codes, True)
     h1_perm = permutation_test(h1_stat, permuter, n_perm, seed)
     fit = fixed_effects(pop, outcome, exposure, controls=controls, absorb=absorb, cluster=cluster)
     resid = Residualizer.from_panel(pop, controls, absorb)
     y_resid = resid(y)
-    h2_perm = permutation_test(lambda xv: fwl_coefficient(y_resid, resid(xv)), permuter, n_perm, seed + 1)
+    clusters = pd.factorize(pop[cluster], sort=True)[0] if cluster else None
+    h2_perm = permutation_test(gate_statistic(y_resid, resid, clusters, studentized),
+                               permuter, n_perm, seed + 1)
     if continuous:  # a correlation is already standardized
         h1_out = {"method": "correlation", "effect": h1, "standardized_effect": h1}
     else:

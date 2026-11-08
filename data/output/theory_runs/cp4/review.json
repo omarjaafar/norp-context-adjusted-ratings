@@ -1,0 +1,56 @@
+{
+  "run_dir": "data/output/theory_runs/cp4",
+  "family_size": 4,
+  "all_follow": true,
+  "all_current_gate": false,
+  "theories": [
+    {
+      "theory_id": "hard_pressed_county_rating_penalty",
+      "gold_id": "ratings_fairness",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 not significant after FDR (q = 0.3533)",
+        "H1 gap -0.022 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": -0.02212535070089836,
+      "H1_family_q": 0.35333333333333333,
+      "H2_standardized": -0.011613714146140703,
+      "H2_family_q": 0.35333333333333333,
+      "replicated": false,
+      "folds_with_expected_sign": 0,
+      "gate_problems": [
+        "raw-coefficient permutation (before 7ab7337): rerun"
+      ],
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 0.13686445937876496
+    },
+    {
+      "theory_id": "unemployment_leverage_link",
+      "gold_id": "unemployment_vulnerability",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 not significant after FDR (q = 0.3533)",
+        "H1 gap +0.001 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": 0.0011764497356501068,
+      "H1_family_q": 0.35333333333333333,
+      "H2_standardized": 0.000479501332338941,
+      "H2_family_q": 0.439,
+      "replicated": false,
+      "folds_with_expected_sign": 4,
+      "gate_problems": [
+        "raw-coefficient permutation (before 7ab7337): rerun"
+      ],
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 0.1495348560960592
+    }
+  ]
+}
