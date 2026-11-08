@@ -97,8 +97,8 @@ Notes:
 - Every NCCS column the catalog uses is listed under `verified` and was confirmed in the
   2018–2022 headers by `scripts/probe_nccs_efile.py` (`data/output/nccs_efile_probe.json`).
   The extract script still stops and prints the real header if any column is missing.
-- `expected_rows` for the NCCS tables are wide sanity bounds (100k–1M rows per file). The
-  measured counts, 364,285 to 553,554 rows per file, are in `MANIFEST.json`.
+- `expected_rows` for the NCCS tables are the exact measured count per year (CP4), so
+  `build_panel` stops on a changed source file. The counts are also in `MANIFEST.json`.
 - No raw data is needed to inspect results or rebuild the panel: the extracts, crosswalk
   and need table are committed, so `python scripts/build_panel.py` runs on a bare clone.
   `scripts/run_cp2.sh` rebuilds everything from the raw sources.
@@ -150,3 +150,48 @@ How the gate reads (`theorylab/validator.py::decide_verdict`):
 - Multilevel and county-year-mean models are reported next to the verdict as robustness
   checks and never change it. Every theory run restricts to full Form 990 filers
   (`return_type == "990"`), which settles which rows the Part IX ratios come from.
+
+## Checkpoint 4: agents
+
+> **Built on the TA's `ai-suggestions/cp4` code.** Commit `7d9ee8a` adds it as provided. Our fixes and additions are in the commits after it.
+
+| Piece | Code | Output |
+|---|---|---|
+| Planner and Data Scout agents, locked gate, hash-checked LLM cache | `theorylab/agents.py`, `theorylab/llm.py`, `theorylab/spec.py` | `data/llm_cache/` |
+| Orchestrator: theory → Scout → Planner → spec → gate → drill-down, per-year results and trend for every theory | `theorylab/orchestrator.py`, `theorylab/cli.py`, `theorylab/trends.py` | `data/output/theory_runs/cp4/` |
+| Five named theories with gold answers | `benchmark/cp4_theories.json`, `theorylab/benchmark.py`, `scripts/run_cp4.py` | `summary.json`, `<theory_id>.json`, `<theory_id>.spec.json` |
+| Mechanical review of every verdict | `scripts/review_theory_runs.py` | `data/output/theory_runs/cp4/review.json` |
+| Assumptions 1 and 2, first measurement | `scripts/measure_assumptions_1_2.py` | `data/output/assumptions_1_2_first_pass.json`, `data/output/assumptions_1_2.json`, `data/output/run_times.json` |
+| Outlier check on each theory's outcome | `scripts/outcome_tails.py` | `data/output/outcome_tails.json` |
+| Ratio × need sweep with the TA before/after | `theorylab/sweep.py`, `scripts/run_sweep.py` | `data/output/sweep.json`, `data/output/sweep/` |
+| County Health Rankings columns (health, education, crime) | `theorylab/need.py`, `scripts/build_county_need.py`, D8 in `docs/data_decisions.md` | `data/extracts/chr/`, `data/output/county_need_report.json` |
+| Studentized permutation gate (the H2 null/SE gap) | `theorylab/validator.py`, `scripts/h2_null_check.py`, `docs/validator.md` 2.5 | `data/output/h2_null_check.json` |
+| BH family across theories, family-level controls | `theorylab/gate.py`, `scripts/run_controls.py --family` | `data/output/controls_family.json` |
+| One-level drill-down tested on planted strata | `theorylab/drilldown.py`, `scripts/drilldown_check.py` | `data/output/drilldown_check.json` |
+| Panel rebuild checked across two machines | `scripts/check_panel_hash.py` | `data/output/panel_rebuild_check.json`, `data/output/panel_rebuild_check_omar.json` |
+
+**Result: all five theories are unsupported, and three of those nulls say very little.** T1 (ratings) and T4 (crime × admin share) are real nulls on well-behaved outcomes. T4 is significant and replicates in all 5 state folds, but at +0.027 SD it is far below the floor. T2, T3 and T5 use ratios whose SD is set by a tiny share of rows (over 99.9% of the variance in the top 0.1% of rows, `outcome_tails.json`), so neither the floor nor Pearson r can detect anything on them yet. Fixing that is the first CP5 item.
+
+**Sweep.** 4 rating ratios × 7 need measures, one BH family, 999 permutations: all 28 cells unsupported, largest effect 0.040 SD. 7 cells are significant after the correction, all on program or administration share; the 14 cells on heavy-tailed ratios show nothing, and the same limit applies to them. On the TA's 40-cell grid, 21 cells are significant as the TA wrote it and 12 on the fixed gate (`data/output/sweep.json`).
+
+Assumption 1 was **8 of 10 at first** (7 usable), below the 85% needed; after two fixes to the schema check and the retry prompt, the same texts give 9 of 10. A real test needs new theories (CP5).
+
+To reproduce:
+
+```bash
+pip install -r requirements.txt
+python -m pytest -q                      # expect 164 passed
+python scripts/build_panel.py            # sha256_csv must equal panel.sha256_csv in the join log
+python scripts/check_panel_hash.py --out data/output/panel_rebuild_check_mine.json
+python scripts/measure_assumptions_1_2.py --replay   # no API key needed: replays data/llm_cache
+python scripts/run_cp4.py --replay       # about 35 min at 999 permutations
+python scripts/review_theory_runs.py     # must end: all verdicts follow: True; all on the current gate: True
+python scripts/outcome_tails.py
+python scripts/run_sweep.py --part main --part ta_after   # about 1 h 50 min on a laptop; ta_before is kept as committed
+python scripts/h2_null_check.py
+python scripts/run_controls.py --family
+python scripts/drilldown_check.py
+python scripts/build_county_need.py --chr-only --chr-dir data/raw/chr   # needs the raw CHR files
+```
+
+Without `--replay`, the agents need `ANTHROPIC_API_KEY` (model `claude-sonnet-5-5`, no fallback model). The gate settings come from `spec.GATE_POLICY`, and the Planner cannot change them.
