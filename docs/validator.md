@@ -138,6 +138,23 @@ The four candidate causes, one at a time:
 - **The permutation count limits the family size.** The smallest permutation p is 1/(n + 1). A theory whose H1 and H2 rank first and second gets q = p × m / 2, so it can survive only if m < 2 × alpha × (n + 1). At 999 permutations that is m < 100 hypotheses (50 theories); at 199, m < 20. A drill-down family of k strata needs k < alpha × (n + 1): 36 states need more than 720 permutations, so the drill-down must run at the gate's 999.
 - **Family controls on the real panel** (`scripts/run_controls.py --family` → `data/output/controls_family.json`, 199 permutations, the studentized gate): 8 placebo theories (each county takes another county's whole exposure history) and 1 theory with 0.25 SD planted in high-need counties, in one family of 18 hypotheses. **0 of 8 placebos survive** (family q 0.225 to 0.99, every effect within ±0.025 SD). **The planted theory stays supported** (H1 −0.271 SD, H2 −0.261 SD, family q 0.045, replicated). Its q is at the 199-permutation floor (0.005 × 18 / 2); at 999 it would be about 0.009.
 
+### 2.7 Drill-down on planted effects (CP4 V5, audit W12, CP3 feedback F4)
+
+The drill-down is **one level**: one stratifier per run (state, sector or size tercile), only for theories that are supported or weak, with the strata of that run in one BH family. In CP3 we planned an automatic drill-down to any depth. Every extra level multiplies the family, and one level of 36 states already needs more than 720 permutations before any stratum can survive (section 2.6).
+
+Nothing on the real panel survives, so `scripts/drilldown_check.py` → `data/output/drilldown_check.json` plants effects in the ratings theory's real population (999 permutations, studentized gate):
+
+| Scenario | National gate | Drill-down result |
+|---|---|---|
+| A. 0.3 SD penalty in high-need counties of Georgia only (most high-need counties) | unsupported (H1 −0.040 SD) | by state: **GA only** survives (−0.292 SD, q 0.036) of 36 tested; 13/36 have the expected sign |
+| B. 0.3 SD penalty in high-need counties for Education only | unsupported (H1 −0.065 SD, q 0.045, below floor) | by sector: **Education only** survives (−0.286 SD, q 0.026) of 26 |
+| C. 0.25 SD penalty everywhere | supported | expected sign in 34/36 states (19 survive; IL +0.025 and WI +0.051 SD are the exceptions), 26/26 sectors (23 survive), 3/3 size terciles (3 survive) |
+
+- **The search itself works.** It names the planted stratum and no other.
+- **A one-stratum effect is not drilled.** In A and B the national gate says unsupported, so the survivor-only rule never opens the drill-down; the scenarios had to force it. The one-level drill-down explains *where* a national effect lives. It cannot find an effect that is confined to one state or sector and too diluted to clear the national floor. Searching every stratum of every theory would be a much larger family.
+- **The 30-county rule skips 15 of 51 states** (AZ, CT, DC, DE, HI, MA, MD, ME, NH, NJ, NV, RI, UT, VT, WY), with 219,642 of 1,303,953 rows (16.8%). The sector drill-down skips one category (Women-Related). Results for skipped strata are not reported, not counted in the family, and listed under `skipped`.
+- Tests: `tests/test_drilldown.py`.
+
 ## 3. Evidence that the gate works (V2)
 
 `scripts/run_controls.py` → `data/output/controls.json`, on the real population, with 199 permutations and no robustness models:

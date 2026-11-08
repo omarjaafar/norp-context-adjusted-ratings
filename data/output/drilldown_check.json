@@ -1,0 +1,1803 @@
+{
+  "generated_at": "2026-11-08T13:41:03",
+  "theory_id": "ratings_fairness",
+  "n_permutations": 999,
+  "permutation": {
+    "keep_paths": true,
+    "studentized": true
+  },
+  "min_units": 30,
+  "planted_effect_sd": 0.3,
+  "population_rows": 1303953,
+  "states": 51,
+  "states_below_min_units": [
+    "AZ",
+    "CT",
+    "DC",
+    "DE",
+    "HI",
+    "MA",
+    "MD",
+    "ME",
+    "NH",
+    "NJ",
+    "NV",
+    "RI",
+    "UT",
+    "VT",
+    "WY"
+  ],
+  "rows_in_states_below_min_units": 219642,
+  "scenarios": {
+    "A_one_state": {
+      "by": "state",
+      "national_gate": {
+        "verdict": "unsupported",
+        "H1_standardized": -0.03987700738303599,
+        "H1_q": 0.233,
+        "H2_standardized": -0.029177230396786,
+        "H2_q": 0.233,
+        "replicated": false
+      },
+      "would_be_drilled": false,
+      "family_size": 36,
+      "survivors": [
+        "GA"
+      ],
+      "skipped": 15,
+      "tested_with_expected_sign": 13,
+      "tested": 36,
+      "target": "GA",
+      "target_tested": true,
+      "finds_target_only": true,
+      "target_stratum": {
+        "level": "GA",
+        "n_obs": 31328,
+        "units": 150,
+        "effect": -0.6463907816266004,
+        "standardized_effect": -0.2922354922083741,
+        "p_value": 0.001,
+        "q_value": 0.036000000000000004,
+        "same_sign": true,
+        "survives": true
+      },
+      "drill_down": {
+        "by": "state",
+        "family_size": 36,
+        "strata": [
+          {
+            "level": "AK",
+            "n_obs": 5155,
+            "units": 30,
+            "effect": -0.12286384251335376,
+            "standardized_effect": -0.05657117039356089,
+            "p_value": 0.77,
+            "q_value": 0.9370285714285714,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "AL",
+            "n_obs": 16206,
+            "units": 67,
+            "effect": 0.05734776426193054,
+            "standardized_effect": 0.02707628842013572,
+            "p_value": 0.786,
+            "q_value": 0.9370285714285714,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "AR",
+            "n_obs": 10509,
+            "units": 75,
+            "effect": -0.09930925373816418,
+            "standardized_effect": -0.045476964519885234,
+            "p_value": 0.536,
+            "q_value": 0.8039999999999999,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "CA",
+            "n_obs": 137798,
+            "units": 58,
+            "effect": 0.07285727573349726,
+            "standardized_effect": 0.03353400553391755,
+            "p_value": 0.454,
+            "q_value": 0.8039999999999999,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "CO",
+            "n_obs": 28344,
+            "units": 64,
+            "effect": 0.19670489182841422,
+            "standardized_effect": 0.09355020685379023,
+            "p_value": 0.221,
+            "q_value": 0.636923076923077,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "FL",
+            "n_obs": 59715,
+            "units": 67,
+            "effect": 0.2707445501624359,
+            "standardized_effect": 0.12287941178365044,
+            "p_value": 0.047,
+            "q_value": 0.564,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "GA",
+            "n_obs": 31328,
+            "units": 150,
+            "effect": -0.6463907816266004,
+            "standardized_effect": -0.2922354922083741,
+            "p_value": 0.001,
+            "q_value": 0.036000000000000004,
+            "same_sign": true,
+            "survives": true
+          },
+          {
+            "level": "IA",
+            "n_obs": 17155,
+            "units": 99,
+            "effect": -1.1183655538410036,
+            "standardized_effect": -0.5457261311924473,
+            "p_value": 0.23,
+            "q_value": 0.636923076923077,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "ID",
+            "n_obs": 5978,
+            "units": 43,
+            "effect": 0.10589529256202267,
+            "standardized_effect": 0.05108026118226072,
+            "p_value": 0.911,
+            "q_value": 0.9370285714285714,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "IL",
+            "n_obs": 46442,
+            "units": 102,
+            "effect": 0.5938692746722012,
+            "standardized_effect": 0.2691468206702098,
+            "p_value": 0.066,
+            "q_value": 0.5811428571428572,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "IN",
+            "n_obs": 27347,
+            "units": 92,
+            "effect": -0.032459259054733965,
+            "standardized_effect": -0.01510216808434828,
+            "p_value": 0.821,
+            "q_value": 0.9370285714285714,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "KS",
+            "n_obs": 12871,
+            "units": 100,
+            "effect": 0.07676312305607563,
+            "standardized_effect": 0.03597379575523735,
+            "p_value": 0.84,
+            "q_value": 0.9370285714285714,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "KY",
+            "n_obs": 15121,
+            "units": 118,
+            "effect": 0.15531623213490503,
+            "standardized_effect": 0.0705407538819443,
+            "p_value": 0.364,
+            "q_value": 0.8039999999999999,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "LA",
+            "n_obs": 15304,
+            "units": 64,
+            "effect": 0.054165384728010836,
+            "standardized_effect": 0.023140047102609473,
+            "p_value": 0.833,
+            "q_value": 0.9370285714285714,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "MI",
+            "n_obs": 36164,
+            "units": 83,
+            "effect": -0.05429148501378427,
+            "standardized_effect": -0.024936285804799514,
+            "p_value": 0.751,
+            "q_value": 0.9370285714285714,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "MN",
+            "n_obs": 33430,
+            "units": 87,
+            "effect": -1.1016784283842533,
+            "standardized_effect": -0.546308971225557,
+            "p_value": 0.085,
+            "q_value": 0.5811428571428572,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "MO",
+            "n_obs": 26449,
+            "units": 114,
+            "effect": 0.013336310325254334,
+            "standardized_effect": 0.006226801245913899,
+            "p_value": 0.974,
+            "q_value": 0.974,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "MS",
+            "n_obs": 8897,
+            "units": 81,
+            "effect": 0.1018494734570791,
+            "standardized_effect": 0.04620541904449216,
+            "p_value": 0.483,
+            "q_value": 0.8039999999999999,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "MT",
+            "n_obs": 7945,
+            "units": 54,
+            "effect": 0.16257930848122865,
+            "standardized_effect": 0.0820313573253863,
+            "p_value": 0.326,
+            "q_value": 0.8039999999999999,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "NC",
+            "n_obs": 38017,
+            "units": 100,
+            "effect": 0.10237232264149457,
+            "standardized_effect": 0.04930791625137596,
+            "p_value": 0.191,
+            "q_value": 0.636923076923077,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "ND",
+            "n_obs": 4976,
+            "units": 52,
+            "effect": -0.23641330128120744,
+            "standardized_effect": -0.11705448555268456,
+            "p_value": 0.793,
+            "q_value": 0.9370285714285714,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "NE",
+            "n_obs": 10384,
+            "units": 82,
+            "effect": 0.03236346143953803,
+            "standardized_effect": 0.015468988922046675,
+            "p_value": 0.893,
+            "q_value": 0.9370285714285714,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "NM",
+            "n_obs": 8007,
+            "units": 32,
+            "effect": 0.14256406803645993,
+            "standardized_effect": 0.0705142805915194,
+            "p_value": 0.149,
+            "q_value": 0.636923076923077,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "NY",
+            "n_obs": 102479,
+            "units": 62,
+            "effect": -0.1299233196144508,
+            "standardized_effect": -0.05985754031522483,
+            "p_value": 0.787,
+            "q_value": 0.9370285714285714,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "OH",
+            "n_obs": 51118,
+            "units": 88,
+            "effect": 0.06745503874360466,
+            "standardized_effect": 0.032260965994282464,
+            "p_value": 0.476,
+            "q_value": 0.8039999999999999,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "OK",
+            "n_obs": 13268,
+            "units": 73,
+            "effect": -0.08769928146240605,
+            "standardized_effect": -0.04198878184464532,
+            "p_value": 0.512,
+            "q_value": 0.8039999999999999,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "OR",
+            "n_obs": 19785,
+            "units": 36,
+            "effect": 0.27236976854205786,
+            "standardized_effect": 0.1324928017029949,
+            "p_value": 0.113,
+            "q_value": 0.5811428571428572,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "PA",
+            "n_obs": 67795,
+            "units": 67,
+            "effect": -0.5089608138418721,
+            "standardized_effect": -0.23731194400158342,
+            "p_value": 0.007,
+            "q_value": 0.126,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "SC",
+            "n_obs": 16221,
+            "units": 46,
+            "effect": -0.22107981112508027,
+            "standardized_effect": -0.10669446045588503,
+            "p_value": 0.17,
+            "q_value": 0.636923076923077,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "SD",
+            "n_obs": 5208,
+            "units": 63,
+            "effect": 0.18499512835981122,
+            "standardized_effect": 0.08492950364588311,
+            "p_value": 0.407,
+            "q_value": 0.8039999999999999,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "TN",
+            "n_obs": 24139,
+            "units": 94,
+            "effect": -0.2696713520975269,
+            "standardized_effect": -0.12046506362488682,
+            "p_value": 0.212,
+            "q_value": 0.636923076923077,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "TX",
+            "n_obs": 80131,
+            "units": 242,
+            "effect": 0.01829551201654028,
+            "standardized_effect": 0.00845118855034663,
+            "p_value": 0.887,
+            "q_value": 0.9370285714285714,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "VA",
+            "n_obs": 37548,
+            "units": 133,
+            "effect": 0.15636180942706787,
+            "standardized_effect": 0.07347034055970147,
+            "p_value": 0.112,
+            "q_value": 0.5811428571428572,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "WA",
+            "n_obs": 28901,
+            "units": 39,
+            "effect": 0.12574775099272983,
+            "standardized_effect": 0.06077946181769254,
+            "p_value": 0.515,
+            "q_value": 0.8039999999999999,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "WI",
+            "n_obs": 25824,
+            "units": 72,
+            "effect": 0.6458438990456034,
+            "standardized_effect": 0.30283046408495246,
+            "p_value": 0.429,
+            "q_value": 0.8039999999999999,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "WV",
+            "n_obs": 8352,
+            "units": 55,
+            "effect": 0.11153475233099847,
+            "standardized_effect": 0.054163219629538704,
+            "p_value": 0.405,
+            "q_value": 0.8039999999999999,
+            "same_sign": false,
+            "survives": false
+          }
+        ],
+        "skipped": [
+          {
+            "level": "AZ",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "CT",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "DC",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "DE",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "HI",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "MA",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "MD",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "ME",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "NH",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "NJ",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "NV",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "RI",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "UT",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "VT",
+            "reason": "fewer than 30 county_fips units"
+          },
+          {
+            "level": "WY",
+            "reason": "fewer than 30 county_fips units"
+          }
+        ],
+        "survivors": [
+          "GA"
+        ]
+      }
+    },
+    "B_one_sector": {
+      "by": "sector",
+      "national_gate": {
+        "verdict": "unsupported",
+        "H1_standardized": -0.06463491506726218,
+        "H1_q": 0.045,
+        "H2_standardized": -0.05417741257428318,
+        "H2_q": 0.045,
+        "replicated": false
+      },
+      "would_be_drilled": false,
+      "family_size": 26,
+      "survivors": [
+        "Education"
+      ],
+      "skipped": 1,
+      "tested_with_expected_sign": 10,
+      "tested": 26,
+      "target": "Education",
+      "target_tested": true,
+      "finds_target_only": true,
+      "target_stratum": {
+        "level": "Education",
+        "n_obs": 190408,
+        "units": 2421,
+        "effect": -0.6099994793462328,
+        "standardized_effect": -0.28611203891607057,
+        "p_value": 0.001,
+        "q_value": 0.026000000000000002,
+        "same_sign": true,
+        "survives": true
+      },
+      "drill_down": {
+        "by": "sector",
+        "family_size": 26,
+        "strata": [
+          {
+            "level": "Animal-Related",
+            "n_obs": 28646,
+            "units": 1734,
+            "effect": 0.07039600374734707,
+            "standardized_effect": 0.03881390563983444,
+            "p_value": 0.394,
+            "q_value": 0.788,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Arts, Culture and Humanities",
+            "n_obs": 106396,
+            "units": 2103,
+            "effect": 0.006314634151298926,
+            "standardized_effect": 0.0028237632173473922,
+            "p_value": 0.944,
+            "q_value": 0.9439999999999998,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Civil Rights, Social Action, Advocacy",
+            "n_obs": 11487,
+            "units": 597,
+            "effect": -0.11630011287742015,
+            "standardized_effect": -0.05604332916585822,
+            "p_value": 0.536,
+            "q_value": 0.8377777777777777,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "Community Improvement, Capacity Building",
+            "n_obs": 90436,
+            "units": 2390,
+            "effect": 0.048142078782543764,
+            "standardized_effect": 0.02004376758014458,
+            "p_value": 0.52,
+            "q_value": 0.8377777777777777,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Crime & Legal-Related",
+            "n_obs": 21909,
+            "units": 1111,
+            "effect": 0.11760053206234262,
+            "standardized_effect": 0.057844911148610956,
+            "p_value": 0.332,
+            "q_value": 0.7193333333333333,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Education",
+            "n_obs": 190408,
+            "units": 2421,
+            "effect": -0.6099994793462328,
+            "standardized_effect": -0.28611203891607057,
+            "p_value": 0.001,
+            "q_value": 0.026000000000000002,
+            "same_sign": true,
+            "survives": true
+          },
+          {
+            "level": "Employment",
+            "n_obs": 24215,
+            "units": 1130,
+            "effect": -0.1691616215069552,
+            "standardized_effect": -0.07507656849700205,
+            "p_value": 0.147,
+            "q_value": 0.5571428571428572,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "Environment",
+            "n_obs": 30155,
+            "units": 1334,
+            "effect": 0.05328219999173989,
+            "standardized_effect": 0.02571212406635731,
+            "p_value": 0.552,
+            "q_value": 0.8377777777777777,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Food, Agriculture and Nutrition",
+            "n_obs": 19634,
+            "units": 1550,
+            "effect": 0.013512688802217409,
+            "standardized_effect": 0.006957494948939804,
+            "p_value": 0.881,
+            "q_value": 0.9439999999999998,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Health Care",
+            "n_obs": 91376,
+            "units": 2377,
+            "effect": -0.11829231940847756,
+            "standardized_effect": -0.05616285820268273,
+            "p_value": 0.027,
+            "q_value": 0.23399999999999999,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "Housing & Shelter",
+            "n_obs": 80994,
+            "units": 1906,
+            "effect": -0.24976288080598735,
+            "standardized_effect": -0.11678612190150055,
+            "p_value": 0.025,
+            "q_value": 0.23399999999999999,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "Human Services",
+            "n_obs": 166009,
+            "units": 2580,
+            "effect": -0.020457555995637568,
+            "standardized_effect": -0.010538178700287872,
+            "p_value": 0.712,
+            "q_value": 0.923,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "International, Foreign Affairs and National Security",
+            "n_obs": 26480,
+            "units": 902,
+            "effect": 0.07108640109406221,
+            "standardized_effect": 0.03609725176164813,
+            "p_value": 0.869,
+            "q_value": 0.9439999999999998,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Medical Research",
+            "n_obs": 8642,
+            "units": 451,
+            "effect": 0.05827610865536389,
+            "standardized_effect": 0.02647175815817436,
+            "p_value": 0.781,
+            "q_value": 0.923,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Mental Health & Crisis Intervention",
+            "n_obs": 30338,
+            "units": 1390,
+            "effect": 0.05397450556762853,
+            "standardized_effect": 0.02716033076512702,
+            "p_value": 0.58,
+            "q_value": 0.8377777777777777,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Mutual/Membership Benefit",
+            "n_obs": 23570,
+            "units": 1492,
+            "effect": 0.11766109816309409,
+            "standardized_effect": 0.049020554984887915,
+            "p_value": 0.27,
+            "q_value": 0.7193333333333333,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Philanthropy, Voluntarism and Grantmaking Foundations",
+            "n_obs": 59363,
+            "units": 1847,
+            "effect": -0.03194116640842315,
+            "standardized_effect": -0.014836373805140291,
+            "p_value": 0.631,
+            "q_value": 0.8634736842105263,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "Public & Societal Benefit",
+            "n_obs": 36251,
+            "units": 1969,
+            "effect": 0.06137571524056274,
+            "standardized_effect": 0.02541602346513625,
+            "p_value": 0.451,
+            "q_value": 0.8375714285714286,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Public Safety, Disaster Preparedness & Relief",
+            "n_obs": 35511,
+            "units": 1552,
+            "effect": 0.11758500644601069,
+            "standardized_effect": 0.06129314718144439,
+            "p_value": 0.15,
+            "q_value": 0.5571428571428572,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Recreation & Sports",
+            "n_obs": 81542,
+            "units": 2165,
+            "effect": -0.11046894412331336,
+            "standardized_effect": -0.05295222656086619,
+            "p_value": 0.058,
+            "q_value": 0.377,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "Religion-Related",
+            "n_obs": 62022,
+            "units": 1819,
+            "effect": 0.005534548035118934,
+            "standardized_effect": 0.0024951160354115824,
+            "p_value": 0.942,
+            "q_value": 0.9439999999999998,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Science and Technology",
+            "n_obs": 7282,
+            "units": 493,
+            "effect": 0.3559752533979303,
+            "standardized_effect": 0.15507439406940904,
+            "p_value": 0.132,
+            "q_value": 0.5571428571428572,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Social Science",
+            "n_obs": 2495,
+            "units": 221,
+            "effect": 0.41799605517824234,
+            "standardized_effect": 0.18477144538614135,
+            "p_value": 0.316,
+            "q_value": 0.7193333333333333,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Unknown",
+            "n_obs": 15681,
+            "units": 1046,
+            "effect": -0.15014514795005418,
+            "standardized_effect": -0.06933120421840748,
+            "p_value": 0.287,
+            "q_value": 0.7193333333333333,
+            "same_sign": true,
+            "survives": false
+          },
+          {
+            "level": "Voluntary Health Associations & Medical Disciplines",
+            "n_obs": 20016,
+            "units": 821,
+            "effect": 0.16291680642625198,
+            "standardized_effect": 0.07408659334060518,
+            "p_value": 0.278,
+            "q_value": 0.7193333333333333,
+            "same_sign": false,
+            "survives": false
+          },
+          {
+            "level": "Youth Development",
+            "n_obs": 33080,
+            "units": 1517,
+            "effect": -0.028269678565634473,
+            "standardized_effect": -0.013898316961729565,
+            "p_value": 0.761,
+            "q_value": 0.923,
+            "same_sign": true,
+            "survives": false
+          }
+        ],
+        "skipped": [
+          {
+            "level": "Women-Related",
+            "reason": "fewer than 30 county_fips units"
+          }
+        ],
+        "survivors": [
+          "Education"
+        ]
+      }
+    },
+    "C_national": {
+      "national_gate": {
+        "verdict": "supported",
+        "H1_standardized": -0.2713834742197874,
+        "H1_q": 0.001,
+        "H2_standardized": -0.2607080140859137,
+        "H2_q": 0.001,
+        "replicated": true
+      },
+      "by": {
+        "state": {
+          "family_size": 36,
+          "survivors": [
+            "AL",
+            "AR",
+            "CA",
+            "GA",
+            "IN",
+            "KY",
+            "LA",
+            "MI",
+            "MS",
+            "NC",
+            "NM",
+            "OH",
+            "OK",
+            "PA",
+            "SC",
+            "TN",
+            "TX",
+            "VA",
+            "WV"
+          ],
+          "skipped": 15,
+          "tested_with_expected_sign": 34,
+          "tested": 36,
+          "drill_down": {
+            "by": "state",
+            "family_size": 36,
+            "strata": [
+              {
+                "level": "AK",
+                "n_obs": 5155,
+                "units": 30,
+                "effect": -0.6609813360357586,
+                "standardized_effect": -0.3036707031444424,
+                "p_value": 0.111,
+                "q_value": 0.15369230769230768,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "AL",
+                "n_obs": 16206,
+                "units": 67,
+                "effect": -0.48076972926047434,
+                "standardized_effect": -0.22614029798260762,
+                "p_value": 0.011,
+                "q_value": 0.024749999999999998,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "AR",
+                "n_obs": 10509,
+                "units": 75,
+                "effect": -0.637426747260569,
+                "standardized_effect": -0.2898266836824293,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "CA",
+                "n_obs": 137798,
+                "units": 58,
+                "effect": -0.46526021778890947,
+                "standardized_effect": -0.21388708509991164,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "CO",
+                "n_obs": 28344,
+                "units": 64,
+                "effect": -0.3414126016939906,
+                "standardized_effect": -0.1623251618186017,
+                "p_value": 0.056,
+                "q_value": 0.08765217391304347,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "FL",
+                "n_obs": 59715,
+                "units": 67,
+                "effect": -0.26737294335996886,
+                "standardized_effect": -0.12134646665992553,
+                "p_value": 0.041,
+                "q_value": 0.07028571428571428,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "GA",
+                "n_obs": 31328,
+                "units": 150,
+                "effect": -0.5387672829221198,
+                "standardized_effect": -0.2441372819795966,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "IA",
+                "n_obs": 17155,
+                "units": 99,
+                "effect": -1.656483047363409,
+                "standardized_effect": -0.8077741147046787,
+                "p_value": 0.103,
+                "q_value": 0.14831999999999998,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "ID",
+                "n_obs": 5978,
+                "units": 43,
+                "effect": -0.4322222009603825,
+                "standardized_effect": -0.20845252019389704,
+                "p_value": 0.646,
+                "q_value": 0.684,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "IL",
+                "n_obs": 46442,
+                "units": 102,
+                "effect": 0.055751781149794795,
+                "standardized_effect": 0.025283868900364225,
+                "p_value": 0.861,
+                "q_value": 0.861,
+                "same_sign": false,
+                "survives": false
+              },
+              {
+                "level": "IN",
+                "n_obs": 27347,
+                "units": 92,
+                "effect": -0.570576752577138,
+                "standardized_effect": -0.2648981471373387,
+                "p_value": 0.022,
+                "q_value": 0.04168421052631579,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "KS",
+                "n_obs": 12871,
+                "units": 100,
+                "effect": -0.46135437046632927,
+                "standardized_effect": -0.21611928656203686,
+                "p_value": 0.302,
+                "q_value": 0.3507096774193548,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "KY",
+                "n_obs": 15121,
+                "units": 118,
+                "effect": -0.38280126138749965,
+                "standardized_effect": -0.17348897274316485,
+                "p_value": 0.009,
+                "q_value": 0.021599999999999998,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "LA",
+                "n_obs": 15304,
+                "units": 64,
+                "effect": -0.4839521087943945,
+                "standardized_effect": -0.20547491477767862,
+                "p_value": 0.015,
+                "q_value": 0.030000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "MI",
+                "n_obs": 36164,
+                "units": 83,
+                "effect": -0.5924089785361887,
+                "standardized_effect": -0.2703103350387238,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "MN",
+                "n_obs": 33430,
+                "units": 87,
+                "effect": -1.63979592190666,
+                "standardized_effect": -0.8130384535586954,
+                "p_value": 0.031,
+                "q_value": 0.0558,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "MO",
+                "n_obs": 26449,
+                "units": 114,
+                "effect": -0.5247811831971504,
+                "standardized_effect": -0.24403110038687054,
+                "p_value": 0.285,
+                "q_value": 0.34199999999999997,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "MS",
+                "n_obs": 8897,
+                "units": 81,
+                "effect": -0.4362680200653253,
+                "standardized_effect": -0.1971158900261652,
+                "p_value": 0.012,
+                "q_value": 0.025411764705882352,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "MT",
+                "n_obs": 7945,
+                "units": 54,
+                "effect": -0.3755381850411763,
+                "standardized_effect": -0.18925932874870788,
+                "p_value": 0.056,
+                "q_value": 0.08765217391304347,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "NC",
+                "n_obs": 38017,
+                "units": 100,
+                "effect": -0.43574517088091014,
+                "standardized_effect": -0.209501775332553,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "ND",
+                "n_obs": 4976,
+                "units": 52,
+                "effect": -0.7745307948036124,
+                "standardized_effect": -0.38310427498648414,
+                "p_value": 0.491,
+                "q_value": 0.5356363636363636,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "NE",
+                "n_obs": 10384,
+                "units": 82,
+                "effect": -0.5057540320828667,
+                "standardized_effect": -0.24169416049527892,
+                "p_value": 0.372,
+                "q_value": 0.4185,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "NM",
+                "n_obs": 8007,
+                "units": 32,
+                "effect": -0.3955534254859449,
+                "standardized_effect": -0.19471695327433847,
+                "p_value": 0.003,
+                "q_value": 0.007714285714285714,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "NY",
+                "n_obs": 102479,
+                "units": 62,
+                "effect": -0.6680408131368555,
+                "standardized_effect": -0.30718564020278294,
+                "p_value": 0.251,
+                "q_value": 0.3115862068965517,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "OH",
+                "n_obs": 51118,
+                "units": 88,
+                "effect": -0.4706624547788011,
+                "standardized_effect": -0.22481649496923267,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "OK",
+                "n_obs": 13268,
+                "units": 73,
+                "effect": -0.6258167749848101,
+                "standardized_effect": -0.2980818917260232,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "OR",
+                "n_obs": 19785,
+                "units": 36,
+                "effect": -0.2657477249803471,
+                "standardized_effect": -0.12931100168943602,
+                "p_value": 0.141,
+                "q_value": 0.18799999999999997,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "PA",
+                "n_obs": 67795,
+                "units": 67,
+                "effect": -1.0470783073642769,
+                "standardized_effect": -0.48226197899478884,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "SC",
+                "n_obs": 16221,
+                "units": 46,
+                "effect": -0.7591973046474845,
+                "standardized_effect": -0.36342803199394524,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "SD",
+                "n_obs": 5208,
+                "units": 63,
+                "effect": -0.35312236516259393,
+                "standardized_effect": -0.16198534491542338,
+                "p_value": 0.09,
+                "q_value": 0.13499999999999998,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "TN",
+                "n_obs": 24139,
+                "units": 94,
+                "effect": -0.8077888456199321,
+                "standardized_effect": -0.35749842045892455,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "TX",
+                "n_obs": 80131,
+                "units": 242,
+                "effect": -0.5198219815058641,
+                "standardized_effect": -0.23974283871531452,
+                "p_value": 0.002,
+                "q_value": 0.005538461538461539,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "VA",
+                "n_obs": 37548,
+                "units": 133,
+                "effect": -0.38175568409533694,
+                "standardized_effect": -0.1790943646566449,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "WA",
+                "n_obs": 28901,
+                "units": 39,
+                "effect": -0.4123697425296751,
+                "standardized_effect": -0.19928564238115376,
+                "p_value": 0.194,
+                "q_value": 0.24942857142857142,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "WI",
+                "n_obs": 25824,
+                "units": 72,
+                "effect": 0.10772640552319876,
+                "standardized_effect": 0.05051346640751213,
+                "p_value": 0.822,
+                "q_value": 0.8454857142857143,
+                "same_sign": false,
+                "survives": false
+              },
+              {
+                "level": "WV",
+                "n_obs": 8352,
+                "units": 55,
+                "effect": -0.42658274119140666,
+                "standardized_effect": -0.20620013897021677,
+                "p_value": 0.001,
+                "q_value": 0.0030000000000000005,
+                "same_sign": true,
+                "survives": true
+              }
+            ],
+            "skipped": [
+              {
+                "level": "AZ",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "CT",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "DC",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "DE",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "HI",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "MA",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "MD",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "ME",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "NH",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "NJ",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "NV",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "RI",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "UT",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "VT",
+                "reason": "fewer than 30 county_fips units"
+              },
+              {
+                "level": "WY",
+                "reason": "fewer than 30 county_fips units"
+              }
+            ],
+            "survivors": [
+              "AL",
+              "AR",
+              "CA",
+              "GA",
+              "IN",
+              "KY",
+              "LA",
+              "MI",
+              "MS",
+              "NC",
+              "NM",
+              "OH",
+              "OK",
+              "PA",
+              "SC",
+              "TN",
+              "TX",
+              "VA",
+              "WV"
+            ]
+          }
+        },
+        "sector": {
+          "family_size": 26,
+          "survivors": [
+            "Animal-Related",
+            "Arts, Culture and Humanities",
+            "Civil Rights, Social Action, Advocacy",
+            "Community Improvement, Capacity Building",
+            "Crime & Legal-Related",
+            "Education",
+            "Employment",
+            "Environment",
+            "Food, Agriculture and Nutrition",
+            "Health Care",
+            "Housing & Shelter",
+            "Human Services",
+            "International, Foreign Affairs and National Security",
+            "Mental Health & Crisis Intervention",
+            "Mutual/Membership Benefit",
+            "Philanthropy, Voluntarism and Grantmaking Foundations",
+            "Public & Societal Benefit",
+            "Public Safety, Disaster Preparedness & Relief",
+            "Recreation & Sports",
+            "Religion-Related",
+            "Unknown",
+            "Voluntary Health Associations & Medical Disciplines",
+            "Youth Development"
+          ],
+          "skipped": 1,
+          "tested_with_expected_sign": 26,
+          "tested": 26,
+          "drill_down": {
+            "by": "sector",
+            "family_size": 26,
+            "strata": [
+              {
+                "level": "Animal-Related",
+                "n_obs": 28646,
+                "units": 1734,
+                "effect": -0.46772148977505773,
+                "standardized_effect": -0.25729359508820276,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Arts, Culture and Humanities",
+                "n_obs": 106396,
+                "units": 2103,
+                "effect": -0.5318028593711038,
+                "standardized_effect": -0.23735648428490597,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Civil Rights, Social Action, Advocacy",
+                "n_obs": 11487,
+                "units": 597,
+                "effect": -0.6544176063998254,
+                "standardized_effect": -0.314449652618429,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Community Improvement, Capacity Building",
+                "n_obs": 90436,
+                "units": 2390,
+                "effect": -0.4899754147398628,
+                "standardized_effect": -0.2036254498037218,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Crime & Legal-Related",
+                "n_obs": 21909,
+                "units": 1111,
+                "effect": -0.4205169614600626,
+                "standardized_effect": -0.20651378084415845,
+                "p_value": 0.002,
+                "q_value": 0.0024761904761904764,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Education",
+                "n_obs": 190408,
+                "units": 2421,
+                "effect": -0.5023759806417509,
+                "standardized_effect": -0.23586693541398934,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Employment",
+                "n_obs": 24215,
+                "units": 1130,
+                "effect": -0.70727911502936,
+                "standardized_effect": -0.3127822111346692,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Environment",
+                "n_obs": 30155,
+                "units": 1334,
+                "effect": -0.4848352935306657,
+                "standardized_effect": -0.23356208674482185,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Food, Agriculture and Nutrition",
+                "n_obs": 19634,
+                "units": 1550,
+                "effect": -0.5246048047201881,
+                "standardized_effect": -0.26913206193659905,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Health Care",
+                "n_obs": 91376,
+                "units": 2377,
+                "effect": -0.656409812930884,
+                "standardized_effect": -0.3103860632961521,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Housing & Shelter",
+                "n_obs": 80994,
+                "units": 1906,
+                "effect": -0.7878803743283868,
+                "standardized_effect": -0.36636463729218294,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Human Services",
+                "n_obs": 166009,
+                "units": 2580,
+                "effect": -0.5585750495180404,
+                "standardized_effect": -0.28674067615330123,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "International, Foreign Affairs and National Security",
+                "n_obs": 26480,
+                "units": 902,
+                "effect": -0.467031092428344,
+                "standardized_effect": -0.23692205909873695,
+                "p_value": 0.023,
+                "q_value": 0.026,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Medical Research",
+                "n_obs": 8642,
+                "units": 451,
+                "effect": -0.4798413848670403,
+                "standardized_effect": -0.21772759449160473,
+                "p_value": 0.066,
+                "q_value": 0.07150000000000001,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "Mental Health & Crisis Intervention",
+                "n_obs": 30338,
+                "units": 1390,
+                "effect": -0.4841429879547762,
+                "standardized_effect": -0.2430475354905256,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Mutual/Membership Benefit",
+                "n_obs": 23570,
+                "units": 1492,
+                "effect": -0.42045639535931034,
+                "standardized_effect": -0.17493998561999036,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Philanthropy, Voluntarism and Grantmaking Foundations",
+                "n_obs": 59363,
+                "units": 1847,
+                "effect": -0.5700586599308263,
+                "standardized_effect": -0.2641576001460635,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Public & Societal Benefit",
+                "n_obs": 36251,
+                "units": 1969,
+                "effect": -0.47674177828184233,
+                "standardized_effect": -0.19705289446568466,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Public Safety, Disaster Preparedness & Relief",
+                "n_obs": 35511,
+                "units": 1552,
+                "effect": -0.4205324870763929,
+                "standardized_effect": -0.21882866924572,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Recreation & Sports",
+                "n_obs": 81542,
+                "units": 2165,
+                "effect": -0.6485864376457164,
+                "standardized_effect": -0.31011269438456757,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Religion-Related",
+                "n_obs": 62022,
+                "units": 1819,
+                "effect": -0.5325829454872889,
+                "standardized_effect": -0.2396101176184266,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Science and Technology",
+                "n_obs": 7282,
+                "units": 493,
+                "effect": -0.1821422401244751,
+                "standardized_effect": -0.07937675022468367,
+                "p_value": 0.413,
+                "q_value": 0.42951999999999996,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "Social Science",
+                "n_obs": 2495,
+                "units": 221,
+                "effect": -0.12012143834416246,
+                "standardized_effect": -0.053111302651593154,
+                "p_value": 0.76,
+                "q_value": 0.76,
+                "same_sign": true,
+                "survives": false
+              },
+              {
+                "level": "Unknown",
+                "n_obs": 15681,
+                "units": 1046,
+                "effect": -0.6882626414724587,
+                "standardized_effect": -0.31680426128089845,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Voluntary Health Associations & Medical Disciplines",
+                "n_obs": 20016,
+                "units": 821,
+                "effect": -0.375200687096153,
+                "standardized_effect": -0.17051489407945128,
+                "p_value": 0.017,
+                "q_value": 0.020090909090909093,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "Youth Development",
+                "n_obs": 33080,
+                "units": 1517,
+                "effect": -0.5663871720880386,
+                "standardized_effect": -0.27765051228863713,
+                "p_value": 0.001,
+                "q_value": 0.0013000000000000002,
+                "same_sign": true,
+                "survives": true
+              }
+            ],
+            "skipped": [
+              {
+                "level": "Women-Related",
+                "reason": "fewer than 30 county_fips units"
+              }
+            ],
+            "survivors": [
+              "Animal-Related",
+              "Arts, Culture and Humanities",
+              "Civil Rights, Social Action, Advocacy",
+              "Community Improvement, Capacity Building",
+              "Crime & Legal-Related",
+              "Education",
+              "Employment",
+              "Environment",
+              "Food, Agriculture and Nutrition",
+              "Health Care",
+              "Housing & Shelter",
+              "Human Services",
+              "International, Foreign Affairs and National Security",
+              "Mental Health & Crisis Intervention",
+              "Mutual/Membership Benefit",
+              "Philanthropy, Voluntarism and Grantmaking Foundations",
+              "Public & Societal Benefit",
+              "Public Safety, Disaster Preparedness & Relief",
+              "Recreation & Sports",
+              "Religion-Related",
+              "Unknown",
+              "Voluntary Health Associations & Medical Disciplines",
+              "Youth Development"
+            ]
+          }
+        },
+        "size": {
+          "family_size": 3,
+          "survivors": [
+            "large",
+            "medium",
+            "small"
+          ],
+          "skipped": 0,
+          "tested_with_expected_sign": 3,
+          "tested": 3,
+          "drill_down": {
+            "by": "size",
+            "family_size": 3,
+            "strata": [
+              {
+                "level": "large",
+                "n_obs": 434651,
+                "units": 2783,
+                "effect": -0.5135883283023056,
+                "standardized_effect": -0.2734874662861269,
+                "p_value": 0.001,
+                "q_value": 0.001,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "medium",
+                "n_obs": 434649,
+                "units": 2966,
+                "effect": -0.5638154881484955,
+                "standardized_effect": -0.2605711096566054,
+                "p_value": 0.001,
+                "q_value": 0.001,
+                "same_sign": true,
+                "survives": true
+              },
+              {
+                "level": "small",
+                "n_obs": 434653,
+                "units": 3034,
+                "effect": -0.5827549495435023,
+                "standardized_effect": -0.2426750715289944,
+                "p_value": 0.001,
+                "q_value": 0.001,
+                "same_sign": true,
+                "survives": true
+              }
+            ],
+            "skipped": [],
+            "survivors": [
+              "large",
+              "medium",
+              "small"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "states_skipped_by_min_units": 15,
+  "seconds": 329.4
+}
