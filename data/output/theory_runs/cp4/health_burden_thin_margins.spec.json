@@ -1,0 +1,101 @@
+{
+  "spec_version": 1,
+  "theory_id": "health_burden_thin_margins",
+  "theory": "Nonprofits in places where people are in worse health are stretched thinner: they end the year with smaller surpluses relative to their income.",
+  "source": "scout mapping",
+  "written_by": "Planner agent (claude-sonnet-5-5)",
+  "outcome": "operating_margin",
+  "exposure": "chr_poor_fair_health",
+  "exposure_type": "continuous",
+  "expected_sign": -1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": [
+      "990"
+    ],
+    "require_true": [
+      "has_county"
+    ],
+    "require_present": [
+      "operating_margin",
+      "chr_poor_fair_health",
+      "log_revenue",
+      "poverty_rate",
+      "category",
+      "county_fips"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Operating margin is negatively correlated with the county share of adults in poor or fair health.",
+      "method": "correlation"
+    },
+    {
+      "id": "H2",
+      "claim": "The negative association remains after controlling for organization size (log revenue), county poverty rate, sector (NORP category), state and tax year.",
+      "method": "fixed_effects",
+      "controls": [
+        "log_revenue",
+        "poverty_rate"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "controls": [
+        "log_revenue",
+        "poverty_rate"
+      ],
+      "categorical": [
+        "category"
+      ],
+      "group": "county_fips",
+      "years": [
+        2022
+      ]
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "controls": [
+        "log_revenue",
+        "poverty_rate"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "groups": [
+        "county_fips",
+        "tax_year"
+      ]
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {
+      "keep_paths": true,
+      "studentized": true
+    },
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year": 2022
+  },
+  "gate_overrides": []
+}

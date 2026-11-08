@@ -1,0 +1,95 @@
+{
+  "spec_version": 1,
+  "theory_id": "unemployment_leverage",
+  "theory": "Where joblessness is high, nonprofits owe more relative to what they own.",
+  "source": "scout mapping",
+  "written_by": "Planner agent (claude-sonnet-5-5)",
+  "outcome": "liabilities_to_assets",
+  "exposure": "unemployment_rate",
+  "exposure_type": "continuous",
+  "expected_sign": 1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": [
+      "990"
+    ],
+    "require_true": [
+      "has_county"
+    ],
+    "require_present": [
+      "liabilities_to_assets",
+      "unemployment_rate",
+      "log_revenue",
+      "category",
+      "county_fips"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "The liabilities-to-assets ratio is positively correlated with the county unemployment rate.",
+      "method": "correlation"
+    },
+    {
+      "id": "H2",
+      "claim": "The positive association remains after controlling for organization size (log revenue), sector (NORP category) and tax year.",
+      "method": "fixed_effects",
+      "controls": [
+        "log_revenue"
+      ],
+      "absorb": [
+        "tax_year",
+        "category"
+      ],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "controls": [
+        "log_revenue"
+      ],
+      "categorical": [
+        "category"
+      ],
+      "group": "county_fips",
+      "years": [
+        2022
+      ]
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "controls": [
+        "log_revenue"
+      ],
+      "absorb": [
+        "tax_year",
+        "category"
+      ],
+      "groups": [
+        "county_fips",
+        "tax_year"
+      ]
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {
+      "keep_paths": true,
+      "studentized": true
+    },
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year": 2022
+  },
+  "gate_overrides": []
+}

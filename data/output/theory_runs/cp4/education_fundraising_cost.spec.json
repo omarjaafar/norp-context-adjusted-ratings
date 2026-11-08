@@ -1,0 +1,105 @@
+{
+  "spec_version": 1,
+  "theory_id": "education_fundraising_cost",
+  "theory": "In better-educated communities it costs nonprofits less to bring in each donated dollar.",
+  "source": "scout mapping: education and fundraising efficiency",
+  "written_by": "Planner agent (claude-sonnet-5-5)",
+  "outcome": "fundraising_efficiency",
+  "exposure": "chr_some_college",
+  "exposure_type": "continuous",
+  "expected_sign": -1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": [
+      "990"
+    ],
+    "require_true": [
+      "has_county"
+    ],
+    "require_present": [
+      "fundraising_efficiency",
+      "chr_some_college",
+      "log_revenue",
+      "category",
+      "county_fips",
+      "state",
+      "tax_year",
+      "return_type",
+      "revenue_concentration"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Fundraising cost per dollar raised (higher = costlier) is negatively correlated with county share of adults with some college.",
+      "method": "correlation"
+    },
+    {
+      "id": "H2",
+      "claim": "The negative association remains after controlling for organization size (log revenue), revenue concentration, sector, state and tax year.",
+      "method": "fixed_effects",
+      "controls": [
+        "log_revenue",
+        "revenue_concentration"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "controls": [
+        "log_revenue",
+        "revenue_concentration"
+      ],
+      "categorical": [
+        "category",
+        "state"
+      ],
+      "group": "county_fips",
+      "years": [
+        2022
+      ]
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "controls": [
+        "log_revenue",
+        "revenue_concentration"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "groups": [
+        "county_fips",
+        "tax_year"
+      ]
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {
+      "keep_paths": true,
+      "studentized": true
+    },
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year": 2022
+  },
+  "gate_overrides": []
+}

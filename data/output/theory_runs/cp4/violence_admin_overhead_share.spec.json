@@ -1,0 +1,103 @@
+{
+  "spec_version": 1,
+  "theory_id": "violence_admin_overhead_share",
+  "theory": "Nonprofits in more violent places spend a bigger slice of their budget on running the organization itself rather than on programs or fundraising.",
+  "source": "scout mapping: admin_expense_ratio ~ chr_violent_crime_rate",
+  "written_by": "Planner agent (claude-sonnet-5-5)",
+  "outcome": "admin_expense_ratio",
+  "exposure": "chr_violent_crime_rate",
+  "exposure_type": "continuous",
+  "expected_sign": 1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": [
+      "990"
+    ],
+    "require_true": [],
+    "require_present": [
+      "admin_expense_ratio",
+      "chr_violent_crime_rate",
+      "log_revenue",
+      "category",
+      "county_fips",
+      "state",
+      "tax_year",
+      "poverty_rate",
+      "median_household_income"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "The admin expense ratio is positively correlated with the county violent crime rate.",
+      "method": "correlation"
+    },
+    {
+      "id": "H2",
+      "claim": "The positive association remains after controlling for organization size (log revenue), county economic context (poverty rate, median household income), and absorbing sector (NORP category), state and tax year.",
+      "method": "fixed_effects",
+      "controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_county_means",
+      "method": "two_stage_group_means",
+      "controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "groups": [
+        "county_fips"
+      ]
+    },
+    {
+      "id": "H2_multilevel",
+      "method": "multilevel",
+      "controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income"
+      ],
+      "categorical": [
+        "category",
+        "state",
+        "tax_year"
+      ],
+      "group": "county_fips"
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {
+      "keep_paths": true,
+      "studentized": true
+    },
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year": 2022
+  },
+  "gate_overrides": []
+}

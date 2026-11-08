@@ -1,7 +1,7 @@
 {
   "theories": [
     {
-      "theory_id": "hard_pressed_county_rating_penalty",
+      "theory_id": "distressed_county_rating_penalty",
       "verdict": "unsupported",
       "verdict_within_theory": "unsupported",
       "gate_overrides": [],
@@ -14,16 +14,55 @@
       }
     },
     {
-      "theory_id": "unemployment_leverage_link",
+      "theory_id": "health_burden_thin_margins",
       "verdict": "unsupported",
       "verdict_within_theory": "unsupported",
       "gate_overrides": [],
       "years_H1_holds": [],
       "years_H2_holds": [],
       "trend": {
-        "change_per_year": -0.10861196196149693,
-        "change_per_year_sd": -0.0007041330331583017,
-        "p_value": 0.1495348560960592
+        "change_per_year": -0.5598704932044818,
+        "change_per_year_sd": -0.00022336836563745523,
+        "p_value": 0.6510083853489186
+      }
+    },
+    {
+      "theory_id": "education_fundraising_cost",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "gate_overrides": [],
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": 0.05220407147381675,
+        "change_per_year_sd": 0.001188715233688405,
+        "p_value": 0.22669795728910777
+      }
+    },
+    {
+      "theory_id": "violence_admin_overhead_share",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "gate_overrides": [],
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": 0.0002745395564785552,
+        "change_per_year_sd": 0.001360868383887866,
+        "p_value": 0.04479958329026345
+      }
+    },
+    {
+      "theory_id": "unemployment_leverage",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "gate_overrides": [],
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.10085054375970401,
+        "change_per_year_sd": -0.0006538156386343369,
+        "p_value": 0.1701051289604986
       }
     }
   ],
@@ -31,10 +70,10 @@
   "run_errors": [],
   "llm_usage": {
     "calls": 0,
-    "cache_hits": 5,
+    "cache_hits": 14,
     "input_tokens": 0,
     "output_tokens": 0,
-    "cached_input_tokens": 7892,
-    "cached_output_tokens": 2722
+    "cached_input_tokens": 26589,
+    "cached_output_tokens": 8416
   }
 }
