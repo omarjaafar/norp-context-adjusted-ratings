@@ -1,0 +1,160 @@
+{
+  "generated_at": "2026-11-08T13:31:30",
+  "theory_id": "ratings_fairness",
+  "n_permutations": 199,
+  "permutation": {
+    "keep_paths": true,
+    "studentized": true
+  },
+  "family_size_hypotheses": 18,
+  "population": {
+    "rows_in": 2390744,
+    "after_return_type": 1531303,
+    "after_has_county": 1507855,
+    "after_has_need": 1507813,
+    "after_standard_rating_present": 1314041,
+    "after_high_need_present": 1314021,
+    "after_log_revenue_present": 1303953,
+    "after_category_present": 1303953,
+    "after_county_fips_present": 1303953,
+    "rows_out": 1303953,
+    "organizations": 337995,
+    "units": 3087,
+    "exposed_rows": 105597,
+    "exposed_units_by_year": {
+      "2018": 689,
+      "2019": 693,
+      "2020": 702,
+      "2021": 702,
+      "2022": 708
+    }
+  },
+  "placebos": 8,
+  "family_false_positives": 0,
+  "within_theory_false_positives": 0,
+  "placebo_hypotheses_with_p_below_alpha": 0,
+  "planted": {
+    "effect_sd": 0.25,
+    "verdict_family": "supported",
+    "survives": true
+  },
+  "theories": [
+    {
+      "theory_id": "placebo_2000",
+      "kind": "placebo",
+      "verdict_within_theory": "unsupported",
+      "verdict_family": "unsupported",
+      "H1_standardized": 0.008668524840260147,
+      "H1_p": 0.655,
+      "H1_family_q": 0.7425,
+      "H2_standardized": 0.007714995081063948,
+      "H2_p": 0.61,
+      "H2_family_q": 0.7425,
+      "replicated": false
+    },
+    {
+      "theory_id": "placebo_2001",
+      "kind": "placebo",
+      "verdict_within_theory": "unsupported",
+      "verdict_family": "unsupported",
+      "H1_standardized": 0.014031224647842561,
+      "H1_p": 0.26,
+      "H1_family_q": 0.48600000000000004,
+      "H2_standardized": 0.01746736165301722,
+      "H2_p": 0.16,
+      "H2_family_q": 0.48,
+      "replicated": false
+    },
+    {
+      "theory_id": "placebo_2002",
+      "kind": "placebo",
+      "verdict_within_theory": "unsupported",
+      "verdict_family": "unsupported",
+      "H1_standardized": 0.007489222399223109,
+      "H1_p": 0.5,
+      "H1_family_q": 0.7425,
+      "H2_standardized": 0.004368402234530169,
+      "H2_p": 0.66,
+      "H2_family_q": 0.7425,
+      "replicated": false
+    },
+    {
+      "theory_id": "placebo_2003",
+      "kind": "placebo",
+      "verdict_within_theory": "unsupported",
+      "verdict_family": "unsupported",
+      "H1_standardized": -0.016938253519022107,
+      "H1_p": 0.135,
+      "H1_family_q": 0.48,
+      "H2_standardized": -0.013214609049764271,
+      "H2_p": 0.265,
+      "H2_family_q": 0.48600000000000004,
+      "replicated": false
+    },
+    {
+      "theory_id": "placebo_2004",
+      "kind": "placebo",
+      "verdict_within_theory": "unsupported",
+      "verdict_family": "unsupported",
+      "H1_standardized": 0.016428011682088368,
+      "H1_p": 0.215,
+      "H1_family_q": 0.48600000000000004,
+      "H2_standardized": 0.01401156120817781,
+      "H2_p": 0.27,
+      "H2_family_q": 0.48600000000000004,
+      "replicated": false
+    },
+    {
+      "theory_id": "placebo_2005",
+      "kind": "placebo",
+      "verdict_within_theory": "unsupported",
+      "verdict_family": "unsupported",
+      "H1_standardized": 0.0003187014563487915,
+      "H1_p": 0.98,
+      "H1_family_q": 0.99,
+      "H2_standardized": -0.00013631007048379502,
+      "H2_p": 0.99,
+      "H2_family_q": 0.99,
+      "replicated": false
+    },
+    {
+      "theory_id": "placebo_2006",
+      "kind": "placebo",
+      "verdict_within_theory": "unsupported",
+      "verdict_family": "unsupported",
+      "H1_standardized": -0.009450728268588228,
+      "H1_p": 0.56,
+      "H1_family_q": 0.7425,
+      "H2_standardized": -0.007848680677899438,
+      "H2_p": 0.515,
+      "H2_family_q": 0.7425,
+      "replicated": false
+    },
+    {
+      "theory_id": "placebo_2007",
+      "kind": "placebo",
+      "verdict_within_theory": "unsupported",
+      "verdict_family": "unsupported",
+      "H1_standardized": 0.025163098829105838,
+      "H1_p": 0.05,
+      "H1_family_q": 0.225,
+      "H2_standardized": 0.02358806592266546,
+      "H2_p": 0.05,
+      "H2_family_q": 0.225,
+      "replicated": false
+    },
+    {
+      "theory_id": "planted_0.25sd",
+      "kind": "planted",
+      "verdict_within_theory": "supported",
+      "verdict_family": "supported",
+      "H1_standardized": -0.2713834742197874,
+      "H1_p": 0.005,
+      "H1_family_q": 0.045,
+      "H2_standardized": -0.2607080140859137,
+      "H2_p": 0.005,
+      "H2_family_q": 0.045,
+      "replicated": true
+    }
+  ]
+}

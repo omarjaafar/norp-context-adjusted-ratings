@@ -131,6 +131,13 @@ The four candidate causes, one at a time:
 - **What it changes.** Nothing is significant either way for ratings H2 or T5. The sweep cell goes from p = 0.001 to 0.133, in line with its clustered p of 0.113. With the 10 largest counties dropped, ratings H2 goes from a spurious p = 0.014 to 0.306. Every CP4 theory and sweep result must be rerun under the new gate.
 - **Approximation.** The jackknife drops a county from the already-residualized vectors and does not refit the controls and absorbed effects without it. Those effects are estimated from all 3,000+ counties, so one county moves them very little.
 
+### 2.6 The gate for many theories (CP4 V4, audit W11)
+
+- `gate.apply_family` takes alpha from the reports (`validator.alpha`), not a hard-coded 0.05, and refuses a family whose reports were run with different alphas. The alpha used is written to each report as `validator.family_alpha`.
+- The test that always passed is replaced by three that can fail: a family of 1 true + 9 null theories (20 hypotheses), where the true theory survives at p = 0.004 (q = 0.04) and not at p = 0.006 (q = 0.06); a theory supported alone (q = 0.01) that is unsupported in a family of 40 hypotheses (q = 0.20); and alpha taken from the specs.
+- **The permutation count limits the family size.** The smallest permutation p is 1/(n + 1). A theory whose H1 and H2 rank first and second gets q = p × m / 2, so it can survive only if m < 2 × alpha × (n + 1). At 999 permutations that is m < 100 hypotheses (50 theories); at 199, m < 20. A drill-down family of k strata needs k < alpha × (n + 1): 36 states need more than 720 permutations, so the drill-down must run at the gate's 999.
+- **Family controls on the real panel** (`scripts/run_controls.py --family` → `data/output/controls_family.json`, 199 permutations, the studentized gate): 8 placebo theories (each county takes another county's whole exposure history) and 1 theory with 0.25 SD planted in high-need counties, in one family of 18 hypotheses. **0 of 8 placebos survive** (family q 0.225 to 0.99, every effect within ±0.025 SD). **The planted theory stays supported** (H1 −0.271 SD, H2 −0.261 SD, family q 0.045, replicated). Its q is at the 199-permutation floor (0.005 × 18 / 2); at 999 it would be about 0.009.
+
 ## 3. Evidence that the gate works (V2)
 
 `scripts/run_controls.py` → `data/output/controls.json`, on the real population, with 199 permutations and no robustness models:

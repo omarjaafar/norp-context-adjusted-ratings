@@ -95,23 +95,59 @@ def test_continuous_spec_needs_correlation_h1():
     assert validate_spec(s) == []
 
 
-def _report(tid, p1, p2, e1, e2, replicated, fold_sign=-1):
+def _report(tid, p1, p2, e1, e2, replicated, fold_sign=-1, alpha=0.05):
     fold = {"test": {"effect": fold_sign * 0.2}, "train": {"effect": fold_sign * 0.2}}
-    return {"theory_id": tid, "verdict": "x", "validator": {"effect_floor_sd": 0.1},
+    return {"theory_id": tid, "verdict": "x", "validator": {"effect_floor_sd": 0.1, "alpha": alpha},
             "H1": {"effect": e1, "standardized_effect": e1, "permutation": {"p_value": p1}},
             "H2": {"fit": {"effect": e2, "standardized_effect": e2}, "permutation": {"p_value": p2}},
             "replication": {"replicated": replicated, "folds": [fold] * 5,
                             "pooled_p_value": 0.001, "pooled_effect": fold_sign * 0.2}}
 
 
-def test_family_q_is_larger_than_within_theory_and_can_remove_support():
-    reports = [_report("a", 0.01, 0.01, -0.3, -0.3, True)] + \
-              [_report(f"n{i}", 0.5, 0.5, 0.0, 0.0, False) for i in range(8)]
-    signs = {r["theory_id"]: -1 for r in reports}
-    out = apply_family(reports, signs)
-    assert out[0]["H1"]["family_q_value"] == pytest.approx(0.01 * 18 / 1) or out[0]["H1"]["family_q_value"] > 0.05
-    assert out[0]["verdict"] in ("unsupported", "weak", "supported")
-    assert out[0]["verdict_within_theory"] == "x"
+def _family(true_p, n_null=9):
+    """1 true theory (H1 and H2 at true_p, large effect, replicated) + n_null null theories."""
+    return ([_report("true", true_p, true_p, -0.3, -0.3, True)]
+            + [_report(f"null{i}", 0.5 + i / 100, 0.6 + i / 100, 0.0, 0.0, False)
+               for i in range(n_null)])
+
+
+def test_true_theory_survives_only_if_its_p_clears_bh_over_20_hypotheses():
+    # 10 theories -> 20 hypotheses. The true theory's two p-values rank 1 and 2, so
+    # BH gives q = p * 20 / 2 for both: it survives at alpha 0.05 only if p < 0.005.
+    signs = {f"null{i}": -1 for i in range(9)} | {"true": -1}
+    passes = apply_family(_family(0.004), signs)
+    assert passes[0]["H1"]["family_q_value"] == pytest.approx(0.004 * 20 / 2)
+    assert passes[0]["verdict"] == "supported"
+    fails = apply_family(_family(0.006), signs)
+    assert fails[0]["H1"]["family_q_value"] == pytest.approx(0.006 * 20 / 2)
+    assert fails[0]["verdict"] == "unsupported"
+    assert all(r["verdict"] == "unsupported" for r in passes[1:] + fails[1:])
+    assert passes[0]["validator"]["fdr_family"].endswith("(20)")
+
+
+def test_theory_supported_alone_is_demoted_inside_a_big_family():
+    alone = _report("t", 0.01, 0.01, -0.3, -0.3, True)
+    signs = {"t": -1} | {f"null{i}": -1 for i in range(19)}
+    single = apply_family([alone], signs)[0]
+    assert single["H1"]["family_q_value"] == pytest.approx(0.01)   # family of 2
+    assert single["verdict"] == "supported"
+    big = apply_family([alone] + [_report(f"null{i}", 0.5, 0.5, 0.0, 0.0, False)
+                                  for i in range(19)], signs)[0]
+    assert big["H1"]["family_q_value"] == pytest.approx(0.01 * 40 / 2)  # 40 hypotheses
+    assert big["verdict"] == "unsupported"
+    assert big["verdict_within_theory"] == "x"
+
+
+def test_family_alpha_comes_from_the_specs_not_a_constant():
+    signs = {"a": -1}
+    # q = 0.02 * 2 / 2 = 0.02: supported at alpha 0.05, not at alpha 0.01
+    assert apply_family([_report("a", 0.02, 0.02, -0.3, -0.3, True)], signs)[0]["verdict"] == "supported"
+    strict = apply_family([_report("a", 0.02, 0.02, -0.3, -0.3, True, alpha=0.01)], signs)[0]
+    assert strict["verdict"] == "unsupported"
+    assert strict["validator"]["family_alpha"] == 0.01
+    with pytest.raises(ValueError, match="different alphas"):
+        apply_family([_report("a", 0.02, 0.02, -0.3, -0.3, True),
+                      _report("b", 0.02, 0.02, -0.3, -0.3, True, alpha=0.01)], {"a": -1, "b": -1})
 
 
 def test_reversed_needs_h2_and_opposite_replication():

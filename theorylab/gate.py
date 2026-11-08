@@ -29,12 +29,27 @@ def opposite_replication(replication: dict, expected_sign: int, alpha: float) ->
                 and int(np.sign(pooled)) == -expected_sign)
 
 
-def apply_family(reports: list, expected_signs: dict, alpha: float = 0.05, floor: float | None = None) -> list:
+def family_alpha(reports: list) -> float:
+    """The alpha every report was run with (validator.alpha); one family has one alpha."""
+    alphas = {float(r["validator"]["alpha"]) for r in reports if "alpha" in r.get("validator", {})}
+    if len(alphas) > 1:
+        raise ValueError(f"reports in one family were run with different alphas: {sorted(alphas)}")
+    if not alphas:
+        raise ValueError("no report states validator.alpha; pass alpha explicitly")
+    return alphas.pop()
+
+
+def apply_family(reports: list, expected_signs: dict, alpha: float | None = None,
+                 floor: float | None = None) -> list:
     """Returns copies of the reports with family q-values and re-decided verdicts.
 
-    expected_signs: {theory_id: -1 or 1}. floor: effect floor in SD; when None each
-    report's own validator.effect_floor_sd is used.
+    expected_signs: {theory_id: -1 or 1}. alpha: when None (the default) it is the
+    validator.alpha the reports were run with, which must be the same for all of
+    them (CP4 audit W11: it was a hard-coded 0.05). floor: effect floor in SD; when
+    None each report's own validator.effect_floor_sd is used.
     """
+    if alpha is None:
+        alpha = family_alpha(reports)
     p_values, index = [], []
     for i, r in enumerate(reports):
         for h in ("H1", "H2"):
@@ -61,4 +76,5 @@ def apply_family(reports: list, expected_signs: dict, alpha: float = 0.05, floor
         r["verdict_within_theory"] = r["verdict"]
         r["verdict"], r["reasons"] = d["verdict"], d["reasons"]
         r["validator"]["fdr_family"] = f"all primary hypotheses in the run ({len(p_values)})"
+        r["validator"]["family_alpha"] = float(alpha)
     return out

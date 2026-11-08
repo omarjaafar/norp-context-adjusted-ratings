@@ -119,3 +119,65 @@ def run_controls(panel: pd.DataFrame, spec: dict, *, negative_seeds=range(20),
         "positive_controls": pos,
         "all_passed": neg["false_positives"] == 0 and all(p["passed"] for p in pos),
     })
+
+
+def family_controls(panel: pd.DataFrame, spec: dict, *, placebo_seeds=range(2000, 2008),
+                    planted_sd: float = 0.25, n_permutations: int | None = None) -> dict:
+    """Placebo theories and one planted theory through one BH family (CP4 V4).
+
+    Each placebo is the theory with the exposure replaced by another county's whole
+    history; the planted theory keeps the real exposure and adds planted_sd outcome
+    SDs in exposed rows. All of them go through gate.apply_family together, as the
+    theories of one run would. A placebo that is not "unsupported" after the family
+    correction is a family false positive; the planted one should stay "supported".
+    """
+    from theorylab.gate import apply_family
+
+    pop, pop_log = population(panel, spec)
+    exposure, within = spec["exposure"], spec.get("exposure_varies_by")
+    outcome, sign = spec["outcome"], int(spec["expected_sign"])
+    permuter = UnitPermuter(pop, exposure, unit=spec["exposure_unit"], within=within,
+                            keep_paths=within is not None)
+    reports, kinds = [], {}
+    for seed in placebo_seeds:
+        shuffled = pop.copy()
+        shuffled[exposure] = permuter.draw(np.random.default_rng(seed))
+        r = run_spec(shuffled, spec, n_permutations=n_permutations, include_robustness=False)
+        r["theory_id"] = f"placebo_{seed}"
+        reports.append(r)
+        kinds[r["theory_id"]] = "placebo"
+    y = to_float(pop[outcome])
+    planted = pop.copy()
+    planted[outcome] = y + sign * planted_sd * float(y.std(ddof=1)) * to_float(pop[exposure]).eq(1.0)
+    r = run_spec(planted, spec, n_permutations=n_permutations, include_robustness=False)
+    r["theory_id"] = f"planted_{planted_sd:g}sd"
+    reports.append(r)
+    kinds[r["theory_id"]] = "planted"
+
+    family = apply_family(reports, {tid: sign for tid in kinds})
+    rows = [{"theory_id": f["theory_id"], "kind": kinds[f["theory_id"]],
+             "verdict_within_theory": f["verdict_within_theory"], "verdict_family": f["verdict"],
+             "H1_standardized": f["H1"]["standardized_effect"],
+             "H1_p": f["H1"]["permutation"]["p_value"], "H1_family_q": f["H1"]["family_q_value"],
+             "H2_standardized": f["H2"]["fit"]["standardized_effect"],
+             "H2_p": f["H2"]["permutation"]["p_value"], "H2_family_q": f["H2"]["family_q_value"],
+             "replicated": f["replication"]["replicated"]} for f in family]
+    placebos = [r for r in rows if r["kind"] == "placebo"]
+    planted_row = next(r for r in rows if r["kind"] == "planted")
+    return to_jsonable({
+        "generated_at": datetime.datetime.now().isoformat(timespec="seconds"),
+        "theory_id": spec["theory_id"],
+        "n_permutations": int(n_permutations or spec["validator"]["n_permutations"]),
+        "permutation": spec["validator"].get("permutation"),
+        "family_size_hypotheses": 2 * len(rows),
+        "population": pop_log,
+        "placebos": len(placebos),
+        "family_false_positives": sum(r["verdict_family"] != "unsupported" for r in placebos),
+        "within_theory_false_positives": sum(r["verdict_within_theory"] != "unsupported"
+                                             for r in placebos),
+        "placebo_hypotheses_with_p_below_alpha": sum(
+            (r["H1_p"] < 0.05) + (r["H2_p"] < 0.05) for r in placebos),
+        "planted": {"effect_sd": planted_sd, "verdict_family": planted_row["verdict_family"],
+                    "survives": planted_row["verdict_family"] == "supported"},
+        "theories": rows,
+    })
