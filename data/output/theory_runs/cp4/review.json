@@ -1,56 +1,117 @@
 {
   "run_dir": "data/output/theory_runs/cp4",
-  "family_size": 4,
+  "family_size": 10,
   "all_follow": true,
-  "all_current_gate": false,
+  "all_current_gate": true,
   "theories": [
     {
-      "theory_id": "hard_pressed_county_rating_penalty",
+      "theory_id": "distressed_county_rating_penalty",
       "gold_id": "ratings_fairness",
       "verdict": "unsupported",
       "verdict_recomputed": "unsupported",
       "verdict_follows": true,
       "reasons": [
-        "H1 not significant after FDR (q = 0.3533)",
+        "H1 not significant after FDR (q = 0.725)",
         "H1 gap -0.022 SD is below the 0.1 SD floor"
       ],
       "family_q_matches": true,
       "H1_standardized": -0.02212535070089836,
-      "H1_family_q": 0.35333333333333333,
+      "H1_family_q": 0.725,
       "H2_standardized": -0.011613714146140703,
-      "H2_family_q": 0.35333333333333333,
+      "H2_family_q": 0.7799999999999999,
       "replicated": false,
       "folds_with_expected_sign": 0,
-      "gate_problems": [
-        "raw-coefficient permutation (before 7ab7337): rerun"
-      ],
+      "gate_problems": [],
       "gold_disagreements": [],
       "years_H1_holds": [],
       "trend_p": 0.13686445937876496
     },
     {
-      "theory_id": "unemployment_leverage_link",
+      "theory_id": "education_fundraising_cost",
+      "gold_id": "education_fundraising",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 not significant after FDR (q = 0.966)",
+        "H1 gap -0.000 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": -7.938857033060286e-05,
+      "H1_family_q": 0.966,
+      "H2_standardized": -0.0007919588252793118,
+      "H2_family_q": 0.7799999999999999,
+      "replicated": false,
+      "folds_with_expected_sign": 2,
+      "gate_problems": [],
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 0.22669795728910777
+    },
+    {
+      "theory_id": "health_burden_thin_margins",
+      "gold_id": "health_margin",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 not significant after FDR (q = 0.78)",
+        "H1 gap -0.000 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": -0.00044253372435780903,
+      "H1_family_q": 0.7799999999999999,
+      "H2_standardized": 0.006084418088847177,
+      "H2_family_q": 0.006666666666666667,
+      "replicated": false,
+      "folds_with_expected_sign": 0,
+      "gate_problems": [],
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 0.6510083853489186
+    },
+    {
+      "theory_id": "unemployment_leverage",
       "gold_id": "unemployment_vulnerability",
       "verdict": "unsupported",
       "verdict_recomputed": "unsupported",
       "verdict_follows": true,
       "reasons": [
-        "H1 not significant after FDR (q = 0.3533)",
+        "H1 not significant after FDR (q = 0.078)",
         "H1 gap +0.001 SD is below the 0.1 SD floor"
       ],
       "family_q_matches": true,
-      "H1_standardized": 0.0011764497356501068,
-      "H1_family_q": 0.35333333333333333,
-      "H2_standardized": 0.000479501332338941,
-      "H2_family_q": 0.439,
+      "H1_standardized": 0.001176449735650106,
+      "H1_family_q": 0.078,
+      "H2_standardized": 0.0012218776342997188,
+      "H2_family_q": 0.078,
       "replicated": false,
       "folds_with_expected_sign": 4,
-      "gate_problems": [
-        "raw-coefficient permutation (before 7ab7337): rerun"
-      ],
+      "gate_problems": [],
       "gold_disagreements": [],
       "years_H1_holds": [],
-      "trend_p": 0.1495348560960592
+      "trend_p": 0.1701051289604986
+    },
+    {
+      "theory_id": "violence_admin_overhead_share",
+      "gold_id": "crime_overhead",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 gap +0.027 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": 0.026754595944603173,
+      "H1_family_q": 0.005,
+      "H2_standardized": 0.03537854997213238,
+      "H2_family_q": 0.005,
+      "replicated": true,
+      "folds_with_expected_sign": 5,
+      "gate_problems": [],
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 0.04479958329026345
     }
   ]
 }
