@@ -1,0 +1,267 @@
+{
+  "generated_at": "2026-11-19T15:44:37",
+  "what": "V6: placebo family on heavy-tailed outcomes under the rule",
+  "n_permutations": 199,
+  "effect_sd": 0.25,
+  "controls": {
+    "pos_unemployment_margin": {
+      "outcome": "operating_margin",
+      "exposure": "unemployment_rate",
+      "expected_sign": -1,
+      "family_size_hypotheses": 18,
+      "placebos": 8,
+      "family_false_positives": 0,
+      "planted_survives": true,
+      "planting": {
+        "effect_sd": 0.25,
+        "shift_per_unit_exposure": -0.1798130896014839,
+        "planted_in": "raw outcome, before the outcome rule",
+        "scale": "outcome SD after the rule, unplanted population",
+        "sd_after_rule_unplanted": 0.7192523584059356,
+        "raw_sd_unplanted": 2501.8532790280847,
+        "rule_applied_to_unplanted": true
+      },
+      "seconds": 2245.5,
+      "theories": [
+        {
+          "theory_id": "placebo_2000",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.003694085411731045,
+          "H1_family_q": 0.396,
+          "H2_standardized": -0.0004536869496902522,
+          "H2_family_q": 0.895,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2001",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.00139402296957413,
+          "H1_family_q": 0.855,
+          "H2_standardized": -0.01049844812412475,
+          "H2_family_q": 0.225,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2002",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.0061844369639614954,
+          "H1_family_q": 0.57375,
+          "H2_standardized": -0.00985356901955244,
+          "H2_family_q": 0.57375,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2003",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": 0.0023538852782273873,
+          "H1_family_q": 0.726923076923077,
+          "H2_standardized": 0.0028150271227075137,
+          "H2_family_q": 0.726923076923077,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2004",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": 0.002521401667387069,
+          "H1_family_q": 0.726923076923077,
+          "H2_standardized": 0.0032720695469627657,
+          "H2_family_q": 0.726923076923077,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2005",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.0007427575470483803,
+          "H1_family_q": 0.855,
+          "H2_standardized": -0.00045257096162852503,
+          "H2_family_q": 0.895,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2006",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.003020193271785004,
+          "H1_family_q": 0.57375,
+          "H2_standardized": -0.009111819794468156,
+          "H2_family_q": 0.15,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2007",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.0009330591690128069,
+          "H1_family_q": 0.855,
+          "H2_standardized": -0.002978105967332459,
+          "H2_family_q": 0.726923076923077,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "planted_0.25sd",
+          "kind": "planted",
+          "verdict_within_theory": "supported",
+          "verdict_family": "supported",
+          "H1_standardized": -0.2530357616394657,
+          "H1_family_q": 0.045,
+          "H2_standardized": -0.25427713871881513,
+          "H2_family_q": 0.045,
+          "replicated": true,
+          "rule_applied": true
+        }
+      ]
+    },
+    "pos_poverty_leverage": {
+      "outcome": "liabilities_to_assets",
+      "exposure": "poverty_rate",
+      "expected_sign": 1,
+      "family_size_hypotheses": 18,
+      "placebos": 8,
+      "family_false_positives": 0,
+      "planted_survives": true,
+      "planting": {
+        "effect_sd": 0.25,
+        "shift_per_unit_exposure": 0.11867567991706018,
+        "planted_in": "raw outcome, before the outcome rule",
+        "scale": "outcome SD after the rule, unplanted population",
+        "sd_after_rule_unplanted": 0.47470271966824074,
+        "raw_sd_unplanted": 154.24920696353556,
+        "rule_applied_to_unplanted": true
+      },
+      "seconds": 1393.5,
+      "theories": [
+        {
+          "theory_id": "placebo_2000",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": 0.008017072081019776,
+          "H1_family_q": 0.935,
+          "H2_standardized": 0.0018563964008001034,
+          "H2_family_q": 0.935,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2001",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": 0.006493936409488778,
+          "H1_family_q": 0.935,
+          "H2_standardized": 0.0023839311366112056,
+          "H2_family_q": 0.935,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2002",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.01020453291171796,
+          "H1_family_q": 0.63,
+          "H2_standardized": -0.004492567893571517,
+          "H2_family_q": 0.935,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2003",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.0004916586831576648,
+          "H1_family_q": 0.935,
+          "H2_standardized": 0.001779010556278177,
+          "H2_family_q": 0.935,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2004",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.0004282150553999834,
+          "H1_family_q": 0.935,
+          "H2_standardized": -0.0020428812619522744,
+          "H2_family_q": 0.935,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2005",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.0008420410497254007,
+          "H1_family_q": 0.935,
+          "H2_standardized": -0.003357367352817746,
+          "H2_family_q": 0.935,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2006",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.00532875981431207,
+          "H1_family_q": 0.935,
+          "H2_standardized": 0.0012538347537597377,
+          "H2_family_q": 0.935,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "placebo_2007",
+          "kind": "placebo",
+          "verdict_within_theory": "unsupported",
+          "verdict_family": "unsupported",
+          "H1_standardized": -0.0015652669924817344,
+          "H1_family_q": 0.935,
+          "H2_standardized": -0.0014095893583414454,
+          "H2_family_q": 0.935,
+          "replicated": false,
+          "rule_applied": true
+        },
+        {
+          "theory_id": "planted_0.25sd",
+          "kind": "planted",
+          "verdict_within_theory": "supported",
+          "verdict_family": "supported",
+          "H1_standardized": 0.27396853230049634,
+          "H1_family_q": 0.045,
+          "H2_standardized": 0.26266012594011046,
+          "H2_family_q": 0.045,
+          "replicated": true,
+          "rule_applied": true
+        }
+      ]
+    }
+  },
+  "seconds_total": 3639.1
+}
