@@ -168,3 +168,19 @@ Why:
 - Values in range: shares in 0–1, crime ≥ 0 (`chr.range_violations`, all 0).
 - Rebuild: `python scripts/build_county_need.py --chr-only --chr-dir data/raw/chr` refreshes only the CHR columns and checks that every ACS and NORP column is unchanged.
 - Tests: `tests/test_need.py`, the `test_chr_*` and `test_read_chr_*` and `test_add_chr_need_*` tests (vintage rule, code-based reading, missing measures, CT handling, ranges, rerun safety).
+
+## D9. Nonprofit density, and the multi-year crime source (CP5 V3, V5, Vien)
+
+**`nonprofit_density`** (county-year): distinct EINs that filed a full Form 990 in the county that tax year, per 10,000 ACS residents (`theorylab/need.add_nonprofit_density`). It needs the filings, so it is added in the panel build (`panel.build_panel`), not in `build_county_need.py`. It is the exposure for L6 (`lit_density_fundraising`, Thornton 2008).
+- 990-EZ and 990-N filers are not counted, so it measures the larger organizations only.
+- It is computed from our own panel, so it inherits the panel's coverage. The median county rises from 6.9 (2018) to 9.0 (2022), which is likely e-file coverage growing, not new nonprofits. **Compare it within a tax year**; the benchmark's H2 absorbs tax year.
+- Organizations with no county get no value, and the county's density counts only filers that we could place in it (D2).
+- Panel after the rebuild: 2,390,744 rows, 54 columns, sha256_csv `334951b1…` (`data/output/panel_join_log.json`).
+
+**Multi-year crime: roadblock (CP4 feedback F2).** The source we chose on 2026-11-19 is Jacob Kaplan's *Concatenated Files: UCR Offenses Known and Clearances by Arrest (Return A), 1960–2022* (openICPSR 100707). It is agency-level, with LEAIC FIPS codes, so it aggregates to counties directly. **It needs an openICPSR account to download.** We had no account on the machine the CP5 runs were made on, so it is not in the repo. What we tried and ruled out:
+- the FBI Crime Data Explorer's downloadable estimates stop at state level;
+- the NIBRS estimates API is national only.
+
+**The rule, if the extract is added later:** use 2018–2020. Use 2021–2022 only for counties where reporting agencies cover at least 80% of the population, because of the NIBRS transition. Report coverage per year and never impute. Commit a county-year extract with its sha256, since it cannot be re-downloaded without an account. Name the column `crime_violent_rate`, so `scripts/t4_followup.py` picks it up.
+
+**Consequence:** L9 (`lit_crime_admin_trend`) was swapped for the spare `lit_education_fundraising` before the theory file was frozen. `chr_violent_crime_rate` stays a 2014/2016 snapshot (D8). The T4 proxy check runs with the controls only (`data/output/t4_followup.json`).

@@ -1,0 +1,53 @@
+{
+  "second_crime_columns_in_panel": [],
+  "variants": {
+    "as_run": {
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.0267545959446032,
+      "H2_std": 0.03537854997087041,
+      "H2_p": 0.001,
+      "folds_with_expected_sign": 5,
+      "share_of_as_run_effect": 1.0
+    },
+    "poverty_rate": {
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.0267545959446032,
+      "H2_std": 0.03537854997178877,
+      "H2_p": 0.001,
+      "folds_with_expected_sign": 5,
+      "share_of_as_run_effect": 1.0000000000259581
+    },
+    "median_income": {
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.0267545959446032,
+      "H2_std": 0.03537854997178877,
+      "H2_p": 0.001,
+      "folds_with_expected_sign": 5,
+      "share_of_as_run_effect": 1.0000000000259581
+    },
+    "population": {
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.0267545959446032,
+      "H2_std": 0.033772501928341525,
+      "H2_p": 0.001,
+      "folds_with_expected_sign": 5,
+      "share_of_as_run_effect": 0.95460390423431
+    },
+    "need_index": {
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.0267545959446032,
+      "H2_std": 0.03512757971692912,
+      "H2_p": 0.001,
+      "folds_with_expected_sign": 5,
+      "share_of_as_run_effect": 0.992906146403741
+    },
+    "all_four": {
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.0267545959446032,
+      "H2_std": 0.03197446878479312,
+      "H2_p": 0.001,
+      "folds_with_expected_sign": 5,
+      "share_of_as_run_effect": 0.903781212376423
+    }
+  }
+}
