@@ -316,3 +316,21 @@ def test_chr_catalog_block_is_valid():
     src = load_catalog()["chr_county"]
     assert set(src.fields.values()) == set(CHR_COLUMNS)
     assert src.row_bounds(2025) == (3152, 3152)
+
+
+
+def test_nonprofit_density_counts_distinct_full_990_filers_per_10k():
+    from theorylab.need import add_nonprofit_density
+    panel = pd.DataFrame({
+        "ein": ["1", "1", "2", "3", "4", "5"],
+        "tax_year": [2019, 2019, 2019, 2019, 2020, 2019],
+        "return_type": ["990", "990", "990", "990EZ", "990", "990"],
+        "county_fips": ["01001", "01001", "01001", "01001", "01001", None],
+        "population": [20000, 20000, 20000, 20000, 10000, None],
+    })
+    out = add_nonprofit_density(panel)
+    # 2019: EINs 1 and 2 filed a 990 (EIN 1 twice, EIN 3 only a 990EZ) -> 2 / 20,000 * 10,000 = 1.0
+    assert list(out["nonprofit_density"][:4]) == [1.0, 1.0, 1.0, 1.0]
+    assert out["nonprofit_density"][4] == 1.0  # 2020: 1 / 10,000 * 10,000
+    assert pd.isna(out["nonprofit_density"][5])  # no county
+    assert len(out) == len(panel)

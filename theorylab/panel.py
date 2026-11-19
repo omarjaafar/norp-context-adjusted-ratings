@@ -11,6 +11,7 @@ import pandas as pd
 
 from theorylab.catalog import ContractError, Source, missing_columns
 from theorylab.ids import normalize_ein
+from theorylab.need import add_nonprofit_density
 from theorylab.ratios import add_ratios, add_revenue_growth
 
 KEYS = ["ein", "tax_year"]
@@ -128,6 +129,8 @@ def build_panel(p01: pd.DataFrame, p09: pd.DataFrame, p10: pd.DataFrame,
                         validate="many_to_one", indicator=True)
     panel["has_need"] = panel["_merge"].eq("both") & panel["has_county"]
     panel = panel.drop(columns="_merge")
+    if {"return_type", "population"} <= set(panel.columns):
+        panel = add_nonprofit_density(panel)  # CP5 V3: needs the filings, so it is added here
 
     panel = add_ratios(panel)
     panel = add_revenue_growth(panel)

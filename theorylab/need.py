@@ -352,3 +352,23 @@ def add_chr_need(need: pd.DataFrame, chr_wide: pd.DataFrame) -> pd.DataFrame:
     base = need.drop(columns=[c for c in CHR_COLUMNS if c in need.columns])
     return base.merge(chr_wide, on=["county_fips", "acs_year"], how="left",
                       validate="one_to_one")
+
+
+def add_nonprofit_density(panel: pd.DataFrame) -> pd.DataFrame:
+    """CP5 V3: full-990 filers per 10,000 residents, per county and tax year.
+
+    Counts distinct EINs that filed a full Form 990 (return_type == "990") in the county
+    that year, from the panel itself, and divides by the ACS population of that county-year.
+    Every row of the county-year gets the value; rows without a county or a population get NaN.
+    It measures how many nonprofits compete for the same local donors (L6, Thornton 2008).
+    990-EZ and 990-N filers are not counted, so it is a density of the larger organizations.
+    """
+    out = panel.copy()
+    full = out[out["return_type"].eq("990") & out["county_fips"].notna()]
+    filers = (full.groupby(["county_fips", "tax_year"])["ein"].nunique()
+              .rename("_full_990_filers").reset_index())
+    out = out.merge(filers, on=["county_fips", "tax_year"], how="left", validate="many_to_one")
+    pop = pd.to_numeric(out["population"], errors="coerce")
+    density = out["_full_990_filers"].fillna(0) / pop * 10_000
+    out["nonprofit_density"] = density.where(out["county_fips"].notna() & (pop > 0))
+    return out.drop(columns="_full_990_filers")

@@ -1,127 +1,315 @@
 {
-  "about": "The CP5 benchmark: 20 entries = 10 literature theories (the CP3 ratings-fairness theory and 9 from nonprofit finance research), 5 positive controls and 5 negative controls. Each has the plain-language text the Planner gets, one paraphrase and the gold answer its spec is reviewed against. Texts avoid column names (CP4 audit W5). A positive control plants `effect_sd` outcome SDs along the gold exposure, so the gate should call it supported; a negative control replaces the gold exposure with another county's whole exposure history (seeded), so the gate should call it unsupported. The controls are written as ordinary theories so the Planner meets them the way it meets any theory (control recovery includes plan validity). Every gold answer was written before any Planner run.",
+  "about": "FROZEN 2026-11-19, before any Planner run on these entries (CP5 V3). Changes after this date must be logged in the report's Changes table. The CP5 benchmark: 20 entries = 10 literature theories (the CP3 ratings-fairness theory and 9 from nonprofit finance research), 5 positive controls and 5 negative controls. Each literature entry has a `source` (full citation; mechanism and measure) and a `claim` (what the source argues and which step is our inference), checked against the paper or its abstract on 2026-11-19. Each entry has the plain-language text the Planner gets, one paraphrase and the gold answer its spec is reviewed against. Texts avoid column names (CP4 audit W5). A positive control plants `effect_sd` outcome SDs along the gold exposure, in the raw outcome before the heavy-tail rule, scaled to the outcome's SD after the rule (docs/validator.md 2.8); two of them (pos_unemployment_margin, pos_poverty_leverage) are on heavy-tailed ratios (CP4 feedback F4). A negative control replaces the gold exposure with another county's whole exposure history (seeded), so the gate should call it unsupported. Controls are judged in their own BH family. Every gold answer was written before any Planner run.",
   "entries": [
     {
-      "id": "ratings_fairness", "kind": "literature", "source": "CP3 theory; Tuckman and Chang (1991) on context-blind financial ratios",
+      "id": "ratings_fairness",
+      "kind": "literature",
+      "source": "CP3 theory (docs/ratings_theory.md). Overhead-ratio critique: Gregory, A. G. & Howard, D. (2009), 'The Nonprofit Starvation Cycle', Stanford Social Innovation Review 7(4); Lecy, J. D. & Searing, E. A. M. (2015), 'Anatomy of the Nonprofit Starvation Cycle', NVSQ 44(3), doi 10.1177/0899764014527175",
+      "claim": "Gregory & Howard argue that funders' and raters' reliance on overhead ratios misjudges what running a nonprofit costs (the 'starvation cycle'); Lecy & Searing document falling reported overhead over 25 years. They support 'context-blind ratio scores mismeasure nonprofits'; that the penalty falls on high-need places is the CP3 hypothesis itself, not their claim. (McConville & Cordery 2021 dropped: it is about performance-reporting research methods.)",
       "text": "Watchdog-style financial ratings are unfair to nonprofits that work in hard-pressed places: organizations in the most economically distressed quarter of counties get lower scores on the usual 0-10 financial score.",
       "paraphrase": "If you score nonprofits the way charity watchdogs do, the ones based in the worst-off local economies come out worse.",
-      "gold": {"outcome": "standard_rating", "exposure": "high_need", "exposure_type": "binary", "expected_sign": -1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "standard_rating",
+        "exposure": "high_need",
+        "exposure_type": "binary",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "lit_poverty_reserves", "kind": "literature", "source": "Tuckman and Chang (1991): equity balance as a vulnerability indicator",
+      "id": "lit_poverty_reserves",
+      "kind": "literature",
+      "source": "Mechanism: Pfeffer, J. & Salancik, G. R. (1978), The External Control of Organizations: A Resource Dependence Perspective. Measure: Tuckman, H. P. & Chang, C. F. (1991), 'A Methodology for Measuring the Financial Vulnerability of Charitable Nonprofit Organizations', NVSQ 20(4) 445-460",
+      "claim": "Resource dependence: organizations' resources reflect what their environment can supply, so poorer environments leave less to accumulate. Tuckman & Chang use low equity balance (net assets relative to revenue) as one of four vulnerability indicators. The county-poverty direction is an application of resource dependence, not a result in either source.",
       "text": "Nonprofits in poorer counties hold smaller financial reserves relative to their yearly revenue.",
       "paraphrase": "The higher a county's poverty rate, the thinner the cushion of net assets its nonprofits keep.",
-      "gold": {"outcome": "equity_ratio", "exposure": "poverty_rate", "exposure_type": "continuous", "expected_sign": -1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "equity_ratio",
+        "exposure": "poverty_rate",
+        "exposure_type": "continuous",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "lit_income_concentration", "kind": "literature", "source": "Carroll and Stater (2009): revenue diversification and stability",
-      "text": "In wealthier counties nonprofits spread their revenue over more sources instead of leaning on one.",
-      "paraphrase": "Higher local household incomes go with less concentrated nonprofit revenue.",
-      "gold": {"outcome": "revenue_concentration", "exposure": "median_household_income", "exposure_type": "continuous", "expected_sign": -1, "exposure_unit": "county_fips"}
-    },
-    {
-      "id": "lit_income_fundraising", "kind": "literature", "source": "Greenlee and Trussel (2000): donor base and fundraising cost",
-      "text": "Where residents earn more, nonprofits pay less to raise each dollar of contributions.",
-      "paraphrase": "A richer donor base makes fundraising cheaper per dollar raised.",
-      "gold": {"outcome": "fundraising_efficiency", "exposure": "median_household_income", "exposure_type": "continuous", "expected_sign": -1, "exposure_unit": "county_fips"}
-    },
-    {
-      "id": "lit_unemployment_margin", "kind": "literature", "source": "Resource dependency: local downturns squeeze nonprofit surpluses (Tuckman and Chang 1991)",
+      "id": "lit_unemployment_margin",
+      "kind": "literature",
+      "source": "Salamon, L. M., Geller, S. L. & Spence, K. L. (2009), Impact of the 2007-09 Economic Recession on Nonprofit Organizations, Johns Hopkins Listening Post Project, Communique No. 14. Measure: Tuckman & Chang (1991), operating margin",
+      "claim": "About 80% of 363 surveyed nonprofits reported fiscal stress in the 2007-09 recession, with demand rising as revenue fell. A survey of a downturn over time, not a cross-county comparison: it supports the direction only.",
       "text": "In counties with high unemployment nonprofits end the year with smaller surpluses relative to revenue.",
       "paraphrase": "Local joblessness cuts into the operating margin of the nonprofits there.",
-      "gold": {"outcome": "operating_margin", "exposure": "unemployment_rate", "exposure_type": "continuous", "expected_sign": -1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "operating_margin",
+        "exposure": "unemployment_rate",
+        "exposure_type": "continuous",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "lit_housing_debt", "kind": "literature", "source": "Financial vulnerability and debt (Tuckman and Chang 1991)",
-      "text": "Nonprofits in counties where families spend more of their income on housing carry more debt relative to what they own.",
-      "paraphrase": "A heavy local housing cost burden goes with higher liabilities per dollar of assets.",
-      "gold": {"outcome": "liabilities_to_assets", "exposure": "avg_housing_burden", "exposure_type": "continuous", "expected_sign": 1, "exposure_unit": "county_fips"}
+      "id": "lit_income_fundraising",
+      "kind": "literature",
+      "source": "Wolpert, J. (1993), Patterns of Generosity in America: Who's Holding the Safety Net? Twentieth Century Fund",
+      "claim": "Giving and voluntary resources vary with community wealth. That richer places give more is Wolpert's; that each raised dollar is therefore cheaper is our inference from it.",
+      "text": "Where residents earn more, nonprofits pay less to raise each dollar of contributions.",
+      "paraphrase": "A richer donor base makes fundraising cheaper per dollar raised.",
+      "gold": {
+        "outcome": "fundraising_efficiency",
+        "exposure": "median_household_income",
+        "exposure_type": "continuous",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "lit_uninsured_programs", "kind": "literature", "source": "Demand pressure on service providers (resource dependency)",
-      "text": "Where more people lack health insurance, nonprofits put a larger share of their spending into programs.",
-      "paraphrase": "A higher uninsured rate in a county pushes its nonprofits to spend more on direct programs.",
-      "gold": {"outcome": "program_expense_ratio", "exposure": "chr_uninsured", "exposure_type": "continuous", "expected_sign": 1, "exposure_unit": "county_fips"}
+      "id": "lit_income_concentration",
+      "kind": "literature",
+      "source": "Mechanism: Gronbjerg, K. A. & Paarlberg, L. (2001), 'Community Variations in the Size and Scope of the Nonprofit Sector: Theory and Preliminary Findings', NVSQ 30(4) 684-706. Measure (revenue HHI): Carroll, D. A. & Stater, K. J. (2009), 'Revenue Diversification in Nonprofit Organizations: Does It Lead to Financial Stability?', JPART 19(4) 947-966",
+      "claim": "Supply-side factors (community wealth, education) explain where nonprofit resources are, more than demand. That backs 'richer places offer nonprofits more resources'; that revenue is therefore less concentrated is our inference. The weakest literature link; first to be swapped if a reviewer objects.",
+      "text": "In wealthier counties nonprofits spread their revenue over more sources instead of leaning on one.",
+      "paraphrase": "Higher local household incomes go with less concentrated nonprofit revenue.",
+      "gold": {
+        "outcome": "revenue_concentration",
+        "exposure": "median_household_income",
+        "exposure_type": "continuous",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "lit_education_reserves", "kind": "literature", "source": "Educated donor bases support reserves (Hager and others on nonprofit capitalization)",
-      "text": "In counties where more adults finished high school, nonprofits build larger reserves relative to revenue.",
-      "paraphrase": "Higher high-school completion locally goes with a thicker net-asset cushion for nonprofits.",
-      "gold": {"outcome": "equity_ratio", "exposure": "chr_hs_completion", "exposure_type": "continuous", "expected_sign": 1, "exposure_unit": "county_fips"}
+      "id": "lit_density_fundraising",
+      "kind": "literature",
+      "source": "Mechanism: Thornton, J. (2008), 'Competition, Contractibility, and the Market for Donors to Nonprofits', Journal of Law, Economics, and Organization 24(1) 215-246 (often cited as Castaneda, Garen & Thornton; RePEc lists Thornton). Related: Thornton, J. (2006), 'Nonprofit Fund-Raising in Competitive Donor Markets', NVSQ 35(2) 204-224",
+      "claim": "Abstract (JLEO 2008): using variation in competition across metropolitan areas in locally competitive subsectors, 'an increase in competition ... increases the fraction of donations allocated to promotional expenditures'. Sign + follows directly. Our density counts full-990 filers per 10,000 residents in the county, a coarser competition measure than theirs. The 2006 NVSQ abstract was not available to check, so it is cited as related only.",
+      "text": "Where more nonprofits compete for the same local donors, each one spends a larger share of its budget on fundraising.",
+      "paraphrase": "A county crowded with charities relative to its population pushes its nonprofits to put more of their spending into raising money.",
+      "gold": {
+        "outcome": "fundraising_expense_ratio",
+        "exposure": "nonprofit_density",
+        "exposure_type": "continuous",
+        "expected_sign": 1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "lit_highneed_growth", "kind": "literature", "source": "Need and revenue: distressed places grow revenue more slowly",
+      "id": "lit_highneed_growth",
+      "kind": "literature",
+      "source": "Salamon, Geller & Spence (2009), Listening Post Communique No. 14 (see lit_unemployment_margin)",
+      "claim": "Under economic stress nonprofits face rising demand while revenue falls. Applied here as: organizations in the most distressed counties grow revenue more slowly. Direction only.",
       "text": "Nonprofits in the most economically distressed quarter of counties see slower revenue growth from one year to the next.",
       "paraphrase": "Organizations in the hardest-hit local economies grow their revenue more slowly.",
-      "gold": {"outcome": "revenue_growth", "exposure": "high_need", "exposure_type": "binary", "expected_sign": -1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "revenue_growth",
+        "exposure": "high_need",
+        "exposure_type": "binary",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "lit_food_desert_programs", "kind": "literature", "source": "Need-driven programming in food-insecure places",
-      "text": "Where a larger share of residents live in food deserts, nonprofits devote a bigger part of their budget to programs.",
-      "paraphrase": "More food-desert exposure in a county means more of its nonprofits' spending goes to programs.",
-      "gold": {"outcome": "program_expense_ratio", "exposure": "food_desert_share", "exposure_type": "continuous", "expected_sign": 1, "exposure_unit": "county_fips"}
+      "id": "lit_uninsured_programs",
+      "kind": "literature",
+      "source": "Weisbrod, B. A. (1988), The Nonprofit Economy, Harvard University Press (government-failure theory, first in Weisbrod 1975)",
+      "claim": "Nonprofits arise to meet demand that government, serving the median voter, leaves unmet. Where more people are uninsured there is more unmet health demand. That nonprofits respond by shifting their spending toward programs is our inference; Weisbrod's theory is about where nonprofits exist, not how they split spending. Weak link, flagged.",
+      "text": "Where more people lack health insurance, nonprofits put a larger share of their spending into programs.",
+      "paraphrase": "A higher uninsured rate in a county pushes its nonprofits to spend more on direct programs.",
+      "gold": {
+        "outcome": "program_expense_ratio",
+        "exposure": "chr_uninsured",
+        "exposure_type": "continuous",
+        "expected_sign": 1,
+        "exposure_unit": "county_fips"
+      }
     },
-
     {
-      "id": "pos_poverty_programs", "kind": "positive_control", "control": {"effect_sd": 0.25},
+      "id": "lit_education_fundraising",
+      "kind": "literature",
+      "source": "Wolpert (1993), Patterns of Generosity in America (see lit_income_fundraising); Gronbjerg & Paarlberg (2001) on education as a supply-side factor",
+      "claim": "Replaces L9 (crime and admin trend): a multi-year county crime source was not available (V5 roadblock). Both sources tie community resources, including education, to giving. That a more educated donor base lowers the fundraising share is our inference.",
+      "text": "In counties where more adults have some college education, nonprofits spend a smaller share of their budget on fundraising.",
+      "paraphrase": "A better-educated local population means nonprofits there need to put less of their spending into raising money.",
+      "gold": {
+        "outcome": "fundraising_expense_ratio",
+        "exposure": "chr_some_college",
+        "exposure_type": "continuous",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
+    },
+    {
+      "id": "lit_housing_debt",
+      "kind": "literature",
+      "source": "Calabrese, T. D. (2011), 'Testing Competing Capital Structure Theories of Nonprofit Organizations', Public Budgeting & Finance 31(3) 119-143",
+      "claim": "Nonprofit capital structure follows the pecking order: internal funds first, borrowing when they fall short. That high local housing burden marks high occupancy costs, which drain internal funds and so raise borrowing, is our inference. No study links housing burden to nonprofit leverage directly. Weak link, flagged.",
+      "text": "Nonprofits in counties where families spend more of their income on housing carry more debt relative to what they own.",
+      "paraphrase": "A heavy local housing cost burden goes with higher liabilities per dollar of assets.",
+      "gold": {
+        "outcome": "liabilities_to_assets",
+        "exposure": "avg_housing_burden",
+        "exposure_type": "continuous",
+        "expected_sign": 1,
+        "exposure_unit": "county_fips"
+      }
+    },
+    {
+      "id": "pos_poverty_programs",
+      "kind": "positive_control",
+      "control": {
+        "effect_sd": 0.25
+      },
       "text": "Nonprofits in higher-poverty counties spend a smaller share of their budget on programs.",
       "paraphrase": "The poorer the county, the lower the program share of its nonprofits' spending.",
-      "gold": {"outcome": "program_expense_ratio", "exposure": "poverty_rate", "exposure_type": "continuous", "expected_sign": -1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "program_expense_ratio",
+        "exposure": "poverty_rate",
+        "exposure_type": "continuous",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "pos_uninsured_admin", "kind": "positive_control", "control": {"effect_sd": 0.25},
+      "id": "pos_uninsured_admin",
+      "kind": "positive_control",
+      "control": {
+        "effect_sd": 0.25
+      },
       "text": "In counties with more uninsured people, nonprofits spend a larger share of their budget on management and administration.",
       "paraphrase": "A higher uninsured rate goes with a higher administrative share of expenses.",
-      "gold": {"outcome": "admin_expense_ratio", "exposure": "chr_uninsured", "exposure_type": "continuous", "expected_sign": 1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "admin_expense_ratio",
+        "exposure": "chr_uninsured",
+        "exposure_type": "continuous",
+        "expected_sign": 1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "pos_income_fundraising_share", "kind": "positive_control", "control": {"effect_sd": 0.25},
-      "text": "Where household incomes are higher, nonprofits spend a smaller share of their budget on fundraising.",
-      "paraphrase": "Richer counties see a lower fundraising share of nonprofit expenses.",
-      "gold": {"outcome": "fundraising_expense_ratio", "exposure": "median_household_income", "exposure_type": "continuous", "expected_sign": -1, "exposure_unit": "county_fips"}
-    },
-    {
-      "id": "pos_poor_health_programs", "kind": "positive_control", "control": {"effect_sd": 0.25},
-      "text": "In places where more adults report poor or fair health, a larger share of nonprofit spending goes to programs.",
-      "paraphrase": "Worse community health goes with a bigger program share of nonprofit budgets.",
-      "gold": {"outcome": "program_expense_ratio", "exposure": "chr_poor_fair_health", "exposure_type": "continuous", "expected_sign": 1, "exposure_unit": "county_fips"}
-    },
-    {
-      "id": "pos_highneed_rating", "kind": "positive_control", "control": {"effect_sd": 0.25},
+      "id": "pos_highneed_rating",
+      "kind": "positive_control",
+      "control": {
+        "effect_sd": 0.25
+      },
       "text": "Nonprofits in the most economically distressed quarter of counties get lower scores on the usual 0-10 financial score.",
       "paraphrase": "Organizations based in the worst-off local economies score lower on the standard financial rating.",
-      "gold": {"outcome": "standard_rating", "exposure": "high_need", "exposure_type": "binary", "expected_sign": -1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "standard_rating",
+        "exposure": "high_need",
+        "exposure_type": "binary",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     },
-
     {
-      "id": "neg_population_admin", "kind": "negative_control", "control": {"placebo_seed": 3001},
+      "id": "pos_unemployment_margin",
+      "kind": "positive_control",
+      "control": {
+        "effect_sd": 0.25
+      },
+      "text": "When a county's jobless rate is high, the nonprofits based there end the year with thinner surpluses or deeper deficits relative to their revenue.",
+      "paraphrase": "Higher local unemployment means smaller year-end margins for the charities in that county.",
+      "gold": {
+        "outcome": "operating_margin",
+        "exposure": "unemployment_rate",
+        "exposure_type": "continuous",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
+    },
+    {
+      "id": "pos_poverty_leverage",
+      "kind": "positive_control",
+      "control": {
+        "effect_sd": 0.25
+      },
+      "text": "Nonprofits in higher-poverty counties owe more relative to the assets they hold.",
+      "paraphrase": "The poorer the county, the larger its nonprofits' liabilities as a share of their assets.",
+      "gold": {
+        "outcome": "liabilities_to_assets",
+        "exposure": "poverty_rate",
+        "exposure_type": "continuous",
+        "expected_sign": 1,
+        "exposure_unit": "county_fips"
+      }
+    },
+    {
+      "id": "neg_population_admin",
+      "kind": "negative_control",
+      "control": {
+        "placebo_seed": 3001
+      },
       "text": "Nonprofits in more populous counties spend a larger share of their budget on management and administration.",
       "paraphrase": "A bigger county population goes with a higher administrative share of nonprofit expenses.",
-      "gold": {"outcome": "admin_expense_ratio", "exposure": "population", "exposure_type": "continuous", "expected_sign": 1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "admin_expense_ratio",
+        "exposure": "population",
+        "exposure_type": "continuous",
+        "expected_sign": 1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "neg_education_programs", "kind": "negative_control", "control": {"placebo_seed": 3002},
+      "id": "neg_education_programs",
+      "kind": "negative_control",
+      "control": {
+        "placebo_seed": 3002
+      },
       "text": "Where more adults finished high school, nonprofits spend a larger share of their budget on programs.",
       "paraphrase": "Higher high-school completion locally means a bigger program share in nonprofit spending.",
-      "gold": {"outcome": "program_expense_ratio", "exposure": "chr_hs_completion", "exposure_type": "continuous", "expected_sign": 1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "program_expense_ratio",
+        "exposure": "chr_hs_completion",
+        "exposure_type": "continuous",
+        "expected_sign": 1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "neg_food_desert_fundraising", "kind": "negative_control", "control": {"placebo_seed": 3003},
+      "id": "neg_food_desert_fundraising",
+      "kind": "negative_control",
+      "control": {
+        "placebo_seed": 3003
+      },
       "text": "In counties with more residents in food deserts, nonprofits spend a larger share of their budget on fundraising.",
       "paraphrase": "More food-desert exposure goes with a higher fundraising share of nonprofit expenses.",
-      "gold": {"outcome": "fundraising_expense_ratio", "exposure": "food_desert_share", "exposure_type": "continuous", "expected_sign": 1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "fundraising_expense_ratio",
+        "exposure": "food_desert_share",
+        "exposure_type": "continuous",
+        "expected_sign": 1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "neg_crime_programs", "kind": "negative_control", "control": {"placebo_seed": 3004},
+      "id": "neg_crime_programs",
+      "kind": "negative_control",
+      "control": {
+        "placebo_seed": 3004
+      },
       "text": "In counties with more violent crime, nonprofits spend a smaller share of their budget on programs.",
       "paraphrase": "Higher local violent crime goes with a lower program share of nonprofit spending.",
-      "gold": {"outcome": "program_expense_ratio", "exposure": "chr_violent_crime_rate", "exposure_type": "continuous", "expected_sign": -1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "program_expense_ratio",
+        "exposure": "chr_violent_crime_rate",
+        "exposure_type": "continuous",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     },
     {
-      "id": "neg_poor_health_rating", "kind": "negative_control", "control": {"placebo_seed": 3005},
+      "id": "neg_poor_health_rating",
+      "kind": "negative_control",
+      "control": {
+        "placebo_seed": 3005
+      },
       "text": "Nonprofits in counties where more adults report poor or fair health get lower scores on the usual 0-10 financial score.",
       "paraphrase": "Worse community health goes with a lower standard financial rating for nonprofits.",
-      "gold": {"outcome": "standard_rating", "exposure": "chr_poor_fair_health", "exposure_type": "continuous", "expected_sign": -1, "exposure_unit": "county_fips"}
+      "gold": {
+        "outcome": "standard_rating",
+        "exposure": "chr_poor_fair_health",
+        "exposure_type": "continuous",
+        "expected_sign": -1,
+        "exposure_unit": "county_fips"
+      }
     }
   ]
 }
