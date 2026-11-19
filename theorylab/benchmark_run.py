@@ -7,12 +7,20 @@
                                       positive control: effect_sd outcome SDs planted along the exposure
                                       negative control: exposure replaced by another county's history
       -> run_spec()                   the same gate for every entry
-      -> gate.apply_family()          ONE BH family over all entries that ran
+      -> gate.apply_family()          TWO BH families: literature theories, and controls (CP5 audit X2)
       -> drill_down() by state        literature theories that survive only
 
+Families (CP5 audit X2): the planted controls have tiny p-values, and under BH strong true
+positives raise the thresholds for everything ranked after them. Sharing one family would let
+the number of controls we planted make literature theories easier to pass, so literature
+theories and controls are corrected in separate families.
+
 Metrics (defined in docs/validator.md 2.9; the numbers are in data/output/benchmark_cp5.json):
-  plan_validity         entries whose spec passed the schema AND agreed with the gold answer / all entries
-  control_recovery      positive controls the gate calls "supported" / positive controls
+  plan_validity         entries whose spec passed the schema, agreed with the gold answer AND ran
+                        without error / all entries (CP4 A1: a spec that crashes is not usable; X5)
+  control_recovery      positive controls the gate calls "supported" whose spec agreed with the
+                        gold answer / positive controls (X6: planting along a wrong exposure is
+                        not a recovery)
   false_positive_rate   negative controls the gate does not call "unsupported" / negative controls
 A control whose plan failed counts as not recovered (positive) and is left out of the false-positive
 rate (negative), and is listed, so a Planner failure is never mistaken for a gate failure.
@@ -105,6 +113,23 @@ def _run_one(entry: dict, spec: dict, panel: pd.DataFrame, n_permutations: int |
     return report
 
 
+FAMILIES = {"literature": ("literature",), "controls": ("positive_control", "negative_control")}
+
+
+def apply_families(reports: dict, signs: dict, kinds: dict) -> dict:
+    """BH within each family (FAMILIES), never across them. {id: report} in, {id: report} out."""
+    out = {}
+    for name, members in FAMILIES.items():
+        group = [r for i, r in reports.items() if kinds[i] in members]
+        if not group:
+            continue
+        for r in apply_family(group, signs):
+            r["validator"]["fdr_family"] = f"{name}: {2 * len(group)} hypotheses ({len(group)} entries x H1, H2)"
+            r["validator"]["family"] = name
+            out[r["theory_id"]] = r
+    return out
+
+
 def _near_miss(report: dict, q: float) -> bool:
     return min(report["H1"]["family_q_value"], report["H2"]["family_q_value"]) < q
 
@@ -127,7 +152,8 @@ def run_planned(planned: list, panel: pd.DataFrame, *, n_permutations: int | Non
         entries_by_id[entry["id"]] = (entry, spec)
 
     signs = {i: int(spec["expected_sign"]) for i, (_, spec) in entries_by_id.items()}
-    family = {r["theory_id"]: r for r in apply_family(list(reports.values()), signs)} if reports else {}
+    kinds = {i: entry["kind"] for i, (entry, _) in entries_by_id.items()}
+    family = apply_families(reports, signs, kinds)
     rerun = []
     if screen_permutations and family:
         rerun = [i for i, r in family.items() if _near_miss(r, rerun_q)]
@@ -136,7 +162,7 @@ def run_planned(planned: list, panel: pd.DataFrame, *, n_permutations: int | Non
             t0 = time.time()
             reports[i] = _run_one(entry, spec, panel, n_permutations)
             seconds[i] += time.time() - t0
-        family = {r["theory_id"]: r for r in apply_family(list(reports.values()), signs)}
+        family = apply_families(reports, signs, kinds)
 
     survivors = []
     for i, r in family.items():
@@ -159,9 +185,9 @@ def metrics(entries: list, reviews: dict, plan_failures: list, run: dict) -> dic
     def ids(kind):
         return [i for i, k in kinds.items() if k == kind]
 
-    valid = [i for i in kinds if i not in failed and not reviews.get(i)]
+    valid = [i for i in kinds if i not in failed and i not in errored and not reviews.get(i)]
     pos, neg = ids("positive_control"), ids("negative_control")
-    recovered = [i for i in pos if verdict.get(i) == "supported"]
+    recovered = [i for i in pos if verdict.get(i) == "supported" and not reviews.get(i)]
     neg_ran = [i for i in neg if i in verdict]
     false_pos = [i for i in neg_ran if verdict[i] != "unsupported"]
     lit = ids("literature")
@@ -174,7 +200,9 @@ def metrics(entries: list, reviews: dict, plan_failures: list, run: dict) -> dic
                           "run_errors": sorted(errored)},
         "control_recovery": {"recovered": len(recovered), "of": len(pos),
                              "rate": len(recovered) / len(pos) if pos else None,
-                             "missed": sorted(set(pos) - set(recovered))},
+                             "missed": sorted(set(pos) - set(recovered)),
+                             "supported_but_off_gold": sorted(
+                                 i for i in pos if verdict.get(i) == "supported" and reviews.get(i))},
         "false_positive_rate": {"false_positives": len(false_pos), "of": len(neg_ran),
                                 "rate": len(false_pos) / len(neg_ran) if neg_ran else None,
                                 "ids": sorted(false_pos),
@@ -213,7 +241,8 @@ def run_benchmark(orch, panel: pd.DataFrame | None = None, entries: list | None 
         "seconds_per_entry": run["seconds"],
         "planning_seconds": planning_seconds,
         "llm_usage": vars(orch.llm.usage).copy(),
-        "table": [{"id": i, "kind": run["kinds"][i], "verdict": r["verdict"],
+        "table": [{"id": i, "kind": run["kinds"][i], "family": r["validator"].get("family"),
+                   "verdict": r["verdict"],
                    "verdict_within_theory": r["verdict_within_theory"],
                    "H1_std": r["H1"]["standardized_effect"], "H1_family_q": r["H1"]["family_q_value"],
                    "H2_std": r["H2"]["fit"]["standardized_effect"], "H2_family_q": r["H2"]["family_q_value"],

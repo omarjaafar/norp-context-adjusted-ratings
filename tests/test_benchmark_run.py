@@ -2,11 +2,14 @@
 
 import copy
 
+import pytest
+
 import numpy as np
 import pandas as pd
 
 from theorylab.benchmark import review_spec
-from theorylab.benchmark_run import KINDS, load_entries, metrics, prepare_population
+from theorylab.benchmark_run import KINDS, apply_families, load_entries, metrics, prepare_population
+from theorylab.gate import apply_family
 from theorylab.sweep import cell_spec
 from theorylab.theory_run import available_columns
 
@@ -106,7 +109,8 @@ def test_metrics_count_plan_failures_and_controls_separately():
     assert m["plan_validity"]["plan_failures"] == ["p3"]
     assert m["plan_validity"]["disagrees_with_gold"] == ["l1"]
     assert m["plan_validity"]["run_errors"] == ["n3"]
-    assert m["control_recovery"] == {"recovered": 2, "of": 4, "rate": 0.5, "missed": ["p2", "p3"]}
+    assert m["control_recovery"] == {"recovered": 2, "of": 4, "rate": 0.5, "missed": ["p2", "p3"],
+                                     "supported_but_off_gold": []}
     fp = m["false_positive_rate"]
     assert (fp["false_positives"], fp["of"], fp["ids"], fp["not_run"]) == (1, 3, ["n1"], ["n3"])
     assert m["literature_verdicts"]["weak"] == ["l0"]
@@ -118,3 +122,47 @@ def test_review_spec_accepts_a_spec_that_matches_gold():
     spec = copy.deepcopy(_spec(-1))
     assert review_spec(spec, gold) == []
     assert review_spec({**spec, "expected_sign": 1}, gold)
+
+
+def test_a_supported_control_on_the_wrong_variable_is_not_recovered():
+    # CP5 audit X6: the effect is planted along the Planner's exposure, so a spec that picked
+    # the wrong exposure is "supported" without telling us anything about the gate.
+    entries = [{"id": "p0", "kind": "positive_control"}, {"id": "p1", "kind": "positive_control"}]
+    reviews = {"p0": [], "p1": ["exposure: Planner 'poverty_rate', gold 'unemployment_rate'"]}
+    run = {"reports": {"p0": _report("supported"), "p1": _report("supported")}, "run_errors": []}
+    m = metrics(entries, reviews, [], run)
+    assert m["control_recovery"]["recovered"] == 1 and m["control_recovery"]["missed"] == ["p1"]
+    assert m["control_recovery"]["supported_but_off_gold"] == ["p1"]
+    assert m["plan_validity"]["valid"] == 1
+
+
+def _gate_report(tid, p, effect, replicated):
+    fold = {"test": {"effect": -0.2}, "train": {"effect": -0.2}}
+    return {"theory_id": tid, "verdict": "x", "validator": {"effect_floor_sd": 0.1, "alpha": 0.05},
+            "H1": {"effect": effect, "standardized_effect": effect, "permutation": {"p_value": p}},
+            "H2": {"fit": {"effect": effect, "standardized_effect": effect}, "permutation": {"p_value": p}},
+            "replication": {"replicated": replicated, "folds": [fold] * 5,
+                            "pooled_p_value": 0.001, "pooled_effect": -0.2}}
+
+
+def test_controls_do_not_loosen_the_literature_family():
+    # CP5 audit X2. Literature: one borderline theory (p 0.03) and one null. Alone they are
+    # 4 hypotheses, so the borderline one gets q = 0.03 * 4 / 2 = 0.06 and fails. Five planted
+    # controls (p 0.001) in the same family make it 14 hypotheses with the borderline pair
+    # ranked 11-12: q = 0.03 * 14 / 12 = 0.035, and it would pass only because we planted controls.
+    reports = {"lit": _gate_report("lit", 0.03, -0.3, True), "lit_null": _gate_report("lit_null", 0.5, 0.0, False)}
+    reports |= {f"pos{i}": _gate_report(f"pos{i}", 0.001, -0.3, True) for i in range(5)}
+    kinds = {"lit": "literature", "lit_null": "literature"} | {f"pos{i}": "positive_control" for i in range(5)}
+    signs = {i: -1 for i in reports}
+
+    shared = {r["theory_id"]: r for r in apply_family(list(reports.values()), signs)}
+    assert shared["lit"]["verdict"] == "supported"  # the leak the split removes
+
+    fam = apply_families(reports, signs, kinds)
+    assert fam["lit"]["H1"]["family_q_value"] == pytest.approx(0.06)
+    assert fam["lit"]["verdict"] == "unsupported"
+    assert fam["lit"]["validator"]["family"] == "literature"
+    assert fam["pos0"]["validator"]["family"] == "controls"
+    assert fam["pos0"]["H1"]["family_q_value"] == pytest.approx(0.001)  # 10 equal p-values
+    assert fam["pos0"]["verdict"] == "supported"
+    assert set(fam) == set(reports)
