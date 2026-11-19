@@ -39,6 +39,9 @@ GATE_POLICY = {
     "permutation": {"keep_paths": True, "studentized": True},
     "holdout": {"by": "state", "folds": 5},
     "holdout_year": 2022,                  # reported for information only
+    # CP5: heavy-tailed outcomes (SD > 3 x robust SD) are winsorized at 1%/99% before the gate
+    # (theorylab/outcomes.py, docs/validator.md 2.8); well-behaved outcomes are untouched
+    "outcome_rule": {"heavy_tail_ratio": 3.0, "winsorize": [0.01, 0.99]},
 }
 
 
@@ -126,6 +129,9 @@ def validate_spec(spec: dict, available_columns=None) -> list:
                                    and isinstance(v["permutation"].get("studentized", False), bool)):
         errors.append('validator.permutation must be an object like '
                       '{"keep_paths": true, "studentized": true}')
+    if "outcome_rule" in v:
+        from theorylab.outcomes import validate_rule
+        errors += validate_rule(v["outcome_rule"])
     if "holdout" in v:
         h = v["holdout"]
         if not isinstance(h, dict) or not h.get("by"):

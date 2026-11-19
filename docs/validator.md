@@ -155,6 +155,38 @@ Nothing on the real panel survives, so `scripts/drilldown_check.py` → `data/ou
 - **The 30-county rule skips 15 of 51 states** (AZ, CT, DC, DE, HI, MA, MD, ME, NH, NJ, NV, RI, UT, VT, WY), with 219,642 of 1,303,953 rows (16.8%). The sector drill-down skips one category (Women-Related). Results for skipped strata are not reported, not counted in the family, and listed under `skipped`.
 - Tests: `tests/test_drilldown.py`.
 
+### 2.8 The rule for heavy-tailed outcomes (CP5, CP4 finding)
+
+CP4 measured SD / robust SD (robust SD = IQR / 1.349) of 12,754 for T2's `operating_margin`, 1,237 for T3's `fundraising_efficiency` and 664 for T5's `liabilities_to_assets`, against 0.9 and 1.6 for the rating and the admin share. More than 99.9% of the variance of the first three sits in the top 0.1% of rows. The floor is 0.1 SD of the outcome, so for them it is a few organizations' size, and a Pearson r is the correlation with those few rows.
+
+**Options considered, written down before any rerun:**
+
+| Option | For | Against |
+|---|---|---|
+| Winsorize the outcome | One number per outcome, keeps the units, and the SD floor then means something | Clips real extremes; the clip points are a choice |
+| Rank-based tests | No outlier influence at all | Changes the estimand (a rank, not a ratio), breaks the per-SD floor, needs new H2 machinery |
+| Robust SD for the floor only | Smallest change | H1 and H2 estimates are still driven by the same few rows |
+
+**The rule** (`theorylab/outcomes.py`, part of `spec.GATE_POLICY` as `validator.outcome_rule`, so the Planner cannot loosen it):
+
+1. On the theory's own population compute SD / robust SD of the outcome.
+2. If it is above 3.0, winsorize the outcome at its 1st and 99th percentiles. The threshold is far from both sides of the CP4 data (0.9 and 1.6 against 664 and above), so the choice does not depend on where it sits inside that gap.
+3. H1, H2, the floor, replication, per-year tests, drill-down and sweep cells all use the winsorized outcome. The raw SD, robust SD, clip points and number of rows clipped are written to `population.outcome_rule` in every report.
+
+The rating and the expense shares pass through unchanged, so the CP4 verdicts for T1 and T4 do not move. T2, T3, T5 and the sweep cells on `fundraising_efficiency` and `liabilities_to_assets` are rerun under it in CP5; the rerun is reported next to the CP4 numbers, with the CP4 verdict kept. The rule was written before the rerun.
+
+**Test with a planted effect** (`tests/test_outcomes.py`): a heavy-tailed outcome (0.5% of rows shifted by ±10,000) with 0.5 robust SD planted per SD of a county exposure. Without the rule the effect is about 0.0007 SD of the raw outcome and the gate cannot call it supported; with the rule it is supported. The same population with no planted effect stays unsupported.
+
+### 2.9 The benchmark and its metrics (CP5)
+
+`benchmark/cp5_theories.json` holds 20 entries written as ordinary theories: 10 literature (the CP3 ratings theory and 9 from nonprofit finance research), 5 positive controls and 5 negative controls. Gold answers (outcome, exposure, type, sign, unit) were written before any Planner run. A positive control plants 0.25 SD along the gold exposure; a negative control replaces the gold exposure with another county's whole history. All 20 run under the same locked gate in one BH family (40 hypotheses; at 999 permutations the family limit is 100, section 2.6).
+
+- **Plan validity** = entries whose spec passes the schema and agrees with the gold answer / 20.
+- **Control recovery** = positive controls called supported / 5. A control whose plan failed counts as not recovered.
+- **False-positive rate** = negative controls not called unsupported / 5. A control whose plan failed is left out and listed.
+
+`scripts/run_benchmark.py` runs it; `--screen 199 --rerun-q 0.25` runs everything at 199 permutations and reruns near-misses at 999 (Assumption 2's fallback). `scripts/measure_assumption1_benchmark.py` measures Assumption 1 on all 40 texts (text and paraphrase), and lists the H2 controls the Planner chose for a person to read.
+
 ## 3. Evidence that the gate works (V2)
 
 `scripts/run_controls.py` → `data/output/controls.json`, on the real population, with 199 permutations and no robustness models:

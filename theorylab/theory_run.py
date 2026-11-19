@@ -30,6 +30,7 @@ from theorylab.catalog import REPO_ROOT
 from theorylab.executor import (Residualizer, correlation, fixed_effects,
                                 lagged_outcome, multilevel, to_float, to_jsonable,
                                 two_stage_group_means)
+from theorylab.outcomes import apply_outcome_rule
 from theorylab.ratios import RATING_ANCHORS, RATING_MIN_COMPONENTS, standard_rating
 from theorylab.spec import SpecError, spec_columns
 from theorylab.validator import (GateInput, pearson_r, UnitPermuter, benjamini_hochberg, decide_verdict,
@@ -114,6 +115,8 @@ def select_population(df: pd.DataFrame, spec: dict) -> tuple[pd.DataFrame, dict]
     keys = [spec["exposure_unit"], "tax_year", "ein"]
     out = (df.loc[mask].sort_values([k for k in keys if k in df.columns], kind="stable")
            .reset_index(drop=True))
+    out, log["outcome_rule"] = apply_outcome_rule(out, spec["outcome"],
+                                                   (spec.get("validator") or {}).get("outcome_rule"))
     log["rows_out"] = int(len(out))
     if "ein" in out.columns:
         log["organizations"] = int(out["ein"].nunique())
