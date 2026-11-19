@@ -101,7 +101,7 @@ def check_outcome_tails() -> str:
 
 
 def check_sweep_cells() -> str:
-    """CP4 sweep: 28 cells; a cell whose H1 and H2 effects are both under the floor must be
+    """Main sweep (rerun in CP5 under the outcome rule): 28 cells; a cell whose H1 and H2 effects are both under the floor must be
     unsupported, and none is above it."""
     cells = _load("data/output/sweep.json")["main_cells"]
     floor = GATE_POLICY["effect_floor_sd"]
@@ -111,6 +111,22 @@ def check_sweep_cells() -> str:
     assert len(below) == len(cells), "a cell reaches the floor"
     biggest = max(max(abs(c["h1_r"]), abs(c["h2_std_effect"])) for c in cells)
     return f"28/28 unsupported, largest effect {biggest:.3f} SD"
+
+
+def check_sweep_rule_before_after() -> str:
+    """CP5 sweep rerun under the outcome rule: the cells the rule did not clip have exactly
+    their CP4 effects (the rule leaves them alone), and only heavy-tailed outcomes were clipped."""
+    log = _load("data/output/sweep/outcome_rule_log.json")["by_cell"]
+    now = {c["cell"]: c for c in _load("data/output/sweep/main.json")["cells"]}
+    cp4 = {c["cell"]: c for c in _load("data/output/sweep/main_cp4.json")["cells"]}
+    assert set(log) == set(now) == set(cp4), "the three files cover different cells"
+    untouched = [k for k, v in log.items() if not v["applied"]]
+    for k in untouched:
+        for f in ("h1_r", "h2_std_effect"):
+            assert now[k][f] == cp4[k][f], f"{k} {f} moved without clipping"
+    clipped = [k for k, v in log.items() if v["applied"]]
+    assert all(log[k]["sd_over_robust_sd"] > log[k]["threshold"] for k in clipped)
+    return f"{len(untouched)} unclipped cells identical to CP4; {len(clipped)} clipped"
 
 
 def check_panel_hash() -> str:
@@ -130,6 +146,7 @@ CHECKS = {
     "cp4_verdicts_follow": check_cp4_verdicts_follow,
     "outcome_tails": check_outcome_tails,
     "sweep_cells": check_sweep_cells,
+    "sweep_rule_before_after": check_sweep_rule_before_after,
 }
 SLOW = {"panel_hash": check_panel_hash}
 

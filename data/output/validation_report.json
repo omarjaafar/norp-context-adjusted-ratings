@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-19T13:20:07",
+  "generated_at": "2026-11-19T15:40:14",
   "passed": 6,
   "ran": 6,
   "skipped": [],
@@ -26,13 +26,13 @@
     },
     "sweep_cells": {
       "status": "PASS",
-      "detail": "28/28 unsupported, largest effect 0.040 SD",
-      "what": "CP4 sweep: 28 cells; a cell whose H1 and H2 effects are both under the floor must be\n    unsupported, and none is above it."
+      "detail": "28/28 unsupported, largest effect 0.065 SD",
+      "what": "Main sweep (rerun in CP5 under the outcome rule): 28 cells; a cell whose H1 and H2 effects are both under the floor must be\n    unsupported, and none is above it."
     },
-    "panel_hash": {
+    "sweep_rule_before_after": {
       "status": "PASS",
-      "detail": "2,390,744 rows, sha256_csv 3dfa5eb1...",
-      "what": "The rebuilt panel's uncompressed CSV has the sha256 and row count in panel_join_log.json."
+      "detail": "14 unclipped cells identical to CP4; 14 clipped",
+      "what": "CP5 sweep rerun under the outcome rule: the cells the rule did not clip have exactly\n    their CP4 effects (the rule leaves them alone), and only heavy-tailed outcomes were clipped."
     }
   }
 }

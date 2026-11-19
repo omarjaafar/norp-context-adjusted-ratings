@@ -97,6 +97,7 @@ def _cell_row(r: dict, alpha: float, floor: float) -> dict:
         "stopped_only_by_floor": bool(sig) and r["verdict"] == "unsupported"
                                  and all(abs(eff[h]) < floor for h in sig),
         "replicated_held_out_states": bool(r["replication"]["replicated"]),
+        "outcome_rule": r["population"].get("outcome_rule"),  # CP5: clip points when winsorized
     }
 
 

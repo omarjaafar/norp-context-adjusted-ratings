@@ -1,0 +1,394 @@
+{
+  "rule": {
+    "heavy_tail_ratio": 3.0,
+    "winsorize": [
+      0.01,
+      0.99
+    ]
+  },
+  "cells": 28,
+  "clipped": [
+    "sweep_fundraising_efficiency_x_avg_housing_burden",
+    "sweep_fundraising_efficiency_x_chr_hs_completion",
+    "sweep_fundraising_efficiency_x_chr_poor_fair_health",
+    "sweep_fundraising_efficiency_x_chr_some_college",
+    "sweep_fundraising_efficiency_x_chr_uninsured",
+    "sweep_fundraising_efficiency_x_chr_violent_crime_rate",
+    "sweep_fundraising_efficiency_x_need_index",
+    "sweep_liabilities_to_assets_x_avg_housing_burden",
+    "sweep_liabilities_to_assets_x_chr_hs_completion",
+    "sweep_liabilities_to_assets_x_chr_poor_fair_health",
+    "sweep_liabilities_to_assets_x_chr_some_college",
+    "sweep_liabilities_to_assets_x_chr_uninsured",
+    "sweep_liabilities_to_assets_x_chr_violent_crime_rate",
+    "sweep_liabilities_to_assets_x_need_index"
+  ],
+  "not_clipped": [
+    "sweep_admin_expense_ratio_x_avg_housing_burden",
+    "sweep_admin_expense_ratio_x_chr_hs_completion",
+    "sweep_admin_expense_ratio_x_chr_poor_fair_health",
+    "sweep_admin_expense_ratio_x_chr_some_college",
+    "sweep_admin_expense_ratio_x_chr_uninsured",
+    "sweep_admin_expense_ratio_x_chr_violent_crime_rate",
+    "sweep_admin_expense_ratio_x_need_index",
+    "sweep_program_expense_ratio_x_avg_housing_burden",
+    "sweep_program_expense_ratio_x_chr_hs_completion",
+    "sweep_program_expense_ratio_x_chr_poor_fair_health",
+    "sweep_program_expense_ratio_x_chr_some_college",
+    "sweep_program_expense_ratio_x_chr_uninsured",
+    "sweep_program_expense_ratio_x_chr_violent_crime_rate",
+    "sweep_program_expense_ratio_x_need_index"
+  ],
+  "by_cell": {
+    "sweep_program_expense_ratio_x_need_index": {
+      "rows": 1308697,
+      "applied": false,
+      "sd_over_robust_sd": 1.3686695696564222,
+      "threshold": 3.0,
+      "raw_sd": 0.2133185937540966,
+      "raw_robust_sd": 0.15585835944876458
+    },
+    "sweep_program_expense_ratio_x_avg_housing_burden": {
+      "rows": 1288805,
+      "applied": false,
+      "sd_over_robust_sd": 1.368066784376414,
+      "threshold": 3.0,
+      "raw_sd": 0.21351049098965963,
+      "raw_robust_sd": 0.15606730126627627
+    },
+    "sweep_program_expense_ratio_x_chr_hs_completion": {
+      "rows": 1065951,
+      "applied": false,
+      "sd_over_robust_sd": 1.3626364051374518,
+      "threshold": 3.0,
+      "raw_sd": 0.2155022983068091,
+      "raw_robust_sd": 0.15815099133878707
+    },
+    "sweep_program_expense_ratio_x_chr_poor_fair_health": {
+      "rows": 1293113,
+      "applied": false,
+      "sd_over_robust_sd": 1.3682513879378788,
+      "threshold": 3.0,
+      "raw_sd": 0.21347431170891104,
+      "raw_robust_sd": 0.15601980278685687
+    },
+    "sweep_program_expense_ratio_x_chr_some_college": {
+      "rows": 1288824,
+      "applied": false,
+      "sd_over_robust_sd": 1.3680705003489975,
+      "threshold": 3.0,
+      "raw_sd": 0.21350962694491893,
+      "raw_robust_sd": 0.15606624577494524
+    },
+    "sweep_program_expense_ratio_x_chr_uninsured": {
+      "rows": 1293113,
+      "applied": false,
+      "sd_over_robust_sd": 1.3682513879378788,
+      "threshold": 3.0,
+      "raw_sd": 0.21347431170891104,
+      "raw_robust_sd": 0.15601980278685687
+    },
+    "sweep_program_expense_ratio_x_chr_violent_crime_rate": {
+      "rows": 1275766,
+      "applied": false,
+      "sd_over_robust_sd": 1.3692136960515353,
+      "threshold": 3.0,
+      "raw_sd": 0.21340615976522717,
+      "raw_robust_sd": 0.15586037473963074
+    },
+    "sweep_admin_expense_ratio_x_need_index": {
+      "rows": 1308766,
+      "applied": false,
+      "sd_over_robust_sd": 1.5692930731036188,
+      "threshold": 3.0,
+      "raw_sd": 0.2016857877499684,
+      "raw_robust_sd": 0.12852015420618076
+    },
+    "sweep_admin_expense_ratio_x_avg_housing_burden": {
+      "rows": 1288872,
+      "applied": false,
+      "sd_over_robust_sd": 1.5684187625327575,
+      "threshold": 3.0,
+      "raw_sd": 0.20186218269460524,
+      "raw_robust_sd": 0.12870426413965397
+    },
+    "sweep_admin_expense_ratio_x_chr_hs_completion": {
+      "rows": 1066010,
+      "applied": false,
+      "sd_over_robust_sd": 1.5633022830036534,
+      "threshold": 3.0,
+      "raw_sd": 0.20405024161263713,
+      "raw_robust_sd": 0.13052513504975177
+    },
+    "sweep_admin_expense_ratio_x_chr_poor_fair_health": {
+      "rows": 1293181,
+      "applied": false,
+      "sd_over_robust_sd": 1.5685975059917694,
+      "threshold": 3.0,
+      "raw_sd": 0.2018275001873347,
+      "raw_robust_sd": 0.12866748762278965
+    },
+    "sweep_admin_expense_ratio_x_chr_some_college": {
+      "rows": 1288891,
+      "applied": false,
+      "sd_over_robust_sd": 1.5684100886927503,
+      "threshold": 3.0,
+      "raw_sd": 0.2018614496035826,
+      "raw_robust_sd": 0.12870450850761328
+    },
+    "sweep_admin_expense_ratio_x_chr_uninsured": {
+      "rows": 1293181,
+      "applied": false,
+      "sd_over_robust_sd": 1.5685975059917694,
+      "threshold": 3.0,
+      "raw_sd": 0.2018275001873347,
+      "raw_robust_sd": 0.12866748762278965
+    },
+    "sweep_admin_expense_ratio_x_chr_violent_crime_rate": {
+      "rows": 1275829,
+      "applied": false,
+      "sd_over_robust_sd": 1.5707745930804018,
+      "threshold": 3.0,
+      "raw_sd": 0.20173761660823145,
+      "raw_robust_sd": 0.12843193256176208
+    },
+    "sweep_fundraising_efficiency_x_need_index": {
+      "rows": 1120367,
+      "applied": true,
+      "sd_over_robust_sd": 1229.6542512509395,
+      "threshold": 3.0,
+      "raw_sd": 43.746666221872786,
+      "raw_robust_sd": 0.03557639570421431,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 0.9658337526230095,
+      "rows_clipped": 11204,
+      "sd_after": 0.13849125316172856,
+      "sd_over_robust_sd_after": 3.8927848203949216
+    },
+    "sweep_fundraising_efficiency_x_avg_housing_burden": {
+      "rows": 1103445,
+      "applied": true,
+      "sd_over_robust_sd": 1236.5984770932616,
+      "threshold": 3.0,
+      "raw_sd": 43.91677927365815,
+      "raw_robust_sd": 0.035514178682225596,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 0.9675728956034572,
+      "rows_clipped": 11035,
+      "sd_after": 0.138616009788735,
+      "sd_over_robust_sd_after": 3.9031174289301696
+    },
+    "sweep_fundraising_efficiency_x_chr_hs_completion": {
+      "rows": 915215,
+      "applied": true,
+      "sd_over_robust_sd": 1399.1780091515093,
+      "threshold": 3.0,
+      "raw_sd": 46.809556923230666,
+      "raw_robust_sd": 0.03345504047166733,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 0.9080000138333454,
+      "rows_clipped": 9153,
+      "sd_after": 0.1304911827961387,
+      "sd_over_robust_sd_after": 3.900493945199382
+    },
+    "sweep_fundraising_efficiency_x_chr_poor_fair_health": {
+      "rows": 1107129,
+      "applied": true,
+      "sd_over_robust_sd": 1234.3593107839745,
+      "threshold": 3.0,
+      "raw_sd": 43.84767241249079,
+      "raw_robust_sd": 0.0355226164937679,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 0.9674517128339382,
+      "rows_clipped": 11072,
+      "sd_after": 0.1386183550905981,
+      "sd_over_robust_sd_after": 3.902256330552603
+    },
+    "sweep_fundraising_efficiency_x_chr_some_college": {
+      "rows": 1103465,
+      "applied": true,
+      "sd_over_robust_sd": 1236.6221048375169,
+      "threshold": 3.0,
+      "raw_sd": 43.916381311809516,
+      "raw_robust_sd": 0.035513178310507244,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 0.9675524285277766,
+      "rows_clipped": 11035,
+      "sd_after": 0.13861358775685698,
+      "sd_over_robust_sd_after": 3.903159175022235
+    },
+    "sweep_fundraising_efficiency_x_chr_uninsured": {
+      "rows": 1107129,
+      "applied": true,
+      "sd_over_robust_sd": 1234.3593107839745,
+      "threshold": 3.0,
+      "raw_sd": 43.84767241249079,
+      "raw_robust_sd": 0.0355226164937679,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 0.9674517128339382,
+      "rows_clipped": 11072,
+      "sd_after": 0.1386183550905981,
+      "sd_over_robust_sd_after": 3.902256330552603
+    },
+    "sweep_fundraising_efficiency_x_chr_violent_crime_rate": {
+      "rows": 1092479,
+      "applied": true,
+      "sd_over_robust_sd": 1118.4023887813921,
+      "threshold": 3.0,
+      "raw_sd": 40.05594150379846,
+      "raw_robust_sd": 0.03581532184265387,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 0.9699272025287825,
+      "rows_clipped": 10925,
+      "sd_after": 0.138945543047067,
+      "sd_over_robust_sd_after": 3.879500054683058
+    },
+    "sweep_liabilities_to_assets_x_need_index": {
+      "rows": 1463635,
+      "applied": true,
+      "sd_over_robust_sd": 664.1464326636471,
+      "threshold": 3.0,
+      "raw_sd": 154.24947041798083,
+      "raw_robust_sd": 0.2322522004663082,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 3.072805995420655,
+      "rows_clipped": 14637,
+      "sd_after": 0.474703736153337,
+      "sd_over_robust_sd_after": 2.043914913185936
+    },
+    "sweep_liabilities_to_assets_x_avg_housing_burden": {
+      "rows": 1441156,
+      "applied": true,
+      "sd_over_robust_sd": 669.6388630220395,
+      "threshold": 3.0,
+      "raw_sd": 155.44719548092766,
+      "raw_robust_sd": 0.2321358631716862,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 3.077177307252677,
+      "rows_clipped": 14412,
+      "sd_after": 0.47517851034209246,
+      "sd_over_robust_sd_after": 2.0469844850756798
+    },
+    "sweep_liabilities_to_assets_x_chr_hs_completion": {
+      "rows": 1191834,
+      "applied": true,
+      "sd_over_robust_sd": 651.602049949649,
+      "threshold": 3.0,
+      "raw_sd": 149.2875895134937,
+      "raw_robust_sd": 0.22910853261592648,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 3.0009116446242694,
+      "rows_clipped": 11919,
+      "sd_after": 0.46643584698582186,
+      "sd_over_robust_sd_after": 2.0358728750087485
+    },
+    "sweep_liabilities_to_assets_x_chr_poor_fair_health": {
+      "rows": 1446036,
+      "applied": true,
+      "sd_over_robust_sd": 668.6322182727997,
+      "threshold": 3.0,
+      "raw_sd": 155.18499070061617,
+      "raw_robust_sd": 0.23209319930991004,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 3.07682716675037,
+      "rows_clipped": 14461,
+      "sd_after": 0.4750844025259619,
+      "sd_over_robust_sd_after": 2.0469552918333895
+    },
+    "sweep_liabilities_to_assets_x_chr_some_college": {
+      "rows": 1441177,
+      "applied": true,
+      "sd_over_robust_sd": 669.6305302877232,
+      "threshold": 3.0,
+      "raw_sd": 155.44606298543061,
+      "raw_robust_sd": 0.23213706059465267,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 3.077132975557065,
+      "rows_clipped": 14412,
+      "sd_after": 0.47517326864248866,
+      "sd_over_robust_sd_after": 2.0469513460076714
+    },
+    "sweep_liabilities_to_assets_x_chr_uninsured": {
+      "rows": 1446037,
+      "applied": true,
+      "sd_over_robust_sd": 668.6322079026748,
+      "threshold": 3.0,
+      "raw_sd": 155.18493704460525,
+      "raw_robust_sd": 0.2320931226621284,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 3.0768268739009215,
+      "rows_clipped": 14461,
+      "sd_after": 0.47508422657038296,
+      "sd_over_robust_sd_after": 2.0469552097068857
+    },
+    "sweep_liabilities_to_assets_x_chr_violent_crime_rate": {
+      "rows": 1426357,
+      "applied": true,
+      "sd_over_robust_sd": 672.3873925029767,
+      "threshold": 3.0,
+      "raw_sd": 156.2514569363886,
+      "raw_robust_sd": 0.23238308552267636,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 3.091491293405498,
+      "rows_clipped": 14264,
+      "sd_after": 0.47676923342701016,
+      "sd_over_robust_sd_after": 2.051652048403868
+    }
+  }
+}
