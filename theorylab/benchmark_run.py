@@ -46,6 +46,7 @@ from theorylab.catalog import REPO_ROOT
 from theorylab.drilldown import SURVIVOR_VERDICTS, drill_down
 from theorylab.executor import to_float, to_jsonable
 from theorylab.gate import apply_family
+from theorylab.outcomes import apply_outcome_rule
 from theorylab.spec import spec_columns
 from theorylab.theory_run import add_derived, run_spec, select_population
 from theorylab.validator import UnitPermuter
@@ -63,9 +64,24 @@ def load_entries(path: Path = ENTRIES_PATH) -> list:
     return entries
 
 
+def _without_outcome_rule(spec: dict) -> dict:
+    raw = copy.deepcopy(spec)
+    (raw.get("validator") or {}).pop("outcome_rule", None)
+    return raw
+
+
 def prepare_population(entry: dict, spec: dict, panel: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
-    """The rows this entry is gated on. Controls change the population, never the gate."""
-    pop, log = select_population(add_derived(panel, spec_columns(spec)), spec)
+    """The rows this entry is gated on, with the RAW outcome. Controls change the population, never the gate.
+
+    The outcome rule is not applied here: run_spec applies it once, after this (CP5 V2). Applying it
+    here as well clipped every entry twice. A positive control is planted in the raw outcome, before
+    the rule, at effect_sd x the outcome's SD AFTER the rule, measured on the population with nothing
+    planted (decided 2026-11-19, docs/validator.md 2.8). The gate measures effects in post-rule SD, so
+    that is the size it should see; the raw SD of a heavy-tailed ratio would plant a huge effect, and
+    planting after the rule (the TA version) never tested whether the rule recovers an effect hidden
+    in a raw heavy-tailed ratio (audit X3, CP4 feedback F4).
+    """
+    pop, log = select_population(add_derived(panel, spec_columns(spec)), _without_outcome_rule(spec))
     if pop.empty:
         raise ValueError("the population is empty")
     kind, ctl = entry["kind"], entry.get("control", {})
@@ -77,10 +93,16 @@ def prepare_population(entry: dict, spec: dict, panel: pd.DataFrame) -> tuple[pd
             x = (x - x.mean()) / x.std(ddof=1)  # per SD of the exposure, as run_spec scales it
         else:
             x = x.eq(1.0).astype(float)
-        shift = sign * float(ctl["effect_sd"]) * float(y.std(ddof=1))
+        after_rule, rule_log = apply_outcome_rule(pop, outcome, (spec.get("validator") or {}).get("outcome_rule"))
+        sd_after_rule = float(to_float(after_rule[outcome]).std(ddof=1))
+        shift = sign * float(ctl["effect_sd"]) * sd_after_rule
         pop = pop.copy()
         pop[outcome] = y + shift * x
-        log["planted"] = {"effect_sd": float(ctl["effect_sd"]), "shift_per_unit_exposure": shift}
+        log["planted"] = {"effect_sd": float(ctl["effect_sd"]), "shift_per_unit_exposure": shift,
+                          "planted_in": "raw outcome, before the outcome rule",
+                          "scale": "outcome SD after the rule, unplanted population",
+                          "sd_after_rule_unplanted": sd_after_rule, "raw_sd_unplanted": float(y.std(ddof=1)),
+                          "rule_applied_to_unplanted": bool(rule_log["applied"])}
     elif kind == "negative_control":
         within = spec.get("exposure_varies_by")
         permuter = UnitPermuter(pop, exposure, unit=spec["exposure_unit"], within=within,

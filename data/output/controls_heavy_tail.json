@@ -1,0 +1,162 @@
+{
+  "generated_at": "2026-11-19T15:18:08",
+  "what": "V2: heavy-tailed positive controls, planted raw at 0.25 post-rule SD, with and without the rule",
+  "n_permutations": 199,
+  "effect_sd": 0.25,
+  "controls": {
+    "pos_unemployment_margin": {
+      "outcome": "operating_margin",
+      "exposure": "unemployment_rate",
+      "expected_sign": -1,
+      "planted_rule": {
+        "verdict": "supported",
+        "reasons": [
+          "H1 and H2 hold and H2 replicates in the held-out states"
+        ],
+        "H1_standardized": -0.2530357616394657,
+        "H1_p": 0.005,
+        "H2_standardized": -0.25427713871881513,
+        "H2_p": 0.005,
+        "replicated": true,
+        "outcome_sd": 0.7436183509610338,
+        "rule_applied": true,
+        "sd_over_robust_sd_after": 2.4893388656745876,
+        "seconds": 65.6
+      },
+      "planted_no_rule": {
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.135)",
+          "H1 gap -0.001 SD is below the 0.1 SD floor"
+        ],
+        "H1_standardized": -0.0014404938974867025,
+        "H1_p": 0.1,
+        "H2_standardized": -0.002157788037721555,
+        "H2_p": 0.135,
+        "replicated": false,
+        "outcome_sd": 2501.853531585997,
+        "rule_applied": false,
+        "sd_over_robust_sd_after": null,
+        "seconds": 49.1
+      },
+      "planting": {
+        "effect_sd": 0.25,
+        "shift_per_unit_exposure": -0.1798130896014839,
+        "planted_in": "raw outcome, before the outcome rule",
+        "scale": "outcome SD after the rule, unplanted population",
+        "sd_after_rule_unplanted": 0.7192523584059356,
+        "raw_sd_unplanted": 2501.8532790280847,
+        "rule_applied_to_unplanted": true
+      },
+      "no_effect_rule": {
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 gap -0.016 SD is below the 0.1 SD floor"
+        ],
+        "H1_standardized": -0.016004849651025256,
+        "H1_p": 0.005,
+        "H2_standardized": -0.01694788374913129,
+        "H2_p": 0.005,
+        "replicated": true,
+        "outcome_sd": 0.7192523584059356,
+        "rule_applied": true,
+        "sd_over_robust_sd_after": 3.6600990413051493,
+        "seconds": 64.9
+      },
+      "no_effect_no_rule": {
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.145)",
+          "H1 gap -0.001 SD is below the 0.1 SD floor"
+        ],
+        "H1_standardized": -0.0013686220865773068,
+        "H1_p": 0.125,
+        "H2_standardized": -0.0020859162992218024,
+        "H2_p": 0.145,
+        "replicated": false,
+        "outcome_sd": 2501.8532790280847,
+        "rule_applied": false,
+        "sd_over_robust_sd_after": null,
+        "seconds": 1234.1
+      },
+      "finding_holds": true
+    },
+    "pos_poverty_leverage": {
+      "outcome": "liabilities_to_assets",
+      "exposure": "poverty_rate",
+      "expected_sign": 1,
+      "planted_rule": {
+        "verdict": "supported",
+        "reasons": [
+          "H1 and H2 hold and H2 replicates in the held-out states"
+        ],
+        "H1_standardized": 0.27396853230049634,
+        "H1_p": 0.005,
+        "H2_standardized": 0.26266012594011046,
+        "H2_p": 0.005,
+        "replicated": true,
+        "outcome_sd": 0.4938886925204915,
+        "rule_applied": true,
+        "sd_over_robust_sd_after": 1.8472139532469893,
+        "seconds": 216.1
+      },
+      "planted_no_rule": {
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 gap +0.002 SD is below the 0.1 SD floor"
+        ],
+        "H1_standardized": 0.0020675361507821533,
+        "H1_p": 0.005,
+        "H2_standardized": 0.0014962122444207799,
+        "H2_p": 0.055,
+        "replicated": true,
+        "outcome_sd": 154.24940667685624,
+        "rule_applied": false,
+        "sd_over_robust_sd_after": null,
+        "seconds": 113.1
+      },
+      "planting": {
+        "effect_sd": 0.25,
+        "shift_per_unit_exposure": 0.11867567991706018,
+        "planted_in": "raw outcome, before the outcome rule",
+        "scale": "outcome SD after the rule, unplanted population",
+        "sd_after_rule_unplanted": 0.47470271966824074,
+        "raw_sd_unplanted": 154.24920696353556,
+        "rule_applied_to_unplanted": true
+      },
+      "no_effect_rule": {
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 gap +0.038 SD is below the 0.1 SD floor"
+        ],
+        "H1_standardized": 0.03841993689839903,
+        "H1_p": 0.005,
+        "H2_standardized": 0.026767697510220675,
+        "H2_p": 0.005,
+        "replicated": true,
+        "outcome_sd": 0.47470271966824074,
+        "rule_applied": true,
+        "sd_over_robust_sd_after": 2.043913712709366,
+        "seconds": 154.8
+      },
+      "no_effect_no_rule": {
+        "verdict": "unsupported",
+        "reasons": [
+          "H1 not significant after FDR (q = 0.19)",
+          "H1 gap +0.001 SD is below the 0.1 SD floor"
+        ],
+        "H1_standardized": 0.0012981625550358567,
+        "H1_p": 0.095,
+        "H2_standardized": 0.0007268379089559674,
+        "H2_p": 0.425,
+        "replicated": false,
+        "outcome_sd": 154.24920696353556,
+        "rule_applied": false,
+        "sd_over_robust_sd_after": null,
+        "seconds": 110.4
+      },
+      "finding_holds": true
+    }
+  },
+  "seconds_total": 2049.8
+}

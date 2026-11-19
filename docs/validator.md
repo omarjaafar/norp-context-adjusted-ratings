@@ -179,6 +179,15 @@ The 0-10 rating is not marked bounded and passes the ratio test (0.9). With the 
 
 **Test with a planted effect** (`tests/test_outcomes.py`): a heavy-tailed outcome (0.5% of rows shifted by ±10,000) with 0.5 robust SD planted per SD of a county exposure. Without the rule the effect is about 0.0007 SD of the raw outcome and the gate cannot call it supported; with the rule it is supported. The same population with no planted effect stays unsupported.
 
+**Positive controls on heavy-tailed outcomes (CP5 V2, CP4 feedback F4, audit X3; decided 2026-11-19).** A positive control is planted in the **raw** outcome, before the rule, at 0.25 x the outcome's SD **after** the rule, measured on the population with nothing planted (`benchmark_run.prepare_population`). Then the gate applies the rule once. Three scales were considered:
+- the post-rule SD is chosen because the gate measures effects in post-rule SD, so it is the size the gate should see;
+- the raw SD of a heavy-tailed ratio (thousands) would plant an effect larger than any real one;
+- the robust SD is about 3.7 times smaller than the post-rule SD, so it would plant only about 0.07 SD, under the floor.
+
+The TA version planted after the rule. That never tested whether the rule recovers an effect hidden in a raw heavy-tailed ratio, and it also applied the rule twice, because `prepare_population` and `run_spec` both selected the population with it. Now `prepare_population` returns the raw outcome and `run_spec` applies the rule once.
+
+Two of the five benchmark positive controls are on heavy-tailed ratios (`operating_margin` x unemployment, `liabilities_to_assets` x poverty). `scripts/controls_heavy_tail.py` runs each with the effect planted and with no effect, with and without the rule (`data/output/controls_heavy_tail.json`), and, with `--family`, 8 placebos and the planted control through one BH family under the rule (`data/output/controls_family_heavy_tail.json`).
+
 ### 2.9 The benchmark and its metrics (CP5)
 
 `benchmark/cp5_theories.json` holds 20 entries written as ordinary theories: 10 literature (the CP3 ratings theory and 9 from nonprofit finance research), 5 positive controls and 5 negative controls. Gold answers (outcome, exposure, type, sign, unit) were written before any Planner run. A positive control plants 0.25 SD along the gold exposure; a negative control replaces the gold exposure with another county's whole history. All 20 run under the same locked gate. **BH is applied in two families** (CP5 audit X2): the 10 literature theories (20 hypotheses) and the 10 controls (20 hypotheses). Planted controls have tiny p-values, and in a shared family they would raise the BH thresholds for the literature theories, so a literature verdict would depend on how many controls we planted (`tests/test_benchmark_run.py::test_controls_do_not_loosen_the_literature_family`). At 999 permutations the family limit is 100 hypotheses (section 2.6).

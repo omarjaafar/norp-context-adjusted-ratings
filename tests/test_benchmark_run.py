@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from theorylab.benchmark import review_spec
+from theorylab.outcomes import apply_outcome_rule
 from theorylab.benchmark_run import KINDS, apply_families, load_entries, metrics, prepare_population
 from theorylab.gate import apply_family
 from theorylab.sweep import cell_spec
@@ -71,6 +72,26 @@ def test_positive_control_plants_the_effect_along_the_exposure():
     z = (base["poverty_rate"] - base["poverty_rate"].mean()) / base["poverty_rate"].std(ddof=1)
     assert np.allclose(delta, -0.5 * sd * z)
     assert base["poverty_rate"].equals(pop["poverty_rate"])  # the exposure is untouched
+
+
+def test_positive_control_in_a_heavy_tailed_ratio_is_planted_raw_at_the_post_rule_sd():
+    """CP5 V2 (audit X3): plant in the raw outcome at effect_sd x the SD after the rule; the rule runs once, later."""
+    panel = _panel()
+    rng = np.random.default_rng(11)
+    panel["operating_margin"] = rng.normal(0, 0.2, len(panel))
+    panel.loc[rng.random(len(panel)) < 0.01, "operating_margin"] = -1e4  # a few tiny-revenue filers
+    spec = cell_spec("operating_margin", "poverty_rate", -1, n_permutations=99)
+    base, base_log = prepare_population({"kind": "literature"}, spec, panel)
+    assert "outcome_rule" not in base_log or not base_log["outcome_rule"]["applied"]  # raw here
+    assert base["operating_margin"].min() == -1e4
+    pop, log = prepare_population(_entry("positive_control", effect_sd=0.25), spec, panel)
+    clipped, rule_log = apply_outcome_rule(base, "operating_margin", spec["validator"]["outcome_rule"])
+    assert rule_log["applied"]
+    post_sd = float(clipped["operating_margin"].std(ddof=1))
+    assert log["planted"]["sd_after_rule_unplanted"] == pytest.approx(post_sd)
+    assert post_sd < 0.01 * float(base["operating_margin"].std(ddof=1))  # not the raw SD
+    z = (base["poverty_rate"] - base["poverty_rate"].mean()) / base["poverty_rate"].std(ddof=1)
+    assert np.allclose(pop["operating_margin"] - base["operating_margin"], -0.25 * post_sd * z)
 
 
 def test_negative_control_replaces_the_exposure_with_whole_county_histories():
