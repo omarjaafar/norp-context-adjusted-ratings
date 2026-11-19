@@ -1,0 +1,38 @@
+{
+  "generated_at": "2026-11-19T13:20:07",
+  "passed": 6,
+  "ran": 6,
+  "skipped": [],
+  "checks": {
+    "extracts_match_manifest": {
+      "status": "PASS",
+      "detail": "15 extracts, sha256 match",
+      "what": "Every committed NCCS extract has the sha256 and row count MANIFEST.json records (CP2)."
+    },
+    "llm_cache_intact": {
+      "status": "PASS",
+      "detail": "40 entries, 0 bad",
+      "what": "Every cached LLM response matches its stored hashes, so --replay reproduces the specs (CP4)."
+    },
+    "cp4_verdicts_follow": {
+      "status": "PASS",
+      "detail": "5 theories: unsupported",
+      "what": "Each CP4 theory's verdict and family q-values recomputed from its stored p-values and\n    effects (scripts/review_theory_runs.py), and they match the committed review.json."
+    },
+    "outcome_tails": {
+      "status": "PASS",
+      "detail": "heavy: education_fundraising_cost, health_burden_thin_margins, unemployment_leverage",
+      "what": "CP4 finding: T2, T3, T5 outcomes are heavy-tailed (SD > 600x robust SD); T1, T4 are not (< 2x)."
+    },
+    "sweep_cells": {
+      "status": "PASS",
+      "detail": "28/28 unsupported, largest effect 0.040 SD",
+      "what": "CP4 sweep: 28 cells; a cell whose H1 and H2 effects are both under the floor must be\n    unsupported, and none is above it."
+    },
+    "panel_hash": {
+      "status": "PASS",
+      "detail": "2,390,744 rows, sha256_csv 3dfa5eb1...",
+      "what": "The rebuilt panel's uncompressed CSV has the sha256 and row count in panel_join_log.json."
+    }
+  }
+}

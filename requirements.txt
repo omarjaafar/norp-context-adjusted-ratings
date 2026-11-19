@@ -1,7 +1,9 @@
-pandas>=2.0
-numpy>=1.24
-pyyaml>=6.0
-pytest>=7.0
-scipy>=1.11
-statsmodels>=0.14
-anthropic>=0.40
+# Pinned to the versions the reported results were produced with (Python 3.12.10, Windows 11).
+# pip install -r requirements.txt
+pandas==3.1.1
+numpy==2.5.4
+scipy==1.18.1
+statsmodels==0.15.0
+pyyaml==6.0.3
+pytest==9.2.0
+anthropic==2.5.0   # only for live LLM calls; --replay runs need no key
