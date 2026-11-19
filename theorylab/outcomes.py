@@ -5,27 +5,47 @@ and more than 99.9% of the variance sits in the top 0.1% of rows. The gate's flo
 is 0.1 SD of the outcome, so for those ratios it is out of reach and "unsupported"
 only says the test could not see anything.
 
-The rule, fixed here before any rerun and applied by select_population:
+The rule, applied by select_population (decided 2026-11-19, before any rerun):
 
-  1. Diagnose on the theory's own population: SD / robust SD, with robust SD = IQR / 1.349.
-  2. If the ratio exceeds `heavy_tail_ratio` (3.0; the well-behaved CP4 outcomes were 0.9
-     and 1.6), winsorize the outcome at the `winsorize` quantiles (0.01, 0.99).
-  3. Everything downstream (H1, H2, the floor, replication, per-year tests, drill-down,
-     sweep cells) uses the winsorized outcome. Raw numbers stay in the population log.
+  0. D-a: outcomes marked `bounded` in catalog/panel_columns.yaml (the [0, 1] expense
+     shares and revenue concentration) are exempt. Their SD is finite and meaningful;
+     a share with many zeros has a small IQR, so the ratio test would clip it for no reason.
+  1. Diagnose on the theory's own population, pooled over years: SD / robust SD, with
+     robust SD = IQR / 1.349.
+  2. If the ratio exceeds `heavy_tail_ratio` (3.0), winsorize the outcome at the `winsorize`
+     quantiles (0.01, 0.99) of the pooled population (D-b: one scale across years, which
+     the per-year and trend tests need).
+  3. D-c: clip once. If the ratio is still above the threshold afterwards it is logged
+     (`still_above_threshold_after`), not clipped again.
+  4. Everything downstream (H1, H2, the floor, replication, per-year tests, drill-down,
+     sweep cells) uses the result. Raw numbers stay in the population log.
 
-Well-behaved outcomes (the 0-10 rating, expense shares) pass through untouched, so
-CP4 verdicts for T1 and T4 do not move. The rule is part of spec.GATE_POLICY, so the
-Planner cannot loosen or switch it off; it is logged as an override if it tries.
+The rule is part of spec.GATE_POLICY, so the Planner cannot loosen or switch it off; it is
+logged as an override if it tries.
 """
 
 from __future__ import annotations
 
+from functools import lru_cache
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+import yaml
 
 from theorylab.executor import to_float
 
+COLUMNS_PATH = Path(__file__).resolve().parent.parent / "catalog" / "panel_columns.yaml"
+
 DEFAULT_RULE = {"heavy_tail_ratio": 3.0, "winsorize": [0.01, 0.99]}
+
+
+@lru_cache(maxsize=None)
+def bounded_outcomes(path: Path = COLUMNS_PATH) -> dict:
+    """{column: [low, high]} for every column marked `bounded` in panel_columns.yaml (D-a)."""
+    with open(path, encoding="utf-8") as f:
+        columns = yaml.safe_load(f)["columns"]
+    return {c: list(d["bounded"]) for c, d in columns.items() if isinstance(d, dict) and d.get("bounded")}
 
 
 def robust_sd(y: np.ndarray) -> float:
@@ -61,6 +81,9 @@ def apply_outcome_rule(pop: pd.DataFrame, outcome: str, rule: dict | None) -> tu
     errors = validate_rule(rule)
     if errors:
         raise ValueError("; ".join(errors))
+    bounds = bounded_outcomes().get(outcome)
+    if bounds is not None:
+        return pop, {"applied": False, "reason": f"bounded outcome {bounds}: exempt (D-a)", "bounded": bounds}
     y = to_float(pop[outcome]).to_numpy()
     ratio = tail_ratio(y)
     log = {"applied": False, "sd_over_robust_sd": ratio, "threshold": float(rule["heavy_tail_ratio"]),
@@ -73,5 +96,6 @@ def apply_outcome_rule(pop: pd.DataFrame, outcome: str, rule: dict | None) -> tu
     out[outcome] = clipped
     log.update(applied=True, quantiles=list(rule["winsorize"]), lower=float(lo), upper=float(hi),
                rows_clipped=int((clipped != y).sum()), sd_after=float(np.std(clipped, ddof=1)),
-               sd_over_robust_sd_after=tail_ratio(clipped))
+               sd_over_robust_sd_after=tail_ratio(clipped), pooled_over_years=True)
+    log["still_above_threshold_after"] = bool(log["sd_over_robust_sd_after"] > log["threshold"])
     return out, log

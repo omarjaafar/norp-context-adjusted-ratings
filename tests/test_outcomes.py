@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from theorylab.outcomes import apply_outcome_rule, tail_ratio, validate_rule
+from theorylab.outcomes import apply_outcome_rule, bounded_outcomes, tail_ratio, validate_rule
 from theorylab.spec import GATE_POLICY, lock_gate, validate_spec
 from theorylab.sweep import cell_spec
 from theorylab.theory_run import available_columns, run_spec, select_population
@@ -111,3 +111,34 @@ def test_population_log_records_the_rule_for_a_normal_outcome():
     pop, log = select_population(df, spec)
     assert log["outcome_rule"]["applied"] is False
     assert len(pop) == len(df)
+
+
+def test_bounded_shares_are_read_from_the_catalog():
+    assert set(bounded_outcomes()) == {"program_expense_ratio", "admin_expense_ratio",
+                                       "fundraising_expense_ratio", "revenue_concentration"}
+    assert all(b == [0, 1] for b in bounded_outcomes().values())
+
+
+def test_bounded_share_with_many_zeros_passes_untouched():
+    """D-a: like fundraising_expense_ratio (63% zeros, ratio ~4.9), which the TA rule clipped at 0.31."""
+    rng = np.random.default_rng(5)
+    y = np.where(rng.random(5000) < 0.63, 0.0, rng.beta(0.6, 4, 5000))
+    df = pd.DataFrame({"fundraising_expense_ratio": y, "y": y})
+    assert tail_ratio(y) > RULE["heavy_tail_ratio"]  # the ratio test alone would clip it
+    out, log = apply_outcome_rule(df, "fundraising_expense_ratio", RULE)
+    assert out is df and not log["applied"] and log["bounded"] == [0, 1]
+    _, log_unmarked = apply_outcome_rule(df, "y", RULE)
+    assert log_unmarked["applied"]  # the same numbers under an unmarked name are clipped
+
+
+def test_ratio_still_above_threshold_after_one_clip_is_logged_not_clipped_again():
+    """D-c: one clip at the 1st/99th percentiles, even if the ratio stays above 3."""
+    rng = np.random.default_rng(6)
+    # 5% of rows far out: more than the 1% each side that the clip reaches, like equity_ratio
+    y = np.where(rng.random(20000) < 0.05, rng.normal(0, 10, 20000), rng.normal(0, 0.1, 20000))
+    df = pd.DataFrame({"y": y})
+    out, log = apply_outcome_rule(df, "y", RULE)
+    lo, hi = np.quantile(y, RULE["winsorize"])
+    assert log["applied"] and log["still_above_threshold_after"]
+    assert log["sd_over_robust_sd_after"] > RULE["heavy_tail_ratio"]
+    np.testing.assert_array_equal(out["y"].to_numpy(), np.clip(y, lo, hi))  # exactly one clip
