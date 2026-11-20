@@ -227,12 +227,12 @@ def check_a1_unseen_replays() -> str:
     return f"{again['usage']['cache_hits']} cache hits, 0 calls, rows identical"
 
 
-def check_benchmark_metrics() -> str:
+def check_benchmark_metrics(rel: str = "data/output/benchmark_cp5.json") -> str:
     """CP5 benchmark (first pass, 2387c33): the three metrics recomputed from the per-entry table,
     run errors, plan failures and gold reviews in benchmark_cp5.json. A run error or a plan that
     disagrees with gold is an invalid plan; a positive control counts only if supported AND on
     gold; a negative control that did not run is left out of the false-positive rate."""
-    d = _load("data/output/benchmark_cp5.json")
+    d = _load(rel)
     m = d["metrics"]
     kinds = {r["id"]: r["kind"] for r in d["table"]}
     kinds |= {e["id"]: e["kind"] for e in d["run_errors"] + d["plan_failures"]}
@@ -249,6 +249,20 @@ def check_benchmark_metrics() -> str:
     lit = [r for r in d["table"] if r["kind"] == "literature"]
     return (f"plan validity {valid}/20, control recovery {recovered}/{len(pos)}, false positives {fps}/{len(neg_run)}; "
             f"literature {sum(r['verdict'] == 'unsupported' for r in lit)}/{len(lit)} run unsupported")
+
+
+def check_benchmark_postfix() -> str:
+    """CP5 benchmark after the population fix (benchmark_cp5_postfix.json): metrics recomputed the same
+    way, every verdict follows in its own family, and the 17 entries that ran in the first pass have
+    exactly their first-pass effects (the fix only changes specs that crashed)."""
+    detail = check_benchmark_metrics("data/output/benchmark_cp5_postfix.json")
+    review = _script("review_theory_runs").review(OUT / "theory_runs" / "cp5_postfix")
+    assert review["all_follow"] and review["all_in_own_family"], "post-fix review fails"
+    first = {r["id"]: r for r in _load("data/output/benchmark_cp5.json")["table"]}
+    post = {r["id"]: r for r in _load("data/output/benchmark_cp5_postfix.json")["table"]}
+    for i, r in first.items():
+        assert (r["H1_std"], r["H2_std"]) == (post[i]["H1_std"], post[i]["H2_std"]), f"{i} moved"
+    return detail + f"; {len(first)} first-pass effects unchanged"
 
 
 def check_benchmark_review() -> str:
@@ -291,6 +305,7 @@ CHECKS = {
     "a1_unseen_replays": check_a1_unseen_replays,
     "benchmark_metrics": check_benchmark_metrics,
     "benchmark_review": check_benchmark_review,
+    "benchmark_postfix": check_benchmark_postfix,
 }
 SLOW = {"panel_hash": check_panel_hash}
 

@@ -39,7 +39,169 @@ The LLM never computes a statistic and cannot override the Validator.
    - A live re-acquisition path.
    - A verification script.
 
-## Data
+## Reproduce the reported results (README workflow)
+
+Everything below was run from a clean clone of the submission commit in an empty folder, with
+nothing installed beyond `requirements.txt`. The outputs quoted are from that run.
+
+### Requirements for starting fresh
+
+| Item | Value |
+|---|---|
+| Python | 3.12 (checked: 3.12.10 on Windows, 3.12.16 on Linux). The pins below are the versions every reported result was produced with |
+| Packages | `pip install -r requirements.txt`: pandas 3.1.1, numpy 2.5.4, scipy 1.18.1, statsmodels 0.15.0, pyyaml 6.0.3, pytest 9.2.0, anthropic 2.5.0 (live LLM calls only) |
+| OS | Checked on Windows 11 (10.0.26200) for the clean-clone run below. The panel hash also matched on macOS (CP4) and Arch Linux (CP5). Plain Python, no OS-specific calls |
+| Hardware | Checked on an Intel i7-11800H laptop (8 cores, 16 GB RAM). The panel build peaks at ⟦TBD⟧ GB of memory |
+| Disk | About 190 MB for the clone (every committed file is under 20 MB), plus about 400 MB for the rebuilt panel |
+| Accounts and keys | **None for the quickstart or any replay.** `ANTHROPIC_API_KEY` only for live Planner/Scout calls; `CENSUS_API_KEY` only to rebuild the need table from the Census API. Both names are in `.env.example`; never commit a key |
+| Git LFS | Not used: no committed file is over 50 MB |
+| Quickstart runtime | ⟦TBD⟧ |
+
+Install, from a fresh clone:
+
+```bash
+git clone https://github.gatech.edu/ojaafar3/norp-finance-theory-project.git norp && cd norp
+python -m venv .venv
+source .venv/bin/activate            # Windows PowerShell: .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+### Quickstart
+
+The claim it backs: **the ratings-fairness theory (T1) is unsupported under the CP5 gate, with a
+high-need gap of −0.022 SD**, and every other committed number in the report is rechecked by
+`verify_outputs.py`. No key, and no network after the install.
+
+**Step 1. Unit tests**
+
+```bash
+python -m pytest -q
+```
+
+Expected last line: `⟦TBD⟧ passed in …s`. The tests use synthetic data and a fake LLM, so they
+need neither the panel nor a key.
+
+**Step 2. Recheck the committed results**
+
+```bash
+python scripts/verify_outputs.py
+```
+
+Each check recomputes something from committed files and compares it with what the report
+claims, and prints `[PASS]`, `[FAIL]` or `[SKIP]`. Expected last line:
+
+```
+⟦TBD⟧ checks passed -> <path to the clone>/data/output/validation_report.json
+```
+
+The part before the arrow is the match. The exit code is 0 only if every check that ran passed.
+The slowest check (`a1_unseen_replays`) replays all 40 A1 texts from the committed LLM cache and
+fails if any of them would need a live call.
+
+**Step 3. Rebuild the organization-year panel and check its hash**
+
+```bash
+python scripts/build_panel.py
+python scripts/verify_outputs.py --panel
+```
+
+The panel (`data/derived/org_year_panel.csv.gz`, 2,390,744 organization-years × 54 columns,
+about 400 MB) is too large to commit and is never downloaded: it is rebuilt from the committed
+NCCS extracts, crosswalk and need table. `build_panel.py` rewrites
+`data/output/panel_join_log.json`; only `generated_at` should change (`git diff` shows it). The
+second command adds a `panel_hash` check that hashes the uncompressed CSV and compares it with
+the log **as committed** (git `HEAD`). Expected:
+
+```
+[PASS] panel_hash: 2,390,744 rows, sha256_csv 334951b1...
+```
+
+Tolerance: none. The hash is of the exact CSV text, written with LF line endings on every OS.
+
+**Step 4. Rerun one theory from its committed spec**
+
+```bash
+python scripts/rerun_specs.py --only distressed_county_rating_penalty --to quickstart --permutations 199 --no-by-year
+python scripts/review_theory_runs.py --dir data/output/theory_runs/quickstart
+```
+
+This reruns the Planner's committed CP4 spec for T1 through the current gate (outcome rule,
+studentized permutation test, effect floor, held-out states) with no LLM call, and writes to
+`data/output/theory_runs/quickstart/` (git-ignored). Expected output:
+
+```
+⟦TBD⟧
+```
+
+What must match: the verdict `unsupported`, `rule applied False` (the rating is not
+heavy-tailed), and the effects **H1 −0.022 SD and H2 −0.012 SD**, the same as the committed full
+run in `data/output/theory_runs/cp5_reruns/distressed_county_rating_penalty.json` to the printed
+digits. Effects do not depend on the permutation count; p- and q-values do (199 here, 999 in the
+committed run), so they will differ.
+
+### Data provenance
+
+| Data | Rows | Committed or fetched | Source | Used by |
+|---|---|---|---|---|
+| `data/extracts/nccs/*.csv.gz` (15 files, 7.9–18.6 MB) | Parts I, IX, X for 2018–2022; exact counts in `MANIFEST.json` | Committed, sha256 in `MANIFEST.json` (checked by `verify_outputs.py`) | Column subsets of the NCCS efile tables, `https://nccs-efile.s3.us-east-1.amazonaws.com/public/efile_v2_1/` | `build_panel.py` |
+| `data/derived/ein_county_crosswalk.csv.gz` | 612,230 EINs | Committed | NORP `NGOs_with_categories` (Metabase, course login) and the Census 2020 county file | `build_panel.py` |
+| `data/derived/county_need.csv` | 16,140 county-years | Committed | ACS 5-year 2018–2022 (Census API), NORP tract tables, County Health Rankings 2020–2025 (`data/extracts/chr/`) | `build_panel.py` |
+| `data/derived/org_year_panel.csv.gz` | 2,390,744 | **Rebuilt in Step 3**, git-ignored; CSV sha256 in `panel_join_log.json` | All of the above | every theory run |
+| `data/llm_cache/` | one JSON per LLM response | Committed, each with request and response sha256 | Claude `claude-sonnet-5-5` | every `--replay` |
+| Raw NCCS CSVs and NORP raw tables | — | Not committed (4.2 GB; NORP needs the course login) | see the Checkpoint 2 section | only to rebuild the committed extracts (`scripts/run_cp2.sh`) |
+| Multi-year crime (UCR Return A, openICPSR 100707) | — | **Not in the repo.** It needs an openICPSR account, so it was not added (D9 in `docs/data_decisions.md`) | — | — |
+
+### Longer workflows
+
+Each writes the committed file named, so `git diff` after a run shows what moved. Times are from
+the Windows laptop above unless marked. Set `OMP_NUM_THREADS=4` when running several at once.
+
+| Goal (report claim) | Command | Writes | Expected | Time |
+|---|---|---|---|---|
+| **CP5 benchmark: 20 entries, three metrics** | `python scripts/run_benchmark.py --replay --screen 199 --rerun-q 0.25 --by-year` | `data/output/benchmark_cp5.json`, `data/output/theory_runs/cp5/` | at today's code this reproduces the **post-fix** numbers below (plan validity 20/20, recovery 5/5, false positives 0/5); the committed first pass (17/20, 5/5, 0/3) ran before the population fix | about 42 min |
+| Same, written next to the first pass | add `--tag postfix` | `data/output/benchmark_cp5_postfix.json`, `data/output/theory_runs/cp5_postfix/` | 20/20, 5/5, 0/5; the 17 first-pass effects unchanged | about 42 min |
+| Review every benchmark verdict | `python scripts/review_theory_runs.py --dir data/output/theory_runs/cp5` | `.../cp5/review.json` | ends `all verdicts follow: True` | < 1 min |
+| A1 on 40 unseen texts (replay) | `python scripts/measure_assumption1_benchmark.py --replay --out <scratch>.json` | the file you name | 39 of 40, rows identical to `assumption_1_unseen.json` | < 1 min |
+| T1–T5 under the outcome rule | `python scripts/rerun_specs.py` | `data/output/theory_runs/cp5_reruns/` | 5 unsupported; T1 and T4 effects unchanged from CP4 | about 25 min (Linux, 22 cores) |
+| Outcome rule on all 10 outcomes | `python scripts/outcome_rule_check.py` | `data/output/outcome_rule_check.json` | 5 clipped, 4 still above 3 | < 1 min |
+| Heavy-tailed positive controls | `python scripts/controls_heavy_tail.py` | `data/output/controls_heavy_tail.json` | both supported with the rule, unsupported without | about 35 min (Linux) |
+| Placebo families on heavy tails | `python scripts/controls_heavy_tail.py --family` | `data/output/controls_family_heavy_tail.json` | 0 of 16 placebos; planted control survives | about 60 min (Linux) |
+| T4 proxy check | `python scripts/t4_followup.py` | `data/output/t4_followup.json` | 90% of the H2 effect kept with population and need index added | about 10 min (Linux) |
+| Ratio × need sweep under the rule | `python scripts/run_sweep.py --part main` | `data/output/sweep/main.json`, `data/output/sweep.json` | 28/28 unsupported, largest effect 0.065 SD | about 2.2 h |
+
+**Live LLM runs** (`ANTHROPIC_API_KEY` set, drop `--replay`). A live run calls Claude
+`claude-sonnet-5-5` and writes new cache entries. The text will differ, so a re-run should still
+satisfy: every spec schema-valid, the gate block identical to `spec.GATE_POLICY` (the Planner
+cannot change it), and at least 34 of 40 texts agreeing with the gold answers (A1's 85% line).
+Our first pass: 39 of 40, $1.04, 102 calls.
+
+### If something fails
+
+- **`CacheError: no cache entry … (replay-only mode)` from `run_cp4.py --replay` or
+  `measure_assumptions_1_2.py --replay`.** Expected. The cache is keyed on the exact prompt, and
+  since CP4 the Planner's example spec (`specs/ratings_fairness.json`) and the Scout's column list
+  changed, so the CP4 keys no longer match. The CP4 outputs stay as committed. To reproduce CP4's
+  theories, use `python scripts/rerun_specs.py`, which reruns their committed specs with no LLM
+  call. A CP5 replay breaks the same way if either of those two files is edited.
+- **`panel_hash` fails after Step 3.** Check `git status`: an edit to `theorylab/panel.py`,
+  `need.py`, `ratios.py` or a committed input changes the panel. If `extracts_match_manifest`
+  fails as well, the clone's files differ from the commit; re-clone. `python
+  scripts/check_panel_hash.py --out <scratch>.json` hashes each column separately and names the
+  ones that differ.
+- **`MemoryError`, or the machine stalls in Step 3.** The build holds all five years in memory.
+  Close other programs or use a machine with 16 GB.
+- **A long run is much slower than the table.** BLAS threads compete when several runs share the
+  CPU; set `OMP_NUM_THREADS=4`. A laptop that sleeps pauses the run.
+- **`verify_outputs.py` shows `[SKIP] panel_hash`.** The panel is not built yet; run Step 3.
+  Skipped checks are never counted as passed.
+
+### How this README maps to the report
+
+The quickstart is the T1 row of the Checkpoint 5 evidence table, and Step 2 rechecks the rest of
+that table from committed files. Each longer workflow names the report claim it backs. The
+report's "How to Reproduce" section points here.
+
+## Data sources
 
 | Source | What | Where |
 |---|---|---|
@@ -47,7 +209,11 @@ The LLM never computes a statistic and cannot override the Validator.
 | NORP Metabase | NGO table (3.42M orgs with county), 2022 Part I extract, county economics, poverty, tract-level need | norpp.cc.gatech.edu |
 | IRS | Business Master File | irs.gov |
 
-## Checkpoint 1 evidence
+## Checkpoint history
+
+Earlier checkpoints, as they were reported. Commands that no longer run as written are marked.
+
+### Checkpoint 1 evidence
 
 - `scripts/feasibility_check.py` → [`data/output/feasibility_report.json`](data/output/feasibility_report.json)
   - 127,477 of 131,027 unique 2022 990 EINs (97.3%) join to a county through the NORP NGO table.
@@ -64,7 +230,7 @@ python scripts/probe_nccs_efile.py                                  # needs inte
 python scripts/feasibility_check.py --data-dir <path to NORP data/raw>
 ```
 
-## Checkpoint 2: data layer and catalog
+### Checkpoint 2: data layer and catalog
 
 > **Built on the TA's `ai-suggestions/cp2` code.** The commit "Import TA ai-suggestions/cp2 branch unchanged" adds it as provided. Our fixes and additions are in the commits after it.
 
@@ -111,7 +277,7 @@ Notes:
   table rebuilds the planning regions for 2018–2021 from town-level ACS data (marked
   `acs_estimated`). See D5 in `docs/data_decisions.md`.
 
-## Checkpoint 3: Executor and Validator
+### Checkpoint 3: Executor and Validator
 
 | Piece | Code | Output |
 |---|---|---|
@@ -151,7 +317,7 @@ How the gate reads (`theorylab/validator.py::decide_verdict`):
   checks and never change it. Every theory run restricts to full Form 990 filers
   (`return_type == "990"`), which settles which rows the Part IX ratios come from.
 
-## Checkpoint 4: agents
+### Checkpoint 4: agents
 
 > **Built on the TA's `ai-suggestions/cp4` code.** Commit `7d9ee8a` adds it as provided. Our fixes and additions are in the commits after it.
 
@@ -176,15 +342,15 @@ How the gate reads (`theorylab/validator.py::decide_verdict`):
 
 Assumption 1 was **8 of 10 at first** (7 usable), below the 85% needed; after two fixes to the schema check and the retry prompt, the same texts give 9 of 10. A real test needs new theories (CP5).
 
-To reproduce:
+To reproduce (as reported at CP4; two replay lines are now broken, marked):
 
 ```bash
 pip install -r requirements.txt
-python -m pytest -q                      # expect 164 passed
+python -m pytest -q                      # expect 164 passed at the CP4 commit
 python scripts/build_panel.py            # sha256_csv must equal panel.sha256_csv in the join log
 python scripts/check_panel_hash.py --out data/output/panel_rebuild_check_mine.json
-python scripts/measure_assumptions_1_2.py --replay   # no API key needed: replays data/llm_cache
-python scripts/run_cp4.py --replay       # about 35 min at 999 permutations
+python scripts/measure_assumptions_1_2.py --replay   # NO LONGER REPLAYS since f825052 (see "If something fails"); output stays as committed
+python scripts/run_cp4.py --replay       # NO LONGER REPLAYS; use: python scripts/rerun_specs.py --to <scratch dir>
 python scripts/review_theory_runs.py     # must end: all verdicts follow: True; all on the current gate: True
 python scripts/outcome_tails.py
 python scripts/run_sweep.py --part main --part ta_after   # about 1 h 50 min on a laptop; ta_before is kept as committed
@@ -195,3 +361,27 @@ python scripts/build_county_need.py --chr-only --chr-dir data/raw/chr   # needs 
 ```
 
 Without `--replay`, the agents need `ANTHROPIC_API_KEY` (model `claude-sonnet-5-5`, no fallback model). The gate settings come from `spec.GATE_POLICY`, and the Planner cannot change them.
+
+### Checkpoint 5: benchmark
+
+> **Built on the TA's `ai-suggestions/cp5` code.** Commit `f825052` adds it as provided. Our fixes and additions are in the commits after it.
+
+| Piece | Code | Output |
+|---|---|---|
+| Heavy-tail outcome rule (bounded outcomes exempt, pooled 1/99 clip, one clip) | `theorylab/outcomes.py`, `docs/validator.md` 2.8, `scripts/outcome_rule_check.py` | `data/output/outcome_rule_check.json` |
+| Positive controls planted raw in heavy-tailed ratios; placebo families | `theorylab/benchmark_run.py`, `scripts/controls_heavy_tail.py` | `data/output/controls_heavy_tail.json`, `data/output/controls_family_heavy_tail.json` |
+| T1–T5 rerun under the rule from their committed specs | `scripts/rerun_specs.py` | `data/output/theory_runs/cp5_reruns/` |
+| 10 literature theories with checked sources, 5 positive and 5 negative controls, gold answers frozen before any run | `benchmark/cp5_theories.json`, `nonprofit_density` in `theorylab/need.py` (D9) | — |
+| Benchmark runner: two BH families, crashes count as invalid plans, recovery needs a gold-matching spec, per-year results | `theorylab/benchmark_run.py`, `scripts/run_benchmark.py`, `docs/validator.md` 2.9 | `data/output/benchmark_cp5.json` (first pass), `data/output/benchmark_cp5_postfix.json` |
+| Review of every benchmark verdict | `scripts/review_theory_runs.py` | `data/output/theory_runs/cp5*/review.json` |
+| A1 on 40 unseen texts, failure analysis | `scripts/measure_assumption1_benchmark.py`, `docs/assumption_1_unseen.md` | `data/output/assumption_1_unseen.json` |
+| T4 proxy check | `scripts/t4_followup.py` | `data/output/t4_followup.json` |
+| Sweep under the rule | `scripts/run_sweep.py --part main` | `data/output/sweep.json`, `data/output/sweep/` |
+| Recheck of every reported headline | `scripts/verify_outputs.py` | `data/output/validation_report.json` |
+
+**Result: the gate works on every control, and no literature theory is supported.**
+
+- **Benchmark, first pass:** plan validity **17/20** (3 specs crashed on H2 controls with missing values), control recovery **5/5**, false positives **0/3**. After the fix that requires controls to be present (separate file): **20/20, 5/5, 0/5**.
+- **Literature:** all 10 unsupported. Seven are significant after the family correction, all between 0.016 and 0.066 SD, under the 0.1 SD floor. Three point the way their theory says and replicate in all 5 held-out state folds (donor competition → fundraising share, unemployment → lower margins, housing burden → more debt). Three run the other way in every year (richer or more educated counties have more expensive fundraising and more concentrated revenue).
+- **A1:** 39 of 40 unseen texts agree with gold on the first pass; 17 of the 20 benchmark specs were usable. **A2:** 38 min for the benchmark with the 199 screen, $0.51 of API calls.
+- **Outcome rule:** a 0.25 SD effect planted in a raw heavy-tailed ratio is invisible without the rule (−0.001 SD) and recovered at full size with it (−0.253 SD); 0 of 16 placebos pass.
