@@ -1,0 +1,787 @@
+{
+  "model": "claude-sonnet-5-5",
+  "replayed": false,
+  "texts": 40,
+  "schema_valid": 40,
+  "pass_schema_and_review": 39,
+  "rate": 0.975,
+  "needed_rate": 0.85,
+  "by_kind": {
+    "literature": {
+      "passes": 19,
+      "texts": 20
+    },
+    "positive_control": {
+      "passes": 10,
+      "texts": 10
+    },
+    "negative_control": {
+      "passes": 10,
+      "texts": 10
+    }
+  },
+  "usage": {
+    "calls": 102,
+    "cache_hits": 0,
+    "input_tokens": 198204,
+    "output_tokens": 64778,
+    "cached_input_tokens": 0,
+    "cached_output_tokens": 0
+  },
+  "cost_usd": 1.0441880000000001,
+  "rows": [
+    {
+      "id": "ratings_fairness",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "ratings_fairness",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [
+        "exposure: Planner 'need_index', gold 'high_need'",
+        "exposure_type: Planner 'continuous', gold 'binary'"
+      ],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": false
+    },
+    {
+      "id": "lit_poverty_reserves",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_poverty_reserves",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_unemployment_margin",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_unemployment_margin",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "median_household_income",
+        "population"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_income_fundraising",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "nonprofit_density",
+        "revenue_concentration"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_income_fundraising",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_income_concentration",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_income_concentration",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_density_fundraising",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "population",
+        "revenue_concentration"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_density_fundraising",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "need_index",
+        "median_household_income",
+        "revenue_concentration"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_highneed_growth",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_highneed_growth",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "nonprofit_density",
+        "revenue_concentration"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state",
+        "return_type"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_uninsured_programs",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "median_household_income",
+        "revenue_concentration"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_uninsured_programs",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "unemployment_rate",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_education_fundraising",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "nonprofit_density",
+        "revenue_concentration"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_education_fundraising",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_housing_debt",
+      "kind": "literature",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "unemployment_rate"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "lit_housing_debt",
+      "kind": "literature",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_poverty_programs",
+      "kind": "positive_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "revenue_concentration"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_poverty_programs",
+      "kind": "positive_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "revenue_concentration",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_uninsured_admin",
+      "kind": "positive_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_uninsured_admin",
+      "kind": "positive_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_highneed_rating",
+      "kind": "positive_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_highneed_rating",
+      "kind": "positive_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_unemployment_margin",
+      "kind": "positive_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_unemployment_margin",
+      "kind": "positive_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_poverty_leverage",
+      "kind": "positive_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "pos_poverty_leverage",
+      "kind": "positive_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_population_admin",
+      "kind": "negative_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_population_admin",
+      "kind": "negative_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_education_programs",
+      "kind": "negative_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_education_programs",
+      "kind": "negative_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_food_desert_fundraising",
+      "kind": "negative_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "nonprofit_density",
+        "population"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_food_desert_fundraising",
+      "kind": "negative_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_crime_programs",
+      "kind": "negative_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "population"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_crime_programs",
+      "kind": "negative_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_poor_health_rating",
+      "kind": "negative_control",
+      "variant": "text",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "chr_uninsured",
+        "chr_some_college",
+        "nonprofit_density"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    },
+    {
+      "id": "neg_poor_health_rating",
+      "kind": "negative_control",
+      "variant": "paraphrase",
+      "schema_valid": true,
+      "review": [],
+      "h2_controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income"
+      ],
+      "h2_absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "gate_overrides": [],
+      "passes": true
+    }
+  ]
+}
