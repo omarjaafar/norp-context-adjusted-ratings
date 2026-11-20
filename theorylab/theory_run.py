@@ -112,6 +112,16 @@ def select_population(df: pd.DataFrame, spec: dict) -> tuple[pd.DataFrame, dict]
         if col in (spec["outcome"], spec["exposure"]) or col in DERIVED:
             mask &= to_float(df[col]).notna()
         log[f"after_{col}_present"] = int(mask.sum())
+    # CP5: a control the spec uses must be present too. The Planner does not always list its
+    # H2 controls in require_present, and a few counties have no ACS poverty or income value,
+    # so the fit stopped on missing controls (3 of 20 benchmark specs, run errors in the first
+    # pass). Rows are dropped here and counted in the log, as for require_present.
+    controls = [c for h in spec.get("hypotheses", []) for c in h.get("controls", [])]
+    for col in dict.fromkeys(c for c in controls if c not in pop.get("require_present", [])):
+        if col not in df.columns:
+            continue  # unknown columns are the schema check's job
+        mask &= to_float(df[col]).notna()
+        log[f"after_control_{col}_present"] = int(mask.sum())
     keys = [spec["exposure_unit"], "tax_year", "ein"]
     out = (df.loc[mask].sort_values([k for k in keys if k in df.columns], kind="stable")
            .reset_index(drop=True))

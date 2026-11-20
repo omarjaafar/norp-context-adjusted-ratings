@@ -169,3 +169,21 @@ def test_assumption_5_status():
     assert ok["status"] == "Holding (measured)" and ok["holds"]
     assert slow["status"] == "Weakened (measured)" and not slow["holds"]
     assert bad["status"] == "Broken (measured)"
+
+
+def test_population_drops_rows_missing_a_control_the_spec_uses():
+    # CP5 benchmark: H2 controls not listed in require_present, with a few missing values,
+    # crashed the fit. They are now required present, and the drop is logged.
+    import copy
+    import numpy as np
+    df = pd.DataFrame({"ein": range(6), "tax_year": [2020] * 6, "county_fips": list("aabbcc"),
+                       "return_type": ["990"] * 6, "y": [1.0, 2, 3, 4, 5, 6],
+                       "x": [0.0, 1, 0, 1, 0, 1], "pov": [0.1, np.nan, 0.2, 0.3, 0.4, 0.5]})
+    spec = {"outcome": "y", "exposure": "x", "exposure_unit": "county_fips", "exposure_type": "continuous",
+            "population": {"return_type": ["990"], "require_present": []},
+            "hypotheses": [{"id": "H1"}, {"id": "H2", "controls": ["pov"]}], "validator": {}}
+    pop, log = select_population(df, copy.deepcopy(spec))
+    assert len(pop) == 5 and pop["pov"].notna().all()
+    assert log["after_control_pov_present"] == 5
+    spec["hypotheses"][1]["controls"] = []
+    assert len(select_population(df, spec)[0]) == 6
