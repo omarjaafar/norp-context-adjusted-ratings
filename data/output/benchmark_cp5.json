@@ -1,0 +1,455 @@
+{
+  "generated_at": "2026-11-19T23:02:24",
+  "variant": "text",
+  "entries": 20,
+  "permutations": {
+    "final": null,
+    "screen": 199,
+    "rerun_q": 0.25
+  },
+  "metrics": {
+    "plan_validity": {
+      "valid": 17,
+      "of": 20,
+      "rate": 0.85,
+      "by_kind": {
+        "literature": {
+          "valid": 9,
+          "of": 10
+        },
+        "positive_control": {
+          "valid": 5,
+          "of": 5
+        },
+        "negative_control": {
+          "valid": 3,
+          "of": 5
+        }
+      },
+      "plan_failures": [],
+      "disagrees_with_gold": [],
+      "run_errors": [
+        "lit_education_fundraising",
+        "neg_food_desert_fundraising",
+        "neg_poor_health_rating"
+      ]
+    },
+    "control_recovery": {
+      "recovered": 5,
+      "of": 5,
+      "rate": 1.0,
+      "missed": [],
+      "supported_but_off_gold": []
+    },
+    "false_positive_rate": {
+      "false_positives": 0,
+      "of": 3,
+      "rate": 0.0,
+      "ids": [],
+      "not_run": [
+        "neg_food_desert_fundraising",
+        "neg_poor_health_rating"
+      ]
+    },
+    "literature_verdicts": {
+      "supported": [],
+      "weak": [],
+      "reversed": [],
+      "unsupported": [
+        "lit_density_fundraising",
+        "lit_highneed_growth",
+        "lit_housing_debt",
+        "lit_income_concentration",
+        "lit_income_fundraising",
+        "lit_poverty_reserves",
+        "lit_unemployment_margin",
+        "lit_uninsured_programs",
+        "ratings_fairness"
+      ]
+    },
+    "literature_not_run": [
+      "lit_education_fundraising"
+    ]
+  },
+  "plan_failures": [],
+  "reviews": {
+    "ratings_fairness": [],
+    "lit_poverty_reserves": [],
+    "lit_unemployment_margin": [],
+    "lit_income_fundraising": [],
+    "lit_income_concentration": [],
+    "lit_density_fundraising": [],
+    "lit_highneed_growth": [],
+    "lit_uninsured_programs": [],
+    "lit_education_fundraising": [],
+    "lit_housing_debt": [],
+    "pos_poverty_programs": [],
+    "pos_uninsured_admin": [],
+    "pos_highneed_rating": [],
+    "pos_unemployment_margin": [],
+    "pos_poverty_leverage": [],
+    "neg_population_admin": [],
+    "neg_education_programs": [],
+    "neg_food_desert_fundraising": [],
+    "neg_crime_programs": [],
+    "neg_poor_health_rating": []
+  },
+  "run_errors": [
+    {
+      "id": "lit_education_fundraising",
+      "kind": "literature",
+      "error": "ValueError: controls have missing values; select the population first"
+    },
+    {
+      "id": "neg_food_desert_fundraising",
+      "kind": "negative_control",
+      "error": "ValueError: controls have missing values; select the population first"
+    },
+    {
+      "id": "neg_poor_health_rating",
+      "kind": "negative_control",
+      "error": "ValueError: controls have missing values; select the population first"
+    }
+  ],
+  "rerun_at_full_permutations": [
+    "lit_poverty_reserves",
+    "lit_unemployment_margin",
+    "lit_income_fundraising",
+    "lit_income_concentration",
+    "lit_density_fundraising",
+    "lit_uninsured_programs",
+    "lit_housing_debt",
+    "pos_poverty_programs",
+    "pos_uninsured_admin",
+    "pos_highneed_rating",
+    "pos_unemployment_margin",
+    "pos_poverty_leverage",
+    "neg_crime_programs"
+  ],
+  "drilled": [],
+  "seconds_per_entry": {
+    "ratings_fairness": 58.906747817993164,
+    "lit_poverty_reserves": 145.27276372909546,
+    "lit_unemployment_margin": 147.8634696006775,
+    "lit_income_fundraising": 114.31415915489197,
+    "lit_income_concentration": 145.17755556106567,
+    "lit_density_fundraising": 160.16275119781494,
+    "lit_highneed_growth": 47.875229597091675,
+    "lit_uninsured_programs": 135.8011553287506,
+    "lit_housing_debt": 151.5072557926178,
+    "pos_poverty_programs": 131.82686161994934,
+    "pos_uninsured_admin": 126.46435165405273,
+    "pos_highneed_rating": 153.238587141037,
+    "pos_unemployment_margin": 152.2899374961853,
+    "pos_poverty_leverage": 133.6547212600708,
+    "neg_population_admin": 31.363606214523315,
+    "neg_education_programs": 30.625560760498047,
+    "neg_crime_programs": 129.73157453536987
+  },
+  "planning_seconds": 0.33257341384887695,
+  "by_year_seconds": {
+    "ratings_fairness": 32.04852604866028,
+    "lit_poverty_reserves": 24.541548252105713,
+    "lit_unemployment_margin": 24.73901891708374,
+    "lit_income_fundraising": 18.300899744033813,
+    "lit_income_concentration": 25.442628622055054,
+    "lit_density_fundraising": 24.690516233444214,
+    "lit_highneed_growth": 28.393086433410645,
+    "lit_uninsured_programs": 22.388030767440796,
+    "lit_housing_debt": 26.30676293373108
+  },
+  "llm_usage": {
+    "calls": 0,
+    "cache_hits": 50,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cached_input_tokens": 97137,
+    "cached_output_tokens": 31124
+  },
+  "table": [
+    {
+      "id": "ratings_fairness",
+      "kind": "literature",
+      "family": "literature",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": -0.02212535070089836,
+      "H1_family_q": 0.48600000000000004,
+      "H2_std": -0.011613714146140703,
+      "H2_family_q": 0.7485882352941176,
+      "replicated": false,
+      "outcome_rule_applied": false,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.010412186033385546,
+        "change_per_year_sd": -0.004837319989928942,
+        "p_value": 0.13686445937876496
+      }
+    },
+    {
+      "id": "lit_poverty_reserves",
+      "kind": "literature",
+      "family": "literature",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.0015633193047859947,
+      "H1_family_q": 0.7485882352941176,
+      "H2_std": 0.022348068943125778,
+      "H2_family_q": 0.0016363636363636365,
+      "replicated": false,
+      "outcome_rule_applied": true,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": 0.005527163592281803,
+        "change_per_year_sd": 0.0006180779604865267,
+        "p_value": 0.223992134298777
+      }
+    },
+    {
+      "id": "lit_unemployment_margin",
+      "kind": "literature",
+      "family": "literature",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": -0.01600484965102519,
+      "H1_family_q": 0.0016363636363636365,
+      "H2_std": -0.016947883749131296,
+      "H2_family_q": 0.0016363636363636365,
+      "replicated": true,
+      "outcome_rule_applied": true,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.0022054318274970083,
+        "change_per_year_sd": -0.003066283762190036,
+        "p_value": 3.569240589446157e-05
+      }
+    },
+    {
+      "id": "lit_income_fundraising",
+      "kind": "literature",
+      "family": "literature",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.045849487335704264,
+      "H1_family_q": 0.0016363636363636365,
+      "H2_std": 0.049135115160358615,
+      "H2_family_q": 0.0016363636363636365,
+      "replicated": false,
+      "outcome_rule_applied": true,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.0010053905930791371,
+        "change_per_year_sd": -0.0072595963291996,
+        "p_value": 1.0974156124653649e-14
+      }
+    },
+    {
+      "id": "lit_income_concentration",
+      "kind": "literature",
+      "family": "literature",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.04207582699668525,
+      "H1_family_q": 0.0016363636363636365,
+      "H2_std": 0.03346570956849369,
+      "H2_family_q": 0.0016363636363636365,
+      "replicated": false,
+      "outcome_rule_applied": false,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.0001412540446870484,
+        "change_per_year_sd": -0.0007052983425523895,
+        "p_value": 0.39740329004481423
+      }
+    },
+    {
+      "id": "lit_density_fundraising",
+      "kind": "literature",
+      "family": "literature",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.051286137596765244,
+      "H1_family_q": 0.0016363636363636365,
+      "H2_std": 0.0577988938530954,
+      "H2_family_q": 0.0016363636363636365,
+      "replicated": true,
+      "outcome_rule_applied": false,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.00023766461381869697,
+        "change_per_year_sd": -0.00329748525561615,
+        "p_value": 0.0016684013437826973
+      }
+    },
+    {
+      "id": "lit_highneed_growth",
+      "kind": "literature",
+      "family": "literature",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": -0.007939672055875736,
+      "H1_family_q": 0.31153846153846154,
+      "H2_std": 0.0002681503273654151,
+      "H2_family_q": 0.9499999999999998,
+      "replicated": false,
+      "outcome_rule_applied": true,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.0029560784384264744,
+        "change_per_year_sd": -0.002450817487087583,
+        "p_value": 0.37869581148248194
+      }
+    },
+    {
+      "id": "lit_uninsured_programs",
+      "kind": "literature",
+      "family": "literature",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.00657613500174865,
+      "H1_family_q": 0.3535714285714286,
+      "H2_std": -0.01911326023721933,
+      "H2_family_q": 0.058499999999999996,
+      "replicated": false,
+      "outcome_rule_applied": false,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": 0.00015829650069652563,
+        "change_per_year_sd": 0.000741521624107139,
+        "p_value": 0.4228244404034924
+      }
+    },
+    {
+      "id": "lit_housing_debt",
+      "kind": "literature",
+      "family": "literature",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.047648896180097364,
+      "H1_family_q": 0.0016363636363636365,
+      "H2_std": 0.028028329132954995,
+      "H2_family_q": 0.0016363636363636365,
+      "replicated": true,
+      "outcome_rule_applied": true,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": 0.0014100968932163741,
+        "change_per_year_sd": 0.002967472721266424,
+        "p_value": 6.820899095241498e-05
+      }
+    },
+    {
+      "id": "pos_poverty_programs",
+      "kind": "positive_control",
+      "family": "controls",
+      "verdict": "supported",
+      "verdict_within_theory": "supported",
+      "H1_std": -0.24331015002142684,
+      "H1_family_q": 0.0016,
+      "H2_std": -0.24371369263777765,
+      "H2_family_q": 0.0016,
+      "replicated": true,
+      "outcome_rule_applied": false
+    },
+    {
+      "id": "pos_uninsured_admin",
+      "kind": "positive_control",
+      "family": "controls",
+      "verdict": "supported",
+      "verdict_within_theory": "supported",
+      "H1_std": 0.24079184099611134,
+      "H1_family_q": 0.0016,
+      "H2_std": 0.24834407009404008,
+      "H2_family_q": 0.0016,
+      "replicated": true,
+      "outcome_rule_applied": false
+    },
+    {
+      "id": "pos_highneed_rating",
+      "kind": "positive_control",
+      "family": "controls",
+      "verdict": "supported",
+      "verdict_within_theory": "supported",
+      "H1_std": -0.2713834742197875,
+      "H1_family_q": 0.0016,
+      "H2_std": -0.2609004948111495,
+      "H2_family_q": 0.0016,
+      "replicated": true,
+      "outcome_rule_applied": false
+    },
+    {
+      "id": "pos_unemployment_margin",
+      "kind": "positive_control",
+      "family": "controls",
+      "verdict": "supported",
+      "verdict_within_theory": "supported",
+      "H1_std": -0.25303513804243055,
+      "H1_family_q": 0.0016,
+      "H2_std": -0.2569811318616417,
+      "H2_family_q": 0.0016,
+      "replicated": true,
+      "outcome_rule_applied": true
+    },
+    {
+      "id": "pos_poverty_leverage",
+      "kind": "positive_control",
+      "family": "controls",
+      "verdict": "supported",
+      "verdict_within_theory": "supported",
+      "H1_std": 0.2739685323004963,
+      "H1_family_q": 0.0016,
+      "H2_std": 0.2626601259401099,
+      "H2_family_q": 0.0016,
+      "replicated": true,
+      "outcome_rule_applied": true
+    },
+    {
+      "id": "neg_population_admin",
+      "kind": "negative_control",
+      "family": "controls",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.002556071040358302,
+      "H1_family_q": 0.52,
+      "H2_std": 0.0011459431811098768,
+      "H2_family_q": 0.752,
+      "replicated": false,
+      "outcome_rule_applied": false
+    },
+    {
+      "id": "neg_education_programs",
+      "kind": "negative_control",
+      "family": "controls",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": 0.0021789959350570153,
+      "H1_family_q": 0.752,
+      "H2_std": 0.0013763744088188753,
+      "H2_family_q": 0.752,
+      "replicated": false,
+      "outcome_rule_applied": false
+    },
+    {
+      "id": "neg_crime_programs",
+      "kind": "negative_control",
+      "family": "controls",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "H1_std": -9.7145778264926e-05,
+      "H1_family_q": 0.984,
+      "H2_std": -0.004503986927954589,
+      "H2_family_q": 0.28654545454545455,
+      "replicated": false,
+      "outcome_rule_applied": false
+    }
+  ]
+}

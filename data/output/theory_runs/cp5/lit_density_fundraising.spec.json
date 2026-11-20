@@ -1,0 +1,123 @@
+{
+  "spec_version": 1,
+  "theory_id": "lit_density_fundraising",
+  "theory": "Where more nonprofits compete for the same local donors, each one spends a larger share of its budget on fundraising.",
+  "source": "Scout mapping: fundraising_expense_ratio ~ nonprofit_density",
+  "written_by": "Planner agent (claude-sonnet-5-5)",
+  "outcome": "fundraising_expense_ratio",
+  "exposure": "nonprofit_density",
+  "exposure_type": "continuous",
+  "expected_sign": 1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": [
+      "990"
+    ],
+    "require_true": [
+      "has_county"
+    ],
+    "require_present": [
+      "fundraising_expense_ratio",
+      "nonprofit_density",
+      "log_revenue",
+      "category",
+      "county_fips",
+      "state",
+      "tax_year",
+      "median_household_income",
+      "poverty_rate",
+      "population",
+      "revenue_concentration"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Fundraising expense ratio is positively correlated with county nonprofit density.",
+      "method": "correlation"
+    },
+    {
+      "id": "H2",
+      "claim": "The positive association remains after controlling for organization size, county economic conditions and revenue concentration, with sector, state and tax year fixed effects.",
+      "method": "fixed_effects",
+      "controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "population",
+        "revenue_concentration"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "population",
+        "revenue_concentration"
+      ],
+      "categorical": [
+        "category",
+        "state"
+      ],
+      "group": "county_fips",
+      "years": [
+        2022
+      ]
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "population",
+        "revenue_concentration"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "groups": [
+        "county_fips",
+        "tax_year"
+      ]
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {
+      "keep_paths": true,
+      "studentized": true
+    },
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year": 2022,
+    "outcome_rule": {
+      "heavy_tail_ratio": 3.0,
+      "winsorize": [
+        0.01,
+        0.99
+      ]
+    }
+  },
+  "gate_overrides": []
+}
