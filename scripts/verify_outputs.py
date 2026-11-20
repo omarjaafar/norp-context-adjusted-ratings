@@ -69,7 +69,9 @@ def check_extracts_match_manifest() -> str:
 
 
 def check_llm_cache_intact() -> str:
-    """Every cached LLM response matches its stored hashes, so --replay reproduces the specs (CP4)."""
+    """Every cached LLM response matches its stored hashes. This does not show that a script's
+    prompts still hit the cache: CP4's run_cp4.py --replay misses since f825052 (the example spec
+    in every prompt changed), and CP5 replays are checked by a1_unseen_replays."""
     result = LLMClient(replay_only=True).verify_cache()
     assert result["ok"] > 0, "no cache entries"
     assert not result["bad"], f"entries failing their hash: {result['bad']}"
@@ -129,6 +131,102 @@ def check_sweep_rule_before_after() -> str:
     return f"{len(untouched)} unclipped cells identical to CP4; {len(clipped)} clipped"
 
 
+def check_outcome_rule() -> str:
+    """CP5 outcome rule (docs/validator.md 2.8): bounded [0, 1] outcomes are exempt (D-a); an outcome
+    is clipped once at the pooled 1st/99th percentiles when SD > 3x robust SD (D-b); after one clip
+    4 outcomes stay above 3 and are logged, not clipped again (D-c)."""
+    d = _load("data/output/outcome_rule_check.json")
+    thr = d["rule"]["heavy_tail_ratio"]
+    clipped, above_after = [], []
+    for name, o in d["outcomes"].items():
+        log, before, after = o["rule_log"], o["before"], o["after"]
+        if name in d["bounded"]:
+            assert not log["applied"] and before == after, f"{name} is bounded but changed"
+            continue
+        assert log["applied"] == (before["sd_over_robust_sd"] > thr), f"{name}: rule fired wrongly"
+        if log["applied"]:
+            clipped.append(name)
+            assert after["max"] <= log["upper"] and after["min"] >= log["lower"], name
+            if after["sd_over_robust_sd"] > thr:
+                above_after.append(name)
+    fr = d["outcomes"]["fundraising_expense_ratio"]
+    assert fr["without_exemption"]["applied"] and not fr["rule_log"]["applied"], "fundraising share"
+    assert len(clipped) == 5 and len(above_after) == 4, f"clipped {clipped}, above after {above_after}"
+    return f"{len(clipped)} clipped, {len(above_after)} still above {thr:g}; fundraising share exempt"
+
+
+def check_heavy_tail_controls() -> str:
+    """CP5 V2 (CP4 feedback F4): a 0.25 SD effect planted raw in operating margin and in liabilities
+    to assets is supported with the rule, unsupported without it, and the unplanted version is
+    unsupported."""
+    ctl = _load("data/output/controls_heavy_tail.json")["controls"]
+    for name, c in ctl.items():
+        assert c["planted_rule"]["verdict"] == "supported", f"{name} not recovered with the rule"
+        assert c["planted_no_rule"]["verdict"] != "supported", f"{name} found without the rule"
+        assert c["no_effect_rule"]["verdict"] == "unsupported", f"{name} unplanted not unsupported"
+        assert c["finding_holds"], name
+    effects = ", ".join(f"{c['planted_rule']['H1_standardized']:+.3f}" for c in ctl.values())
+    return f"{len(ctl)} heavy-tail controls recovered only with the rule (H1 {effects} SD)"
+
+
+def check_heavy_tail_placebos() -> str:
+    """CP5 V6: on both heavy-tailed outcomes, 0 of 8 placebos is called anything but unsupported
+    after the family correction, and the planted 0.25 SD control survives it."""
+    ctl = _load("data/output/controls_family_heavy_tail.json")["controls"]
+    for name, c in ctl.items():
+        pl = [t for t in c["theories"] if t["kind"] == "placebo"]
+        fp = [t["theory_id"] for t in pl if t["verdict_family"] != "unsupported"]
+        assert len(pl) == 8 and not fp and c["family_false_positives"] == 0, f"{name}: {fp}"
+        planted = [t for t in c["theories"] if t["kind"] == "planted"]
+        assert planted and all(t["verdict_family"] == "supported" for t in planted), name
+    return f"{len(ctl)} outcomes x 8 placebos: 0 false positives; planted control survives"
+
+
+def check_cp5_reruns() -> str:
+    """CP5 V4: T1-T5 rerun under the rule; each verdict and family q follows from the stored
+    numbers, and T1/T4 (outcomes the rule does not clip) keep their CP4 effects."""
+    review = _script("review_theory_runs").review(OUT / "theory_runs" / "cp5_reruns")
+    assert review["all_follow"] and review["all_current_gate"], "a rerun verdict does not follow"
+    cp4 = {t["theory_id"]: t for t in _load("data/output/theory_runs/cp4/review.json")["theories"]}
+    for t in review["theories"]:
+        rep = _load(f"data/output/theory_runs/cp5_reruns/{t['theory_id']}.json")
+        if not rep["population"]["outcome_rule"].get("applied"):
+            for h in ("H1_standardized", "H2_standardized"):
+                assert abs(t[h] - cp4[t["theory_id"]][h]) < 1e-9, f"{t['theory_id']} {h} moved"
+    return f"{len(review['theories'])} reruns follow; " + ", ".join(sorted({t['verdict_recomputed'] for t in review['theories']}))
+
+
+def check_a1_unseen() -> str:
+    """CP5 O3: A1 on the 40 unseen benchmark texts, first pass. The rate is recomputed from the
+    rows, and the committed cache replays every row with no API call."""
+    d = _load("data/output/assumption_1_unseen.json")
+    rows = d["rows"]
+    passes = sum(bool(r["schema_valid"] and not r.get("review")) for r in rows)
+    assert len(rows) == d["texts"] == 40 and passes == d["pass_schema_and_review"], "rate does not follow"
+    return f"{passes}/{len(rows)} pass ({passes / len(rows):.1%}, needed {d['needed_rate']:.0%})"
+
+
+def check_a1_unseen_replays() -> str:
+    """The committed LLM cache reproduces every A1 row offline (measure_assumption1_benchmark --replay)."""
+    import contextlib
+    import io
+    import tempfile
+    d = _load("data/output/assumption_1_unseen.json")
+    mod = _script("measure_assumption1_benchmark")
+    with tempfile.TemporaryDirectory() as tmp:
+        out = Path(tmp) / "a1.json"
+        argv, sys.argv = sys.argv, ["measure_assumption1_benchmark", "--replay", "--out", str(out)]
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                mod.main()
+        finally:
+            sys.argv = argv
+        again = json.loads(out.read_text(encoding="utf-8"))
+    assert again["usage"]["calls"] == 0, "replay made a live call"
+    assert again["rows"] == d["rows"], "replayed rows differ from the committed first pass"
+    return f"{again['usage']['cache_hits']} cache hits, 0 calls, rows identical"
+
+
 def check_panel_hash() -> str:
     """The rebuilt panel's uncompressed CSV has the sha256 and row count in panel_join_log.json."""
     log = _load("data/output/panel_join_log.json")["panel"]
@@ -147,6 +245,12 @@ CHECKS = {
     "outcome_tails": check_outcome_tails,
     "sweep_cells": check_sweep_cells,
     "sweep_rule_before_after": check_sweep_rule_before_after,
+    "outcome_rule": check_outcome_rule,
+    "heavy_tail_controls": check_heavy_tail_controls,
+    "heavy_tail_placebos": check_heavy_tail_placebos,
+    "cp5_reruns_follow": check_cp5_reruns,
+    "a1_unseen": check_a1_unseen,
+    "a1_unseen_replays": check_a1_unseen_replays,
 }
 SLOW = {"panel_hash": check_panel_hash}
 
