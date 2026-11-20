@@ -8,3 +8,6 @@ data/raw/
 
 # CP2: rebuilt from committed extracts by scripts/build_panel.py
 data/derived/org_year_panel.csv.gz
+
+# CP5 README quickstart writes here; never committed
+data/output/theory_runs/quickstart/

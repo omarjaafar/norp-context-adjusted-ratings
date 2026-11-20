@@ -228,12 +228,15 @@ def check_a1_unseen_replays() -> str:
 
 
 def check_panel_hash() -> str:
-    """The rebuilt panel's uncompressed CSV has the sha256 and row count in panel_join_log.json."""
-    log = _load("data/output/panel_join_log.json")["panel"]
+    """The rebuilt panel's uncompressed CSV has the sha256 and row count in panel_join_log.json AS
+    COMMITTED at HEAD. build_panel.py rewrites the working copy of the log, so reading that copy
+    would compare a fresh panel with its own hash."""
+    cph = _script("check_panel_hash")
+    log = json.loads(cph.git("show", "HEAD:data/output/panel_join_log.json"))["panel"]
     path = REPO_ROOT / log["path"]
     if not path.exists():
         raise Skip(f"{log['path']} not built (python scripts/build_panel.py)")
-    digest, rows, _ = _script("check_panel_hash").csv_hash_and_rows(path)
+    digest, rows, _ = cph.csv_hash_and_rows(path)
     assert (digest, rows) == (log["sha256_csv"], log["rows"]), f"{digest[:8]}..., {rows} rows"
     return f"{rows:,} rows, sha256_csv {digest[:8]}..."
 
