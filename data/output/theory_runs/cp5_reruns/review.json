@@ -1,0 +1,213 @@
+{
+  "run_dir": "data/output/theory_runs/cp5_reruns",
+  "family_size": 10,
+  "all_follow": true,
+  "all_current_gate": true,
+  "theories": [
+    {
+      "theory_id": "distressed_county_rating_penalty",
+      "gold_id": "ratings_fairness",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 not significant after FDR (q = 0.4833)",
+        "H1 gap -0.022 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": -0.02212535070089836,
+      "H1_family_q": 0.4833333333333333,
+      "H2_standardized": -0.011613714146140687,
+      "H2_family_q": 0.702,
+      "replicated": false,
+      "folds_with_expected_sign": 0,
+      "gate_problems": [],
+      "cp4": {
+        "verdict": "unsupported",
+        "H1_standardized": -0.02212535070089836,
+        "H2_standardized": -0.011613714146140703,
+        "outcome_sd": 2.152469974089619
+      },
+      "outcome_rule": {
+        "applied": false,
+        "sd_over_robust_sd": 0.8904109194459311,
+        "threshold": 3.0,
+        "raw_sd": 2.152469974089619,
+        "raw_robust_sd": 2.4173894626416077
+      },
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 0.13686445937876857
+    },
+    {
+      "theory_id": "education_fundraising_cost",
+      "gold_id": "education_fundraising",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 gap +0.065 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": 0.06542654832510562,
+      "H1_family_q": 0.0014285714285714286,
+      "H2_standardized": 0.055141459583707184,
+      "H2_family_q": 0.0014285714285714286,
+      "replicated": false,
+      "folds_with_expected_sign": 0,
+      "gate_problems": [],
+      "cp4": {
+        "verdict": "unsupported",
+        "H1_standardized": -7.938857033060286e-05,
+        "H2_standardized": -0.0007919588252793118,
+        "outcome_sd": 43.916381311809516
+      },
+      "outcome_rule": {
+        "applied": true,
+        "sd_over_robust_sd": 1236.6221048375169,
+        "threshold": 3.0,
+        "raw_sd": 43.916381311809516,
+        "raw_robust_sd": 0.035513178310507244,
+        "quantiles": [
+          0.01,
+          0.99
+        ],
+        "lower": 0.0,
+        "upper": 0.9675524285277766,
+        "rows_clipped": 11035,
+        "sd_after": 0.13861358775685695,
+        "sd_over_robust_sd_after": 3.903159175022234,
+        "pooled_over_years": true,
+        "still_above_threshold_after": true
+      },
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 1.7849575392785747e-05
+    },
+    {
+      "theory_id": "health_burden_thin_margins",
+      "gold_id": "health_margin",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 gap -0.013 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": -0.012534985593370629,
+      "H1_family_q": 0.013749999999999998,
+      "H2_standardized": 0.04813986619173461,
+      "H2_family_q": 0.0014285714285714286,
+      "replicated": false,
+      "folds_with_expected_sign": 0,
+      "gate_problems": [],
+      "cp4": {
+        "verdict": "unsupported",
+        "H1_standardized": -0.00044253372435780903,
+        "H2_standardized": 0.006084418088847177,
+        "outcome_sd": 2506.489634764112
+      },
+      "outcome_rule": {
+        "applied": true,
+        "sd_over_robust_sd": 12754.250613422342,
+        "threshold": 3.0,
+        "raw_sd": 2506.489634764112,
+        "raw_robust_sd": 0.19652190557760624,
+        "quantiles": [
+          0.01,
+          0.99
+        ],
+        "lower": -5.328856190846798,
+        "upper": 0.9582074615495034,
+        "rows_clipped": 29368,
+        "sd_after": 0.7200436752856586,
+        "sd_over_robust_sd_after": 3.6639359524290502,
+        "pooled_over_years": true,
+        "still_above_threshold_after": true
+      },
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 0.05563472323099785
+    },
+    {
+      "theory_id": "unemployment_leverage",
+      "gold_id": "unemployment_vulnerability",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 gap +0.045 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": 0.04486606554253043,
+      "H1_family_q": 0.0014285714285714286,
+      "H2_standardized": 0.036660316171960104,
+      "H2_family_q": 0.0014285714285714286,
+      "replicated": true,
+      "folds_with_expected_sign": 5,
+      "gate_problems": [],
+      "cp4": {
+        "verdict": "unsupported",
+        "H1_standardized": 0.001176449735650106,
+        "H2_standardized": 0.0012218776342997188,
+        "outcome_sd": 154.24920696353556
+      },
+      "outcome_rule": {
+        "applied": true,
+        "sd_over_robust_sd": 664.1463303763081,
+        "threshold": 3.0,
+        "raw_sd": 154.24920696353556,
+        "raw_robust_sd": 0.23225183955490247,
+        "quantiles": [
+          0.01,
+          0.99
+        ],
+        "lower": 0.0,
+        "upper": 3.0728000044863393,
+        "rows_clipped": 14637,
+        "sd_after": 0.47470271966824074,
+        "sd_over_robust_sd_after": 2.043913712709366,
+        "pooled_over_years": true,
+        "still_above_threshold_after": false
+      },
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 0.0015250238593435743
+    },
+    {
+      "theory_id": "violence_admin_overhead_share",
+      "gold_id": "crime_overhead",
+      "verdict": "unsupported",
+      "verdict_recomputed": "unsupported",
+      "verdict_follows": true,
+      "reasons": [
+        "H1 gap +0.027 SD is below the 0.1 SD floor"
+      ],
+      "family_q_matches": true,
+      "H1_standardized": 0.026754595944600123,
+      "H1_family_q": 0.0014285714285714286,
+      "H2_standardized": 0.035378549970869755,
+      "H2_family_q": 0.0014285714285714286,
+      "replicated": true,
+      "folds_with_expected_sign": 5,
+      "gate_problems": [],
+      "cp4": {
+        "verdict": "unsupported",
+        "H1_standardized": 0.026754595944603173,
+        "H2_standardized": 0.03537854997213238,
+        "outcome_sd": 0.20173850735970728
+      },
+      "outcome_rule": {
+        "applied": false,
+        "reason": "bounded outcome [0, 1]: exempt (D-a)",
+        "bounded": [
+          0,
+          1
+        ]
+      },
+      "gold_disagreements": [],
+      "years_H1_holds": [],
+      "trend_p": 0.04479958340244324
+    }
+  ]
+}

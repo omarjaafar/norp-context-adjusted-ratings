@@ -22,9 +22,18 @@ from __future__ import annotations
 import argparse
 import datetime
 import json
+import os
 import sys
 import time
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
+
+# OpenBLAS spreads the gate's many small matrix products over every core and the threads
+# fight: one T1 run at 199 permutations took 6.4 min (60 CPU-min) multi-threaded and
+# 2.0 min single-threaded on a 22-core machine. Pin BLAS to one thread before numpy loads;
+# run theories side by side with --jobs instead.
+for _var in ("OPENBLAS_NUM_THREADS", "OMP_NUM_THREADS", "MKL_NUM_THREADS"):
+    os.environ.setdefault(_var, "1")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -35,6 +44,15 @@ from theorylab.spec import lock_gate, validate_spec  # noqa: E402
 from theorylab.theory_run import RUNS_DIR, available_columns, write_report  # noqa: E402
 
 
+def _execute(spec: dict, n_permutations, by_year: bool) -> tuple[dict, float]:
+    """One theory in its own process: load only its columns, run, return (report, seconds)."""
+    orch = Orchestrator(LLMClient(replay_only=True), use_scout=False,
+                        n_permutations=n_permutations, by_year=by_year)
+    t0 = time.time()
+    report = orch.execute(spec, orch.panel_for([spec]))
+    return report, round(time.time() - t0, 1)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--from", dest="src", default="cp4")
@@ -42,6 +60,7 @@ def main() -> int:
     ap.add_argument("--permutations", type=int, default=None, help="default: the gate policy's 999")
     ap.add_argument("--no-by-year", action="store_true")
     ap.add_argument("--only", default=None, help="comma-separated theory ids (e.g. a README quickstart row)")
+    ap.add_argument("--jobs", type=int, default=1, help="theories run side by side (each loads its own columns)")
     args = ap.parse_args()
     src, dst = RUNS_DIR / args.src, RUNS_DIR / args.dst
     if dst.resolve() == src.resolve():
@@ -59,16 +78,15 @@ def main() -> int:
         if errors:
             raise SystemExit(f"{path.name}: {errors}")
         specs.append(spec)
-    orch = Orchestrator(LLMClient(replay_only=True), use_scout=False,
-                        n_permutations=args.permutations, by_year=not args.no_by_year)
-    panel = orch.panel_for(specs)
-    reports, seconds = [], {}
-    for spec in specs:
-        t0 = time.time()
-        reports.append(orch.execute(spec, panel))
-        seconds[spec["theory_id"]] = round(time.time() - t0, 1)
-        print(f"{spec['theory_id']:34s} {reports[-1]['verdict']:11s} ({seconds[spec['theory_id']]} s)",
-              flush=True)
+    t_all = time.time()
+    with ProcessPoolExecutor(max_workers=max(1, args.jobs)) as pool:
+        futures = [pool.submit(_execute, spec, args.permutations, not args.no_by_year) for spec in specs]
+        reports, seconds = [], {}
+        for spec, fut in zip(specs, futures):
+            rep, secs = fut.result()
+            reports.append(rep)
+            seconds[spec["theory_id"]] = secs
+            print(f"{spec['theory_id']:34s} {rep['verdict']:11s} ({secs} s)", flush=True)
     family = apply_family(reports, {s["theory_id"]: int(s["expected_sign"]) for s in specs})
     dst.mkdir(parents=True, exist_ok=True)
     for spec, rep in zip(specs, family):
@@ -76,6 +94,7 @@ def main() -> int:
         (dst / f"{rep['theory_id']}.spec.json").write_text(json.dumps(spec, indent=2), encoding="utf-8")
     summary = {"generated_at": datetime.datetime.now().isoformat(timespec="seconds"),
                "rerun_of": f"theory_runs/{args.src}", "llm_calls": 0, "seconds_per_theory": seconds,
+               "seconds_wall": round(time.time() - t_all, 1), "jobs": args.jobs,
                "theories": [{"theory_id": r["theory_id"], "verdict": r["verdict"],
                              "verdict_within_theory": r["verdict_within_theory"],
                              "outcome_rule_applied": r["population"]["outcome_rule"].get("applied"),

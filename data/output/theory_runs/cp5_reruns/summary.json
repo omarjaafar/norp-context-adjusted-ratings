@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-11-19T21:40:55",
+  "rerun_of": "theory_runs/cp4",
+  "llm_calls": 0,
+  "seconds_per_theory": {
+    "distressed_county_rating_penalty": 247.0,
+    "education_fundraising_cost": 242.7,
+    "health_burden_thin_margins": 256.0,
+    "unemployment_leverage": 235.7,
+    "violence_admin_overhead_share": 537.0
+  },
+  "seconds_wall": 537.2,
+  "jobs": 5,
+  "theories": [
+    {
+      "theory_id": "distressed_county_rating_penalty",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "outcome_rule_applied": false,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.010412186033385461,
+        "change_per_year_sd": -0.004837319989928902,
+        "p_value": 0.13686445937876857
+      }
+    },
+    {
+      "theory_id": "education_fundraising_cost",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "outcome_rule_applied": true,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.00048650893084859024,
+        "change_per_year_sd": -0.003509821358220515,
+        "p_value": 1.7849575392785747e-05
+      }
+    },
+    {
+      "theory_id": "health_burden_thin_margins",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "outcome_rule_applied": true,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": -0.000963754478624505,
+        "change_per_year_sd": -0.0013384666954294967,
+        "p_value": 0.05563472323099785
+      }
+    },
+    {
+      "theory_id": "unemployment_leverage",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "outcome_rule_applied": true,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": 0.0018994267253166957,
+        "change_per_year_sd": 0.0040012973311890085,
+        "p_value": 0.0015250238593435743
+      }
+    },
+    {
+      "theory_id": "violence_admin_overhead_share",
+      "verdict": "unsupported",
+      "verdict_within_theory": "unsupported",
+      "outcome_rule_applied": false,
+      "years_H1_holds": [],
+      "years_H2_holds": [],
+      "trend": {
+        "change_per_year": 0.00027453955632629305,
+        "change_per_year_sd": 0.001360868383133116,
+        "p_value": 0.04479958340244324
+      }
+    }
+  ]
+}

@@ -1,0 +1,1093 @@
+{
+  "generated_at": "2026-11-19T21:39:55",
+  "theory_id": "violence_admin_overhead_share",
+  "theory": "Nonprofits in more violent places spend a bigger slice of their budget on running the organization itself rather than on programs or fundraising.",
+  "exposure_type": "continuous",
+  "verdict": "unsupported",
+  "reasons": [
+    "H1 gap +0.027 SD is below the 0.1 SD floor"
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year_for_information": 2022,
+    "permutation_unit": "county_fips",
+    "permutation_within": "tax_year",
+    "permutation_keep_paths": true,
+    "permutation_studentized": true,
+    "fdr_family": "all primary hypotheses in the run (10)",
+    "family_alpha": 0.05
+  },
+  "rating": {
+    "anchors": {
+      "program_expense_ratio": [
+        0.65,
+        0.85
+      ],
+      "admin_expense_ratio": [
+        0.35,
+        0.15
+      ],
+      "fundraising_efficiency": [
+        0.35,
+        0.1
+      ],
+      "liabilities_to_assets": [
+        1.0,
+        0.0
+      ]
+    },
+    "min_components": 3,
+    "rescored": false
+  },
+  "population": {
+    "rows_in": 2390744,
+    "after_return_type": 1531303,
+    "after_admin_expense_ratio_present": 1339606,
+    "after_chr_violent_crime_rate_present": 1287136,
+    "after_log_revenue_present": 1275829,
+    "after_category_present": 1275829,
+    "after_county_fips_present": 1275829,
+    "after_state_present": 1275829,
+    "after_tax_year_present": 1275829,
+    "after_poverty_rate_present": 1275814,
+    "after_median_household_income_present": 1275809,
+    "outcome_rule": {
+      "applied": false,
+      "reason": "bounded outcome [0, 1]: exempt (D-a)",
+      "bounded": [
+        0,
+        1
+      ]
+    },
+    "rows_out": 1275809,
+    "units": 2900,
+    "exposure_mean": 405.8559810388963,
+    "exposure_sd": 274.41012108405283
+  },
+  "outcome_sd": 0.20173850735970728,
+  "H1": {
+    "claim": "The admin expense ratio is positively correlated with the county violent crime rate.",
+    "method": "correlation",
+    "effect": 0.026754595944600123,
+    "standardized_effect": 0.026754595944600123,
+    "mean_exposed": null,
+    "mean_unexposed": null,
+    "n_exposed": null,
+    "n_unexposed": null,
+    "welch_t_p_value_rows_independent": null,
+    "permutation": {
+      "observed": 8.816711359491457,
+      "p_value": 0.001,
+      "n_permutations": 999,
+      "units_permuted": 2900,
+      "null_mean": -0.04794520317304089,
+      "null_sd": 1.0777606878946187,
+      "seed": 6235,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": 0.005397432250875427,
+        "p_value": 0.001,
+        "null_mean": -3.645968756163723e-05,
+        "null_sd": 0.0011406727112841918
+      }
+    },
+    "q_value": 0.001,
+    "family_q_value": 0.0014285714285714286
+  },
+  "H2": {
+    "claim": "The positive association remains after controlling for organization size (log revenue), county economic context (poverty rate, median household income), and absorbing sector (NORP category), state and tax year.",
+    "method": "fixed_effects",
+    "fit": {
+      "method": "fixed_effects",
+      "outcome": "admin_expense_ratio",
+      "exposure": "chr_violent_crime_rate",
+      "effect": 0.007137215863674079,
+      "std_error": 0.0007335483634855051,
+      "p_value": 4.876063614832806e-22,
+      "n_obs": 1275809,
+      "standardized_effect": 0.035378549970869755,
+      "n_groups": 2900,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": -0.014256981019427383,
+            "std_error": 0.00035823801756329574,
+            "p_value": 9.966524952990019e-277
+          },
+          "poverty_rate": {
+            "coef": 0.008579423575180933,
+            "std_error": 0.021878161331827663,
+            "p_value": 0.6949795006187287
+          },
+          "median_household_income": {
+            "coef": 1.8373944647281176e-07,
+            "std_error": 5.18889002530411e-08,
+            "p_value": 0.00040486593620435196
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 5,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 2899,
+        "outcome_sd": 0.20173850735970728
+      }
+    },
+    "permutation": {
+      "observed": 9.604913156720334,
+      "p_value": 0.001,
+      "n_permutations": 999,
+      "units_permuted": 2900,
+      "null_mean": -0.0347606509821142,
+      "null_sd": 1.0728092530462618,
+      "seed": 6236,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": 0.007137215863590366,
+        "p_value": 0.001,
+        "null_mean": -4.146528800525652e-05,
+        "null_sd": 0.000928486429602058
+      }
+    },
+    "q_value": 0.001,
+    "family_q_value": 0.0014285714285714286
+  },
+  "replication": {
+    "by": "state",
+    "n_folds": 5,
+    "seed": 6237,
+    "rule": "expected sign in every held-out fold and inverse-variance-pooled held-out p < alpha",
+    "folds": [
+      {
+        "fold": 0,
+        "held_out": [
+          "DE",
+          "HI",
+          "ID",
+          "ME",
+          "MI",
+          "MN",
+          "RI",
+          "TN",
+          "UT",
+          "WI"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.007070179679524063,
+          "std_error": 0.0008098707976937392,
+          "p_value": 4.599309791943109e-18,
+          "n_obs": 1114909,
+          "standardized_effect": 0.03489165552351925,
+          "n_groups": 2471,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.014455514062134038,
+                "std_error": 0.0003863441964780891,
+                "p_value": 3.873288945612014e-243
+              },
+              "poverty_rate": {
+                "coef": 0.008332257344718222,
+                "std_error": 0.0232546480868151,
+                "p_value": 0.7201456743544272
+              },
+              "median_household_income": {
+                "coef": 1.8354937303478693e-07,
+                "std_error": 5.46259212388988e-08,
+                "p_value": 0.0007909427711341431
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2470,
+            "outcome_sd": 0.2026323937182717
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.00737869031992138,
+          "std_error": 0.0017683880935254785,
+          "p_value": 3.649397376827533e-05,
+          "n_obs": 160900,
+          "standardized_effect": 0.03775852183835572,
+          "n_groups": 429,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.012723905253327417,
+                "std_error": 0.0007342060812478052,
+                "p_value": 2.3285535143004032e-51
+              },
+              "poverty_rate": {
+                "coef": 0.0031939899695540216,
+                "std_error": 0.05471428102935362,
+                "p_value": 0.9534765345846591
+              },
+              "median_household_income": {
+                "coef": 1.686830655585368e-07,
+                "std_error": 1.3414218260173232e-07,
+                "p_value": 0.20926030739596738
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 428,
+            "outcome_sd": 0.19541788080342662
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 1,
+        "held_out": [
+          "AR",
+          "AZ",
+          "CA",
+          "GA",
+          "MA",
+          "MS",
+          "NC",
+          "OR",
+          "SC",
+          "TX"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.008016710101658081,
+          "std_error": 0.0008364871168256723,
+          "p_value": 2.482824447127267e-21,
+          "n_obs": 877078,
+          "standardized_effect": 0.03985897975559243,
+          "n_groups": 2148,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.014007551365107831,
+                "std_error": 0.0004690107883341047,
+                "p_value": 3.264975464116809e-164
+              },
+              "poverty_rate": {
+                "coef": 0.005805288781335363,
+                "std_error": 0.025448144878976904,
+                "p_value": 0.8195729043777494
+              },
+              "median_household_income": {
+                "coef": 2.887095767972748e-07,
+                "std_error": 5.2459198301026666e-08,
+                "p_value": 4.167416831620836e-08
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2147,
+            "outcome_sd": 0.20112682639683704
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.005122454287209203,
+          "std_error": 0.0014716147344180357,
+          "p_value": 0.0005287178855402494,
+          "n_obs": 398731,
+          "standardized_effect": 0.02522437561542442,
+          "n_groups": 752,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.014801013520781283,
+                "std_error": 0.00052238053288281,
+                "p_value": 1.0976268466545708e-120
+              },
+              "poverty_rate": {
+                "coef": 0.012544248756307469,
+                "std_error": 0.037758515982132104,
+                "p_value": 0.7398135543482033
+              },
+              "median_household_income": {
+                "coef": 2.1199303949403408e-09,
+                "std_error": 8.231752329082855e-08,
+                "p_value": 0.9794611213684816
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 9,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 751,
+            "outcome_sd": 0.2030755633085673
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 2,
+        "held_out": [
+          "AK",
+          "FL",
+          "IA",
+          "KY",
+          "MD",
+          "NH",
+          "NY",
+          "OK",
+          "SD",
+          "VA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.007092355902850721,
+          "std_error": 0.0008152772674821814,
+          "p_value": 6.316200090034733e-18,
+          "n_obs": 987211,
+          "standardized_effect": 0.03529137082217666,
+          "n_groups": 2256,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.013731141491019975,
+                "std_error": 0.00036938063533861076,
+                "p_value": 2.4446673628495325e-236
+              },
+              "poverty_rate": {
+                "coef": 0.007795048292565696,
+                "std_error": 0.025928248870505183,
+                "p_value": 0.7637173419903251
+              },
+              "median_household_income": {
+                "coef": 1.3438271585662082e-07,
+                "std_error": 6.660490714636838e-08,
+                "p_value": 0.04375015864120732
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 9,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2255,
+            "outcome_sd": 0.20096572441425176
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.0074415692380807915,
+          "std_error": 0.0014505848437379478,
+          "p_value": 3.840049779871514e-07,
+          "n_obs": 288598,
+          "standardized_effect": 0.036414648083384286,
+          "n_groups": 644,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.015888362432832287,
+                "std_error": 0.0007955146087996826,
+                "p_value": 2.0610150114215024e-69
+              },
+              "poverty_rate": {
+                "coef": -0.0005614932274608242,
+                "std_error": 0.041300817410254945,
+                "p_value": 0.9891571441798664
+              },
+              "median_household_income": {
+                "coef": 2.6519734619616386e-07,
+                "std_error": 6.782628486695989e-08,
+                "p_value": 0.0001021213022542952
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 10
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 643,
+            "outcome_sd": 0.20435647822383654
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 3,
+        "held_out": [
+          "IN",
+          "KS",
+          "MO",
+          "ND",
+          "NE",
+          "NV",
+          "OH",
+          "VT",
+          "WV",
+          "WY"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.007103520752649051,
+          "std_error": 0.000850272602999918,
+          "p_value": 1.1158358787959748e-16,
+          "n_obs": 1122513,
+          "standardized_effect": 0.03522886302571279,
+          "n_groups": 2324,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.014592900784017692,
+                "std_error": 0.0003644845450492984,
+                "p_value": 5.1289573650403365e-267
+              },
+              "poverty_rate": {
+                "coef": 0.01722797603676948,
+                "std_error": 0.023683796987421967,
+                "p_value": 0.46704437722746284
+              },
+              "median_household_income": {
+                "coef": 1.726099152647111e-07,
+                "std_error": 5.341062705888289e-08,
+                "p_value": 0.0012475429821298626
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2323,
+            "outcome_sd": 0.20163922825054964
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.0075107777664500065,
+          "std_error": 0.0012996018693172664,
+          "p_value": 1.2305275723240726e-08,
+          "n_obs": 153296,
+          "standardized_effect": 0.03710474568010379,
+          "n_groups": 576,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.01180301281413967,
+                "std_error": 0.0010561527120442797,
+                "p_value": 2.243726080233069e-26
+              },
+              "poverty_rate": {
+                "coef": 0.011412362361705147,
+                "std_error": 0.049630415220316845,
+                "p_value": 0.8182147747501715
+              },
+              "median_household_income": {
+                "coef": 6.293350472911079e-07,
+                "std_error": 1.6256159108101287e-07,
+                "p_value": 0.00012064173711187234
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 575,
+            "outcome_sd": 0.2024209472072306
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 4,
+        "held_out": [
+          "AL",
+          "CO",
+          "DC",
+          "IL",
+          "LA",
+          "MT",
+          "NJ",
+          "NM",
+          "PA",
+          "WA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.006564103183634823,
+          "std_error": 0.0007586008096629027,
+          "p_value": 9.032668614593106e-18,
+          "n_obs": 1001525,
+          "standardized_effect": 0.03247218988047113,
+          "n_groups": 2401,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.014379793789578066,
+                "std_error": 0.00041467216374907554,
+                "p_value": 5.945599685631136e-214
+              },
+              "poverty_rate": {
+                "coef": 0.000655943845577038,
+                "std_error": 0.02350749994794236,
+                "p_value": 0.9777413581273415
+              },
+              "median_household_income": {
+                "coef": 1.5416757444488772e-07,
+                "std_error": 5.597711685320521e-08,
+                "p_value": 0.005929425139759037
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2400,
+            "outcome_sd": 0.20214538064100485
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "admin_expense_ratio",
+          "exposure": "chr_violent_crime_rate",
+          "effect": 0.009619236810398236,
+          "std_error": 0.0016356046792858454,
+          "p_value": 7.47813397639043e-09,
+          "n_obs": 274284,
+          "standardized_effect": 0.048038236545093274,
+          "n_groups": 499,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": -0.013790074994738204,
+                "std_error": 0.0006682290864793324,
+                "p_value": 7.809757940922627e-69
+              },
+              "poverty_rate": {
+                "coef": 0.03546614025684025,
+                "std_error": 0.04392055153013959,
+                "p_value": 0.4197601259979031
+              },
+              "median_household_income": {
+                "coef": 3.1398191061585304e-07,
+                "std_error": 1.0798643137687708e-07,
+                "p_value": 0.0038045750518867077
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 10
+            },
+            "demeaning_sweeps": 10,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 498,
+            "outcome_sd": 0.20024125576234886
+          }
+        },
+        "same_sign": true
+      }
+    ],
+    "folds_with_expected_sign": 5,
+    "pooled_effect": 0.007335401603128079,
+    "pooled_std_error": 0.0006707553488101512,
+    "pooled_p_value": 7.7519363657895215e-28,
+    "heterogeneity": {
+      "cochran_q": 4.235166710249434,
+      "p_value": 0.375114030050724,
+      "i_squared": 0.05552714363765472
+    },
+    "same_sign_in_every_fold": true,
+    "significant_pooled": true,
+    "replicated": true
+  },
+  "replication_year": {
+    "holdout_year": 2022,
+    "train_years": [
+      2018,
+      2019,
+      2020,
+      2021
+    ],
+    "train": {
+      "method": "fixed_effects",
+      "outcome": "admin_expense_ratio",
+      "exposure": "chr_violent_crime_rate",
+      "effect": 0.007154845628537234,
+      "std_error": 0.0007740031764876905,
+      "p_value": 4.4743586401480923e-20,
+      "n_obs": 992249,
+      "standardized_effect": 0.0354800418374463,
+      "n_groups": 2895,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": -0.014381559527426898,
+            "std_error": 0.0003613536867142413,
+            "p_value": 1.1760622750099856e-276
+          },
+          "poverty_rate": {
+            "coef": 0.010094343272432638,
+            "std_error": 0.022313975324057437,
+            "p_value": 0.6510308659651466
+          },
+          "median_household_income": {
+            "coef": 2.052017266439247e-07,
+            "std_error": 5.522334909228327e-08,
+            "p_value": 0.00020635273817822013
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 4,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 2894,
+        "outcome_sd": 0.2016583199455497
+      }
+    },
+    "test": {
+      "method": "fixed_effects",
+      "outcome": "admin_expense_ratio",
+      "exposure": "chr_violent_crime_rate",
+      "effect": 0.006989560198505109,
+      "std_error": 0.0007268076852921006,
+      "p_value": 1.4247161808282693e-21,
+      "n_obs": 283560,
+      "standardized_effect": 0.034601242438239276,
+      "n_groups": 2888,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": -0.013806083790150348,
+            "std_error": 0.0004048602670553457,
+            "p_value": 1.8037937698951201e-214
+          },
+          "poverty_rate": {
+            "coef": 0.013993752450602168,
+            "std_error": 0.02515328237113349,
+            "p_value": 0.578022234554281
+          },
+          "median_household_income": {
+            "coef": 1.4440973575715057e-07,
+            "std_error": 5.2496750370767414e-08,
+            "p_value": 0.005981497900644329
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 1,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 2887,
+        "outcome_sd": 0.20200315670690064
+      }
+    },
+    "same_sign": true,
+    "significant_in_holdout": true,
+    "replicated": true
+  },
+  "robustness": [
+    {
+      "id": "H2_county_means",
+      "method": "two_stage_group_means",
+      "years": null,
+      "result": {
+        "method": "two_stage_group_means",
+        "outcome": "admin_expense_ratio",
+        "exposure": "chr_violent_crime_rate",
+        "effect": 0.007037634557141728,
+        "std_error": 0.0007510995730202968,
+        "p_value": 7.268680261503392e-21,
+        "n_obs": 1275809,
+        "standardized_effect": 0.03488493421136186,
+        "n_groups": 2900,
+        "details": {
+          "groups": [
+            "county_fips"
+          ],
+          "controls": [
+            "log_revenue",
+            "poverty_rate",
+            "median_household_income"
+          ],
+          "absorb": [
+            "tax_year",
+            "category",
+            "state"
+          ],
+          "covariance": "HC1",
+          "outcome_sd": 0.20173850735970728
+        }
+      },
+      "sign_matches_expected": true
+    },
+    {
+      "id": "H2_multilevel",
+      "method": "multilevel",
+      "years": null,
+      "result": {
+        "method": "multilevel",
+        "outcome": "admin_expense_ratio",
+        "exposure": "chr_violent_crime_rate",
+        "effect": 0.007999101730026006,
+        "std_error": 0.0016488133059487397,
+        "p_value": 1.225746994538353e-06,
+        "n_obs": 1275809,
+        "standardized_effect": 0.03965084224482394,
+        "n_groups": 2900,
+        "details": {
+          "fit_seconds": 345.26,
+          "converged": false,
+          "convergence_warnings": [
+            "The MLE may be on the boundary of the parameter space."
+          ],
+          "optimizer": "nm",
+          "attempts": [
+            {
+              "method": "lbfgs",
+              "seconds": 22.82,
+              "valid": false,
+              "warnings": [
+                "The MLE may be on the boundary of the parameter space.",
+                "The Hessian matrix at the estimated parameter values is not positive definite."
+              ],
+              "error": null,
+              "effect": -2.5952976354678983e-09
+            },
+            {
+              "method": "powell",
+              "seconds": 94.45,
+              "valid": false,
+              "warnings": [
+                "The MLE may be on the boundary of the parameter space."
+              ],
+              "error": null,
+              "effect": 0.00799910675494679
+            },
+            {
+              "method": "cg",
+              "seconds": 124.78,
+              "valid": false,
+              "warnings": [
+                "The MLE may be on the boundary of the parameter space."
+              ],
+              "error": null,
+              "effect": 0.007999073175070936
+            },
+            {
+              "method": "nm",
+              "seconds": 103.21,
+              "valid": false,
+              "warnings": [
+                "The MLE may be on the boundary of the parameter space."
+              ],
+              "error": null,
+              "effect": 0.007999101730026006
+            }
+          ],
+          "group": "county_fips",
+          "random_intercept_variance": 0.0021350999121866666,
+          "residual_variance": 0.03883593771096451,
+          "group_size": {
+            "median": 100.0,
+            "min": 1,
+            "max": 33335,
+            "groups_with_one_row": 9
+          },
+          "controls": {
+            "log_revenue": -0.014485146973251735,
+            "poverty_rate": 0.027080295115393907,
+            "median_household_income": 2.3044498029315639e-07
+          },
+          "categorical": [
+            "category",
+            "state",
+            "tax_year"
+          ],
+          "reml": true,
+          "optimizers_tried": [
+            "lbfgs",
+            "powell",
+            "cg",
+            "nm"
+          ],
+          "outcome_sd": 0.20173850735970728
+        }
+      },
+      "sign_matches_expected": true
+    }
+  ],
+  "by_year": {
+    "generated_at": "2026-11-19T21:40:53",
+    "theory_id": "violence_admin_overhead_share",
+    "exposure_type": "continuous",
+    "settings": {
+      "alpha": 0.05,
+      "effect_floor_sd": 0.1,
+      "n_permutations": 999,
+      "seed": 6235,
+      "expected_sign": 1,
+      "permutation_unit": "county_fips",
+      "fdr_families": [
+        "H1 over years",
+        "H2 over years"
+      ],
+      "trend_inference": "county-clustered SE (CR1); see module docstring"
+    },
+    "population": {
+      "rows_in": 2390744,
+      "after_return_type": 1531303,
+      "after_admin_expense_ratio_present": 1339606,
+      "after_chr_violent_crime_rate_present": 1287136,
+      "after_log_revenue_present": 1275829,
+      "after_category_present": 1275829,
+      "after_county_fips_present": 1275829,
+      "after_state_present": 1275829,
+      "after_tax_year_present": 1275829,
+      "after_poverty_rate_present": 1275814,
+      "after_median_household_income_present": 1275809,
+      "outcome_rule": {
+        "applied": false,
+        "reason": "bounded outcome [0, 1]: exempt (D-a)",
+        "bounded": [
+          0,
+          1
+        ]
+      },
+      "rows_out": 1275809,
+      "units": 2900,
+      "exposure_mean": 405.8559810388963,
+      "exposure_sd": 274.41012108405283
+    },
+    "by_year": {
+      "2018": {
+        "rows": 220641,
+        "units": 2855,
+        "exposed_units": null,
+        "outcome_sd": 0.19075047007566703,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.024280892288194238,
+          "standardized_effect": 0.024280892288194238,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.006353972727425262,
+          "standardized_effect": 0.03331039092540513,
+          "std_error": 0.000819485695100935,
+          "clustered_p_value": 1.2331529051473326e-14,
+          "p_value": 0.001,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      },
+      "2019": {
+        "rows": 234854,
+        "units": 2866,
+        "exposed_units": null,
+        "outcome_sd": 0.19391386517365655,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.024116992386000128,
+          "standardized_effect": 0.024116992386000128,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.006210720766707924,
+          "standardized_effect": 0.03202824491763912,
+          "std_error": 0.0007739059703306999,
+          "clustered_p_value": 1.4644256443906892e-15,
+          "p_value": 0.001,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      },
+      "2020": {
+        "rows": 261857,
+        "units": 2882,
+        "exposed_units": null,
+        "outcome_sd": 0.21118710339269625,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.028174830380574355,
+          "standardized_effect": 0.028174830380574355,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.008072200064075743,
+          "standardized_effect": 0.038222978270911374,
+          "std_error": 0.0009091314726728944,
+          "clustered_p_value": 1.161047691690469e-18,
+          "p_value": 0.001,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      },
+      "2021": {
+        "rows": 274897,
+        "units": 2889,
+        "exposed_units": null,
+        "outcome_sd": 0.20698226224367872,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.0285888126912737,
+          "standardized_effect": 0.0285888126912737,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.0076750462009200545,
+          "standardized_effect": 0.03708069531042364,
+          "std_error": 0.000828755295971211,
+          "clustered_p_value": 3.839338732960002e-20,
+          "p_value": 0.001,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      },
+      "2022": {
+        "rows": 283560,
+        "units": 2888,
+        "exposed_units": null,
+        "outcome_sd": 0.20200315670690064,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.027615856837120065,
+          "standardized_effect": 0.027615856837120065,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.006989560198504797,
+          "standardized_effect": 0.034601242438237735,
+          "std_error": 0.0007268076852920956,
+          "clustered_p_value": 1.4247161808331182e-21,
+          "p_value": 0.001,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      }
+    },
+    "years_H1_holds": [],
+    "years_H2_holds": [],
+    "trend": {
+      "model": "admin_expense_ratio ~ chr_violent_crime_rate + chr_violent_crime_rate x (tax_year - 2020) + controls | absorb",
+      "center_year": 2020.0,
+      "gap_change_per_year": 0.00027453955632629305,
+      "gap_change_per_year_sd": 0.001360868383133116,
+      "std_error": 0.00013676365228592724,
+      "p_value": 0.04479958340244324,
+      "gap_at_center_year": 0.007087974021576113,
+      "gap_at_center_year_p_value": 1.6221686699608823e-21,
+      "n_obs": 1275809,
+      "clusters": 2900,
+      "covariance": "cluster (CR1)"
+    },
+    "trend_meta_regression": {
+      "slope_per_year": 0.0002520779119444298,
+      "std_error": 0.00023108934823531832,
+      "p_value": 0.35512464370571695,
+      "years": 5
+    }
+  },
+  "verdict_within_theory": "unsupported"
+}

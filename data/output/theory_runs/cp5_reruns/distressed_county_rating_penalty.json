@@ -1,0 +1,953 @@
+{
+  "generated_at": "2026-11-19T21:34:48",
+  "theory_id": "distressed_county_rating_penalty",
+  "theory": "Organizations in the most economically distressed quarter of counties receive lower scores on the context-blind 0-10 standard financial rating.",
+  "exposure_type": "binary",
+  "verdict": "unsupported",
+  "reasons": [
+    "H1 not significant after FDR (q = 0.4833)",
+    "H1 gap -0.022 SD is below the 0.1 SD floor"
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year_for_information": 2022,
+    "permutation_unit": "county_fips",
+    "permutation_within": "tax_year",
+    "permutation_keep_paths": true,
+    "permutation_studentized": true,
+    "fdr_family": "all primary hypotheses in the run (10)",
+    "family_alpha": 0.05
+  },
+  "rating": {
+    "anchors": {
+      "program_expense_ratio": [
+        0.65,
+        0.85
+      ],
+      "admin_expense_ratio": [
+        0.35,
+        0.15
+      ],
+      "fundraising_efficiency": [
+        0.35,
+        0.1
+      ],
+      "liabilities_to_assets": [
+        1.0,
+        0.0
+      ]
+    },
+    "min_components": 3,
+    "rescored": false
+  },
+  "population": {
+    "rows_in": 2390744,
+    "after_return_type": 1531303,
+    "after_has_county": 1507855,
+    "after_has_need": 1507813,
+    "after_standard_rating_present": 1314041,
+    "after_high_need_present": 1314021,
+    "after_log_revenue_present": 1303953,
+    "after_category_present": 1303953,
+    "after_county_fips_present": 1303953,
+    "outcome_rule": {
+      "applied": false,
+      "sd_over_robust_sd": 0.8904109194459311,
+      "threshold": 3.0,
+      "raw_sd": 2.152469974089619,
+      "raw_robust_sd": 2.4173894626416077
+    },
+    "rows_out": 1303953,
+    "units": 3087,
+    "exposed_rows": 105597,
+    "exposed_units_by_year": {
+      "2018": 689,
+      "2019": 693,
+      "2020": 702,
+      "2021": 702,
+      "2022": 708
+    }
+  },
+  "outcome_sd": 2.152469974089619,
+  "H1": {
+    "claim": "The mean standard rating is lower in high-need counties than elsewhere.",
+    "method": "difference_in_means",
+    "effect": -0.04762415304988643,
+    "standardized_effect": -0.02212535070089836,
+    "mean_exposed": 7.98310262959968,
+    "mean_unexposed": 8.030726782649566,
+    "n_exposed": 105597,
+    "n_unexposed": 1198356,
+    "welch_t_p_value_rows_independent": 8.514309684775127e-12,
+    "permutation": {
+      "observed": -0.8423567189918917,
+      "p_value": 0.435,
+      "n_permutations": 999,
+      "units_permuted": 3087,
+      "null_mean": 0.18118565940898304,
+      "null_sd": 1.0673518156018795,
+      "seed": 6235,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": -0.04762415304983399,
+        "p_value": 0.134,
+        "null_mean": 0.0017839245349186707,
+        "null_sd": 0.03195093175216722
+      }
+    },
+    "q_value": 0.702,
+    "family_q_value": 0.4833333333333333
+  },
+  "H2": {
+    "claim": "The gap remains after controlling for organization size (log revenue), sector (NORP category), state and tax year.",
+    "method": "fixed_effects",
+    "fit": {
+      "method": "fixed_effects",
+      "outcome": "standard_rating",
+      "exposure": "high_need",
+      "effect": -0.02499817098722769,
+      "std_error": 0.0476379875529061,
+      "p_value": 0.5997926868745267,
+      "n_obs": 1303953,
+      "standardized_effect": -0.011613714146140687,
+      "n_groups": 3087,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.025708015016204153,
+            "std_error": 0.003954856264589287,
+            "p_value": 9.309773856905645e-11
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 5,
+          "category": 27,
+          "state": 51
+        },
+        "demeaning_sweeps": 7,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3086,
+        "outcome_sd": 2.152469974089619
+      }
+    },
+    "permutation": {
+      "observed": -0.4915378742891072,
+      "p_value": 0.702,
+      "n_permutations": 999,
+      "units_permuted": 3087,
+      "null_mean": 0.10321802815579434,
+      "null_sd": 1.2109797159325757,
+      "seed": 6236,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": -0.02499817098722759,
+        "p_value": 0.265,
+        "null_mean": 0.0009448732846740556,
+        "null_sd": 0.022624133453764763
+      }
+    },
+    "q_value": 0.702,
+    "family_q_value": 0.702
+  },
+  "replication": {
+    "by": "state",
+    "n_folds": 5,
+    "seed": 6237,
+    "rule": "expected sign in every held-out fold and inverse-variance-pooled held-out p < alpha",
+    "folds": [
+      {
+        "fold": 0,
+        "held_out": [
+          "DC",
+          "GA",
+          "IA",
+          "MD",
+          "ME",
+          "MI",
+          "MT",
+          "PA",
+          "TN",
+          "UT",
+          "WI"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": 0.06568951350945791,
+          "std_error": 0.02961530625080048,
+          "p_value": 0.026641833244689102,
+          "n_obs": 1030000,
+          "standardized_effect": 0.030529077601789963,
+          "n_groups": 2399,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.026415299627532543,
+                "std_error": 0.004440225852939729,
+                "p_value": 3.0909154520355655e-09
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2398,
+            "outcome_sd": 2.1517031849532997
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": -0.2123993022016233,
+          "std_error": 0.08866375024134443,
+          "p_value": 0.016861667946424814,
+          "n_obs": 273953,
+          "standardized_effect": -0.098545246015214,
+          "n_groups": 688,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.024876248900822975,
+                "std_error": 0.008343367840104234,
+                "p_value": 0.002969272255888411
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 11
+            },
+            "demeaning_sweeps": 9,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 687,
+            "outcome_sd": 2.155348033418394
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 1,
+        "held_out": [
+          "AK",
+          "AR",
+          "AZ",
+          "CA",
+          "FL",
+          "LA",
+          "MO",
+          "NV",
+          "OH",
+          "TX"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": -0.06595592396400078,
+          "std_error": 0.06202404993131754,
+          "p_value": 0.2877147001829098,
+          "n_obs": 893812,
+          "standardized_effect": -0.03077532157295123,
+          "n_groups": 2318,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.025009785482601864,
+                "std_error": 0.004988708378872316,
+                "p_value": 5.7561488161348e-07
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 41
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2317,
+            "outcome_sd": 2.1431432912132484
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": 0.06441340280174113,
+          "std_error": 0.042149278689784214,
+          "p_value": 0.12686947124467876,
+          "n_obs": 410141,
+          "standardized_effect": 0.02964768040801337,
+          "n_groups": 769,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.02775071280064956,
+                "std_error": 0.0062485865079547395,
+                "p_value": 1.026279032653022e-05
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 6,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 768,
+            "outcome_sd": 2.1726287492066683
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 2,
+        "held_out": [
+          "DE",
+          "HI",
+          "KS",
+          "MA",
+          "NE",
+          "OK",
+          "RI",
+          "SC",
+          "SD",
+          "VA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": -0.027933250180615425,
+          "std_error": 0.05166266537755005,
+          "p_value": 0.5887714097081446,
+          "n_obs": 1150026,
+          "standardized_effect": -0.01297214257554709,
+          "n_groups": 2564,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.024890792501613742,
+                "std_error": 0.004276378034328115,
+                "p_value": 6.597243727653729e-09
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 41
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2563,
+            "outcome_sd": 2.1533258687173626
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": 0.006601124835815735,
+          "std_error": 0.056243054689538934,
+          "p_value": 0.9066137264564956,
+          "n_obs": 153927,
+          "standardized_effect": 0.0030763144462231553,
+          "n_groups": 523,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.031892374540841886,
+                "std_error": 0.010102409319158984,
+                "p_value": 0.0016866454968634912
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 522,
+            "outcome_sd": 2.1457900195866033
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 3,
+        "held_out": [
+          "IL",
+          "IN",
+          "MN",
+          "NC",
+          "ND",
+          "NM",
+          "NY",
+          "VT",
+          "WV",
+          "WY"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": -0.04265701064412208,
+          "std_error": 0.05447397693692723,
+          "p_value": 0.4336603783248958,
+          "n_obs": 1024510,
+          "standardized_effect": -0.01976922998422652,
+          "n_groups": 2468,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.024371799411448503,
+                "std_error": 0.004018917314870038,
+                "p_value": 1.5293502947099173e-09
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 41
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2467,
+            "outcome_sd": 2.157747705811368
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": 0.06358929832839348,
+          "std_error": 0.07010884271638915,
+          "p_value": 0.3647559516066828,
+          "n_obs": 279443,
+          "standardized_effect": 0.029814924573356667,
+          "n_groups": 619,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03140413543616442,
+                "std_error": 0.01041224006418589,
+                "p_value": 0.0026658364150861156
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 10
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 618,
+            "outcome_sd": 2.132800912239047
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 4,
+        "held_out": [
+          "AL",
+          "CO",
+          "CT",
+          "ID",
+          "KY",
+          "MS",
+          "NH",
+          "NJ",
+          "OR",
+          "WA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": -0.04211125413978224,
+          "std_error": 0.05062068912344451,
+          "p_value": 0.4055429311052023,
+          "n_obs": 1117464,
+          "standardized_effect": -0.019542483933241667,
+          "n_groups": 2599,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.027900031725640942,
+                "std_error": 0.004363706237873243,
+                "p_value": 1.913786683415927e-10
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 41
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2598,
+            "outcome_sd": 2.1548567870715356
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "standard_rating",
+          "exposure": "high_need",
+          "effect": 0.135874350788735,
+          "std_error": 0.05794010122025478,
+          "p_value": 0.01942339246237415,
+          "n_obs": 186489,
+          "standardized_effect": 0.06357112020953526,
+          "n_groups": 488,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.011719801775000562,
+                "std_error": 0.006365913868972409,
+                "p_value": 0.06622608179525473
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 487,
+            "outcome_sd": 2.137359705804818
+          }
+        },
+        "same_sign": false
+      }
+    ],
+    "folds_with_expected_sign": 0,
+    "pooled_effect": 0.04294198783389593,
+    "pooled_std_error": 0.02575517787993373,
+    "pooled_p_value": 0.09545183624965727,
+    "heterogeneity": {
+      "cochran_q": 11.630080053864829,
+      "p_value": 0.020324909251206648,
+      "i_squared": 0.6560642763012842
+    },
+    "same_sign_in_every_fold": false,
+    "significant_pooled": false,
+    "replicated": false
+  },
+  "replication_year": {
+    "holdout_year": 2022,
+    "train_years": [
+      2018,
+      2019,
+      2020,
+      2021
+    ],
+    "train": {
+      "method": "fixed_effects",
+      "outcome": "standard_rating",
+      "exposure": "high_need",
+      "effect": -0.014866595423220705,
+      "std_error": 0.04888452017426531,
+      "p_value": 0.7610595766108789,
+      "n_obs": 1014331,
+      "standardized_effect": -0.00690684771044818,
+      "n_groups": 3082,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.027873683603558526,
+            "std_error": 0.004094938327557051,
+            "p_value": 1.1940592299015363e-11
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 4,
+          "category": 27,
+          "state": 51
+        },
+        "demeaning_sweeps": 7,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3081,
+        "outcome_sd": 2.1524429155621303
+      }
+    },
+    "test": {
+      "method": "fixed_effects",
+      "outcome": "standard_rating",
+      "exposure": "high_need",
+      "effect": -0.05880211834340488,
+      "std_error": 0.04640749209983115,
+      "p_value": 0.20522183009074432,
+      "n_obs": 289622,
+      "standardized_effect": -0.02732515189839227,
+      "n_groups": 3074,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.017769420461902514,
+            "std_error": 0.003906651097038736,
+            "p_value": 5.6118977620225825e-06
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 1,
+          "category": 27,
+          "state": 51
+        },
+        "demeaning_sweeps": 7,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3073,
+        "outcome_sd": 2.151941133284775
+      }
+    },
+    "same_sign": true,
+    "significant_in_holdout": false,
+    "replicated": false
+  },
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "years": [
+        2022
+      ],
+      "result": {
+        "method": "multilevel",
+        "outcome": "standard_rating",
+        "exposure": "high_need",
+        "effect": -0.020019405115798892,
+        "std_error": 0.02414995851402455,
+        "p_value": 0.4071257413241711,
+        "n_obs": 289622,
+        "standardized_effect": -0.00930295202138768,
+        "n_groups": 3074,
+        "details": {
+          "fit_seconds": 41.57,
+          "converged": true,
+          "convergence_warnings": [],
+          "optimizer": "powell",
+          "attempts": [
+            {
+              "method": "lbfgs",
+              "seconds": 5.95,
+              "valid": false,
+              "warnings": [
+                "The MLE may be on the boundary of the parameter space.",
+                "The Hessian matrix at the estimated parameter values is not positive definite."
+              ],
+              "error": null,
+              "effect": -0.0005851221027675404
+            },
+            {
+              "method": "powell",
+              "seconds": 35.62,
+              "valid": true,
+              "warnings": [],
+              "error": null,
+              "effect": -0.020019405115798892
+            }
+          ],
+          "group": "county_fips",
+          "random_intercept_variance": 0.05059120823643335,
+          "residual_variance": 4.477793674839325,
+          "group_size": {
+            "median": 21.0,
+            "min": 1,
+            "max": 7335,
+            "groups_with_one_row": 84
+          },
+          "controls": {
+            "log_revenue": 0.025898962020881853
+          },
+          "categorical": [
+            "category",
+            "state"
+          ],
+          "reml": true,
+          "optimizers_tried": [
+            "lbfgs",
+            "powell"
+          ],
+          "outcome_sd": 2.151941133284775
+        }
+      },
+      "sign_matches_expected": true
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "years": null,
+      "result": {
+        "method": "two_stage_group_means",
+        "outcome": "standard_rating",
+        "exposure": "high_need",
+        "effect": -0.025362141427093168,
+        "std_error": 0.02239850019612512,
+        "p_value": 0.2575023322922827,
+        "n_obs": 1303953,
+        "standardized_effect": -0.011782808463017009,
+        "n_groups": 15299,
+        "details": {
+          "groups": [
+            "county_fips",
+            "tax_year"
+          ],
+          "controls": [
+            "log_revenue"
+          ],
+          "absorb": [
+            "tax_year",
+            "category",
+            "state"
+          ],
+          "covariance": "HC1",
+          "outcome_sd": 2.152469974089619
+        }
+      },
+      "sign_matches_expected": true
+    }
+  ],
+  "by_year": {
+    "generated_at": "2026-11-19T21:36:01",
+    "theory_id": "distressed_county_rating_penalty",
+    "exposure_type": "binary",
+    "settings": {
+      "alpha": 0.05,
+      "effect_floor_sd": 0.1,
+      "n_permutations": 999,
+      "seed": 6235,
+      "expected_sign": -1,
+      "permutation_unit": "county_fips",
+      "fdr_families": [
+        "H1 over years",
+        "H2 over years"
+      ],
+      "trend_inference": "county-clustered SE (CR1); see module docstring"
+    },
+    "population": {
+      "rows_in": 2390744,
+      "after_return_type": 1531303,
+      "after_has_county": 1507855,
+      "after_has_need": 1507813,
+      "after_standard_rating_present": 1314041,
+      "after_high_need_present": 1314021,
+      "after_log_revenue_present": 1303953,
+      "after_category_present": 1303953,
+      "after_county_fips_present": 1303953,
+      "outcome_rule": {
+        "applied": false,
+        "sd_over_robust_sd": 0.8904109194459311,
+        "threshold": 3.0,
+        "raw_sd": 2.152469974089619,
+        "raw_robust_sd": 2.4173894626416077
+      },
+      "rows_out": 1303953,
+      "units": 3087,
+      "exposed_rows": 105597,
+      "exposed_units_by_year": {
+        "2018": 689,
+        "2019": 693,
+        "2020": 702,
+        "2021": 702,
+        "2022": 708
+      }
+    },
+    "by_year": {
+      "2018": {
+        "rows": 225587,
+        "units": 3035,
+        "exposed_units": 689,
+        "outcome_sd": 2.1358764774720442,
+        "H1": {
+          "method": "difference_in_means",
+          "effect": -0.039889203238797855,
+          "standardized_effect": -0.018675800618399737,
+          "mean_exposed": 7.984388584341331,
+          "mean_unexposed": 8.024277787580129,
+          "p_value": 0.504,
+          "q_value": 0.652,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.00597953112099026,
+          "standardized_effect": -0.0027995678514459057,
+          "std_error": 0.04925655829814282,
+          "clustered_p_value": 0.9033857139216445,
+          "p_value": 0.937,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.937,
+          "holds": false
+        }
+      },
+      "2019": {
+        "rows": 240085,
+        "units": 3048,
+        "exposed_units": 693,
+        "outcome_sd": 2.151923930889682,
+        "H1": {
+          "method": "difference_in_means",
+          "effect": -0.03514276894887569,
+          "standardized_effect": -0.01633086023368234,
+          "mean_exposed": 7.947536838647181,
+          "mean_unexposed": 7.982679607596057,
+          "p_value": 0.596,
+          "q_value": 0.652,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.00539208627185029,
+          "standardized_effect": -0.002505704869233463,
+          "std_error": 0.05264328810410485,
+          "clustered_p_value": 0.918424611023387,
+          "p_value": 0.937,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.937,
+          "holds": false
+        }
+      },
+      "2020": {
+        "rows": 267721,
+        "units": 3067,
+        "exposed_units": 702,
+        "outcome_sd": 2.1804517185526393,
+        "H1": {
+          "method": "difference_in_means",
+          "effect": -0.032678426326842036,
+          "standardized_effect": -0.014986998358548213,
+          "mean_exposed": 7.939271842331835,
+          "mean_unexposed": 7.971950268658677,
+          "p_value": 0.652,
+          "q_value": 0.652,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.01041472890823317,
+          "standardized_effect": -0.004776408860429323,
+          "std_error": 0.05347449187883791,
+          "clustered_p_value": 0.8455932021210694,
+          "p_value": 0.88,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.937,
+          "holds": false
+        }
+      },
+      "2021": {
+        "rows": 280938,
+        "units": 3075,
+        "exposed_units": 702,
+        "outcome_sd": 2.13756196620055,
+        "H1": {
+          "method": "difference_in_means",
+          "effect": -0.05944492499640219,
+          "standardized_effect": -0.02780968502263525,
+          "mean_exposed": 8.024616657785757,
+          "mean_unexposed": 8.084061582782159,
+          "p_value": 0.316,
+          "q_value": 0.652,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.035668896847352895,
+          "standardized_effect": -0.01668671945485316,
+          "std_error": 0.04776485134568674,
+          "clustered_p_value": 0.455265346058991,
+          "p_value": 0.575,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.937,
+          "holds": false
+        }
+      },
+      "2022": {
+        "rows": 289622,
+        "units": 3074,
+        "exposed_units": 708,
+        "outcome_sd": 2.151941133284775,
+        "H1": {
+          "method": "difference_in_means",
+          "effect": -0.0682093939149393,
+          "standardized_effect": -0.03169668206063928,
+          "mean_exposed": 8.010207398492305,
+          "mean_unexposed": 8.078416792407245,
+          "p_value": 0.296,
+          "q_value": 0.652,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.05880211834340489,
+          "standardized_effect": -0.027325151898392273,
+          "std_error": 0.04640749209983113,
+          "clustered_p_value": 0.205221830090744,
+          "p_value": 0.32,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.937,
+          "holds": false
+        }
+      }
+    },
+    "years_H1_holds": [],
+    "years_H2_holds": [],
+    "trend": {
+      "model": "standard_rating ~ high_need + high_need x (tax_year - 2020) + controls | absorb",
+      "center_year": 2020.0,
+      "gap_change_per_year": -0.010412186033385461,
+      "gap_change_per_year_sd": -0.004837319989928902,
+      "std_error": 0.006997640042798504,
+      "p_value": 0.13686445937876857,
+      "gap_at_center_year": -0.023281619166197098,
+      "gap_at_center_year_p_value": 0.6276927919553805,
+      "n_obs": 1303953,
+      "clusters": 3087,
+      "covariance": "cluster (CR1)"
+    },
+    "trend_meta_regression": {
+      "slope_per_year": -0.01370761878824235,
+      "std_error": 0.003259982269920203,
+      "p_value": 0.024557464222541132,
+      "years": 5
+    }
+  },
+  "verdict_within_theory": "unsupported"
+}

@@ -1,0 +1,957 @@
+{
+  "generated_at": "2026-11-19T21:34:48",
+  "theory_id": "unemployment_leverage",
+  "theory": "Where joblessness is high, nonprofits owe more relative to what they own.",
+  "exposure_type": "continuous",
+  "verdict": "unsupported",
+  "reasons": [
+    "H1 gap +0.045 SD is below the 0.1 SD floor"
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year_for_information": 2022,
+    "permutation_unit": "county_fips",
+    "permutation_within": "tax_year",
+    "permutation_keep_paths": true,
+    "permutation_studentized": true,
+    "fdr_family": "all primary hypotheses in the run (10)",
+    "family_alpha": 0.05
+  },
+  "rating": {
+    "anchors": {
+      "program_expense_ratio": [
+        0.65,
+        0.85
+      ],
+      "admin_expense_ratio": [
+        0.35,
+        0.15
+      ],
+      "fundraising_efficiency": [
+        0.35,
+        0.1
+      ],
+      "liabilities_to_assets": [
+        1.0,
+        0.0
+      ]
+    },
+    "min_components": 3,
+    "rescored": false
+  },
+  "population": {
+    "rows_in": 2390744,
+    "after_return_type": 1531303,
+    "after_has_county": 1507855,
+    "after_liabilities_to_assets_present": 1478791,
+    "after_unemployment_rate_present": 1478734,
+    "after_log_revenue_present": 1463640,
+    "after_category_present": 1463640,
+    "after_county_fips_present": 1463640,
+    "outcome_rule": {
+      "applied": true,
+      "sd_over_robust_sd": 664.1463303763081,
+      "threshold": 3.0,
+      "raw_sd": 154.24920696353556,
+      "raw_robust_sd": 0.23225183955490247,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 3.0728000044863393,
+      "rows_clipped": 14637,
+      "sd_after": 0.47470271966824074,
+      "sd_over_robust_sd_after": 2.043913712709366,
+      "pooled_over_years": true,
+      "still_above_threshold_after": false
+    },
+    "rows_out": 1463640,
+    "units": 3102,
+    "exposure_mean": 0.05388808056372545,
+    "exposure_sd": 0.015663671805773265
+  },
+  "outcome_sd": 0.47470271966824074,
+  "H1": {
+    "claim": "The liabilities-to-assets ratio is positively correlated with the county unemployment rate.",
+    "method": "correlation",
+    "effect": 0.04486606554253043,
+    "standardized_effect": 0.04486606554253043,
+    "mean_exposed": null,
+    "mean_unexposed": null,
+    "n_exposed": null,
+    "n_unexposed": null,
+    "welch_t_p_value_rows_independent": null,
+    "permutation": {
+      "observed": 7.165641704411387,
+      "p_value": 0.001,
+      "n_permutations": 999,
+      "units_permuted": 3102,
+      "null_mean": 0.27429329977610234,
+      "null_sd": 1.070558668289776,
+      "seed": 6235,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": 0.021298043333853198,
+        "p_value": 0.001,
+        "null_mean": 0.0005740114308547588,
+        "null_sd": 0.0019807976283272542
+      }
+    },
+    "q_value": 0.001,
+    "family_q_value": 0.0014285714285714286
+  },
+  "H2": {
+    "claim": "The positive association remains after controlling for organization size (log revenue), sector (NORP category) and tax year.",
+    "method": "fixed_effects",
+    "fit": {
+      "method": "fixed_effects",
+      "outcome": "liabilities_to_assets",
+      "exposure": "unemployment_rate",
+      "effect": 0.01740275179072705,
+      "std_error": 0.0023843311251428357,
+      "p_value": 3.6713802975224866e-13,
+      "n_obs": 1463640,
+      "standardized_effect": 0.036660316171960104,
+      "n_groups": 3102,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.034290954359763676,
+            "std_error": 0.0009110925685281902,
+            "p_value": 1.1298915206181758e-255
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 5,
+          "category": 27
+        },
+        "demeaning_sweeps": 5,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3101,
+        "outcome_sd": 0.47470271966824074
+      }
+    },
+    "permutation": {
+      "observed": 7.20059688311201,
+      "p_value": 0.001,
+      "n_permutations": 999,
+      "units_permuted": 3102,
+      "null_mean": -0.1055465239002872,
+      "null_sd": 1.1090209770664234,
+      "seed": 6236,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": 0.017402751790727047,
+        "p_value": 0.001,
+        "null_mean": -6.176953993690217e-05,
+        "null_sd": 0.001772454948969758
+      }
+    },
+    "q_value": 0.001,
+    "family_q_value": 0.0014285714285714286
+  },
+  "replication": {
+    "by": "state",
+    "n_folds": 5,
+    "seed": 6237,
+    "rule": "expected sign in every held-out fold and inverse-variance-pooled held-out p < alpha",
+    "folds": [
+      {
+        "fold": 0,
+        "held_out": [
+          "DC",
+          "GA",
+          "IA",
+          "MD",
+          "ME",
+          "MI",
+          "MT",
+          "PA",
+          "TN",
+          "UT",
+          "WI"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.016405746170409703,
+          "std_error": 0.002844854412715721,
+          "p_value": 9.11250080490495e-09,
+          "n_obs": 1155252,
+          "standardized_effect": 0.03435415963744102,
+          "n_groups": 2411,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03429560387683595,
+                "std_error": 0.0010429575296761688,
+                "p_value": 3.1401798822315967e-196
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2410,
+            "outcome_sd": 0.4775475908463159
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.01983042804839016,
+          "std_error": 0.004045464974324116,
+          "p_value": 1.1843010005822727e-06,
+          "n_obs": 308388,
+          "standardized_effect": 0.042748059564266326,
+          "n_groups": 691,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0340760475903643,
+                "std_error": 0.0018690067715743395,
+                "p_value": 6.412517013679575e-61
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 690,
+            "outcome_sd": 0.46389071809394317
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 1,
+        "held_out": [
+          "AK",
+          "AR",
+          "AZ",
+          "CA",
+          "FL",
+          "LA",
+          "MO",
+          "NV",
+          "OH",
+          "TX"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.019644647768826167,
+          "std_error": 0.003000670669404108,
+          "p_value": 7.21021842953492e-11,
+          "n_obs": 1006195,
+          "standardized_effect": 0.042072346636394004,
+          "n_groups": 2329,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.035085537557071965,
+                "std_error": 0.0010960834797787474,
+                "p_value": 1.241689371444913e-186
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2328,
+            "outcome_sd": 0.46692541156791295
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.01134800259135316,
+          "std_error": 0.0038032371939757887,
+          "p_value": 0.0029369312523953015,
+          "n_obs": 457445,
+          "standardized_effect": 0.023094688785155703,
+          "n_groups": 773,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03244227944626506,
+                "std_error": 0.001671391714019665,
+                "p_value": 1.1762881950504965e-68
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 772,
+            "outcome_sd": 0.4913685002175556
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 2,
+        "held_out": [
+          "DE",
+          "HI",
+          "KS",
+          "MA",
+          "NE",
+          "OK",
+          "RI",
+          "SC",
+          "SD",
+          "VA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.017567313347570324,
+          "std_error": 0.002573093524297996,
+          "p_value": 1.0754881782326653e-11,
+          "n_obs": 1291866,
+          "standardized_effect": 0.03673496233818128,
+          "n_groups": 2573,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03462625816237306,
+                "std_error": 0.0010173742937018239,
+                "p_value": 6.094302628351822e-210
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2572,
+            "outcome_sd": 0.4782178129337935
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.0134250391698638,
+          "std_error": 0.0036551829839695264,
+          "p_value": 0.00026427654600581606,
+          "n_obs": 171774,
+          "standardized_effect": 0.030018629777508105,
+          "n_groups": 529,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0316864175614355,
+                "std_error": 0.001745649290601357,
+                "p_value": 1.414823979142056e-57
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 528,
+            "outcome_sd": 0.447223583133788
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 3,
+        "held_out": [
+          "IL",
+          "IN",
+          "MN",
+          "NC",
+          "ND",
+          "NM",
+          "NY",
+          "VT",
+          "WV",
+          "WY"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.014677969497364492,
+          "std_error": 0.002271448945335589,
+          "p_value": 1.240034523850993e-10,
+          "n_obs": 1147067,
+          "standardized_effect": 0.031215529567857257,
+          "n_groups": 2482,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.033794671536775116,
+                "std_error": 0.0009322477419997756,
+                "p_value": 2.756365123356847e-231
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2481,
+            "outcome_sd": 0.47021369493210363
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.02716308137121536,
+          "std_error": 0.00700667275907584,
+          "p_value": 0.00011717391763336152,
+          "n_obs": 316573,
+          "standardized_effect": 0.05539368302987758,
+          "n_groups": 620,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03554668220741839,
+                "std_error": 0.002798819841612729,
+                "p_value": 5.2237677272627065e-33
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 619,
+            "outcome_sd": 0.49036424165124504
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 4,
+        "held_out": [
+          "AL",
+          "CO",
+          "CT",
+          "ID",
+          "KY",
+          "MS",
+          "NH",
+          "NJ",
+          "OR",
+          "WA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.0186304824764618,
+          "std_error": 0.002619703332296885,
+          "p_value": 1.4738200582370743e-12,
+          "n_obs": 1254180,
+          "standardized_effect": 0.03892116647317162,
+          "n_groups": 2613,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0336949206773028,
+                "std_error": 0.001013868495317905,
+                "p_value": 2.681162779746834e-202
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2612,
+            "outcome_sd": 0.4786722538057487
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "unemployment_rate",
+          "effect": 0.010465170422740316,
+          "std_error": 0.0034295946666065137,
+          "p_value": 0.002401606362696688,
+          "n_obs": 209460,
+          "standardized_effect": 0.02326377549979991,
+          "n_groups": 489,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.037533740150090665,
+                "std_error": 0.0015760252566227972,
+                "p_value": 9.435787589422922e-84
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26
+            },
+            "demeaning_sweeps": 5,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 488,
+            "outcome_sd": 0.4498483241823893
+          }
+        },
+        "same_sign": true
+      }
+    ],
+    "folds_with_expected_sign": 5,
+    "pooled_effect": 0.014313955174386103,
+    "pooled_std_error": 0.0017946826753573388,
+    "pooled_p_value": 1.514481119974549e-15,
+    "heterogeneity": {
+      "cochran_q": 7.1491331480937665,
+      "p_value": 0.12821398953378751,
+      "i_squared": 0.44049160686473526
+    },
+    "same_sign_in_every_fold": true,
+    "significant_pooled": true,
+    "replicated": true
+  },
+  "replication_year": {
+    "holdout_year": 2022,
+    "train_years": [
+      2018,
+      2019,
+      2020,
+      2021
+    ],
+    "train": {
+      "method": "fixed_effects",
+      "outcome": "liabilities_to_assets",
+      "exposure": "unemployment_rate",
+      "effect": 0.016309368635439546,
+      "std_error": 0.00224439813641095,
+      "p_value": 4.641080238106927e-13,
+      "n_obs": 1139413,
+      "standardized_effect": 0.034161925787587644,
+      "n_groups": 3097,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.03418008635210079,
+            "std_error": 0.00094503039669481,
+            "p_value": 3.0366801329868707e-239
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 4,
+          "category": 27
+        },
+        "demeaning_sweeps": 5,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3096,
+        "outcome_sd": 0.4774136193857483
+      }
+    },
+    "test": {
+      "method": "fixed_effects",
+      "outcome": "liabilities_to_assets",
+      "exposure": "unemployment_rate",
+      "effect": 0.021549490925037783,
+      "std_error": 0.0031657605356242517,
+      "p_value": 1.1921847673461343e-11,
+      "n_obs": 324227,
+      "standardized_effect": 0.046361783585002675,
+      "n_groups": 3087,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.034667182706459035,
+            "std_error": 0.0008774128475897426,
+            "p_value": 1.176765980592466e-276
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 1,
+          "category": 27
+        },
+        "demeaning_sweeps": 2,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3086,
+        "outcome_sd": 0.46481151626808237
+      }
+    },
+    "same_sign": true,
+    "significant_in_holdout": true,
+    "replicated": true
+  },
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "years": [
+        2022
+      ],
+      "result": {
+        "method": "multilevel",
+        "outcome": "liabilities_to_assets",
+        "exposure": "unemployment_rate",
+        "effect": 0.001657460732325646,
+        "std_error": 53696.10175179806,
+        "p_value": 0.9999999753713531,
+        "n_obs": 324227,
+        "standardized_effect": 0.0035658770798821975,
+        "n_groups": 3087,
+        "details": {
+          "fit_seconds": 51.33,
+          "converged": false,
+          "convergence_warnings": [
+            "The MLE may be on the boundary of the parameter space.",
+            "The Hessian matrix at the estimated parameter values is not positive definite."
+          ],
+          "optimizer": "lbfgs",
+          "attempts": [
+            {
+              "method": "lbfgs",
+              "seconds": 2.31,
+              "valid": false,
+              "warnings": [
+                "The MLE may be on the boundary of the parameter space.",
+                "The Hessian matrix at the estimated parameter values is not positive definite."
+              ],
+              "error": null,
+              "effect": 0.001657460732325646
+            },
+            {
+              "method": "powell",
+              "seconds": 16.02,
+              "valid": false,
+              "warnings": [
+                "The MLE may be on the boundary of the parameter space."
+              ],
+              "error": null,
+              "effect": 0.013265370272078225
+            },
+            {
+              "method": "cg",
+              "seconds": 18.82,
+              "valid": false,
+              "warnings": [
+                "The MLE may be on the boundary of the parameter space."
+              ],
+              "error": null,
+              "effect": 0.013266292302663091
+            },
+            {
+              "method": "nm",
+              "seconds": 14.18,
+              "valid": false,
+              "warnings": [
+                "The MLE may be on the boundary of the parameter space."
+              ],
+              "error": null,
+              "effect": 0.01326502217186328
+            }
+          ],
+          "group": "county_fips",
+          "random_intercept_variance": 0.0,
+          "residual_variance": 0.19703580139148263,
+          "group_size": {
+            "median": 23.0,
+            "min": 1,
+            "max": 8091,
+            "groups_with_one_row": 72
+          },
+          "controls": {
+            "log_revenue": 0.03282699542932039
+          },
+          "categorical": [
+            "category"
+          ],
+          "reml": true,
+          "optimizers_tried": [
+            "lbfgs",
+            "powell",
+            "cg",
+            "nm"
+          ],
+          "outcome_sd": 0.46481151626808237
+        }
+      },
+      "sign_matches_expected": true
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "years": null,
+      "result": {
+        "method": "two_stage_group_means",
+        "outcome": "liabilities_to_assets",
+        "exposure": "unemployment_rate",
+        "effect": 0.017148267933274283,
+        "std_error": 0.0011675420118563743,
+        "p_value": 7.75267580836931e-49,
+        "n_obs": 1463640,
+        "standardized_effect": 0.03612422516824599,
+        "n_groups": 15379,
+        "details": {
+          "groups": [
+            "county_fips",
+            "tax_year"
+          ],
+          "controls": [
+            "log_revenue"
+          ],
+          "absorb": [
+            "tax_year",
+            "category"
+          ],
+          "covariance": "HC1",
+          "outcome_sd": 0.47470271966824074
+        }
+      },
+      "sign_matches_expected": true
+    }
+  ],
+  "by_year": {
+    "generated_at": "2026-11-19T21:35:52",
+    "theory_id": "unemployment_leverage",
+    "exposure_type": "continuous",
+    "settings": {
+      "alpha": 0.05,
+      "effect_floor_sd": 0.1,
+      "n_permutations": 999,
+      "seed": 6235,
+      "expected_sign": 1,
+      "permutation_unit": "county_fips",
+      "fdr_families": [
+        "H1 over years",
+        "H2 over years"
+      ],
+      "trend_inference": "county-clustered SE (CR1); see module docstring"
+    },
+    "population": {
+      "rows_in": 2390744,
+      "after_return_type": 1531303,
+      "after_has_county": 1507855,
+      "after_liabilities_to_assets_present": 1478791,
+      "after_unemployment_rate_present": 1478734,
+      "after_log_revenue_present": 1463640,
+      "after_category_present": 1463640,
+      "after_county_fips_present": 1463640,
+      "outcome_rule": {
+        "applied": true,
+        "sd_over_robust_sd": 664.1463303763081,
+        "threshold": 3.0,
+        "raw_sd": 154.24920696353556,
+        "raw_robust_sd": 0.23225183955490247,
+        "quantiles": [
+          0.01,
+          0.99
+        ],
+        "lower": 0.0,
+        "upper": 3.0728000044863393,
+        "rows_clipped": 14637,
+        "sd_after": 0.47470271966824074,
+        "sd_over_robust_sd_after": 2.043913712709366,
+        "pooled_over_years": true,
+        "still_above_threshold_after": false
+      },
+      "rows_out": 1463640,
+      "units": 3102,
+      "exposure_mean": 0.05388808056372545,
+      "exposure_sd": 0.015663671805773265
+    },
+    "by_year": {
+      "2018": {
+        "rows": 253364,
+        "units": 3053,
+        "exposed_units": null,
+        "outcome_sd": 0.49421745403814943,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.03772284044253189,
+          "standardized_effect": 0.03772284044253189,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.013832869965884769,
+          "standardized_effect": 0.02798944038268828,
+          "std_error": 0.0023325920214882566,
+          "clustered_p_value": 3.3634995921461336e-09,
+          "p_value": 0.001,
+          "absorb": [
+            "category"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      },
+      "2019": {
+        "rows": 269251,
+        "units": 3068,
+        "exposed_units": null,
+        "outcome_sd": 0.48862303788565553,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.0377429927007488,
+          "standardized_effect": 0.0377429927007488,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.014758626380234962,
+          "standardized_effect": 0.030204524215840765,
+          "std_error": 0.002471078171811103,
+          "clustered_p_value": 2.6038569651645715e-09,
+          "p_value": 0.001,
+          "absorb": [
+            "category"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      },
+      "2020": {
+        "rows": 301157,
+        "units": 3083,
+        "exposed_units": null,
+        "outcome_sd": 0.47322993761475024,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.04299479698964007,
+          "standardized_effect": 0.04299479698964007,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.01756149688890185,
+          "standardized_effect": 0.03710986033009268,
+          "std_error": 0.002349635107792326,
+          "clustered_p_value": 1.0068855286250857e-13,
+          "p_value": 0.001,
+          "absorb": [
+            "category"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      },
+      "2021": {
+        "rows": 315641,
+        "units": 3088,
+        "exposed_units": null,
+        "outcome_sd": 0.45666033809632495,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.04901088579846865,
+          "standardized_effect": 0.04901088579846865,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.019082989153488234,
+          "standardized_effect": 0.041788146597182683,
+          "std_error": 0.002368846861945218,
+          "clustered_p_value": 1.1166791324759267e-15,
+          "p_value": 0.001,
+          "absorb": [
+            "category"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      },
+      "2022": {
+        "rows": 324227,
+        "units": 3087,
+        "exposed_units": null,
+        "outcome_sd": 0.46481151626808237,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.054431529246253954,
+          "standardized_effect": 0.054431529246253954,
+          "p_value": 0.001,
+          "q_value": 0.001,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.0215494909250378,
+          "standardized_effect": 0.04636178358500271,
+          "std_error": 0.003165760535624252,
+          "clustered_p_value": 1.1921847673461031e-11,
+          "p_value": 0.001,
+          "absorb": [
+            "category"
+          ],
+          "q_value": 0.001,
+          "holds": false
+        }
+      }
+    },
+    "years_H1_holds": [],
+    "years_H2_holds": [],
+    "trend": {
+      "model": "liabilities_to_assets ~ unemployment_rate + unemployment_rate x (tax_year - 2020) + controls | absorb",
+      "center_year": 2020.0,
+      "gap_change_per_year": 0.0018994267253166957,
+      "gap_change_per_year_sd": 0.0040012973311890085,
+      "std_error": 0.0005986774272873299,
+      "p_value": 0.0015250238593435743,
+      "gap_at_center_year": 0.017358448492987618,
+      "gap_at_center_year_p_value": 2.655344269184376e-13,
+      "n_obs": 1463640,
+      "clusters": 3102,
+      "covariance": "cluster (CR1)"
+    },
+    "trend_meta_regression": {
+      "slope_per_year": 0.001939228675446392,
+      "std_error": 0.0001659519666391403,
+      "p_value": 0.00134647446998906,
+      "years": 5
+    }
+  },
+  "verdict_within_theory": "unsupported"
+}

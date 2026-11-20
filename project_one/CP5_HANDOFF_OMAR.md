@@ -1,6 +1,6 @@
 # CP5 handoff: Vien → Omar (2026-11-19)
 
-All my items (V1–V3, V5, V6) are done and committed, and the V7 review tool is ready. V4 (the T1–T5 reruns) is still running and follows as one more commit. V7's last step needs your benchmark run. What's left is your O-items plus pasting the V7 review lines. This file lists them in the order to run them, with the commands. My report sections are in `project_one/CP5_REPORT_VIEN.md`.
+All my items (V1–V6) are done and committed, and the V7 review tool is ready. V7's last step needs your benchmark run. What's left is your O-items plus pasting the V7 review lines. This file lists them in the order to run them, with the commands. My report sections are in `project_one/CP5_REPORT_VIEN.md`.
 
 ## 1. What I committed (after `466f21a`)
 
@@ -12,7 +12,7 @@ All my items (V1–V3, V5, V6) are done and committed, and the V7 review tool is
 | `c2bed6f` | V2: `prepare_population` plants raw at 0.25 × post-rule SD; heavy-tail controls | `data/output/controls_heavy_tail.json` |
 | `4e67642` | V5: crime roadblock (D9) + T4 proxy check | `data/output/t4_followup.json` |
 | `c9c5a8e` | V6: placebo families on two heavy-tailed outcomes | `data/output/controls_family_heavy_tail.json` |
-| (follows) | V4: T1–T5 rerun under the rule, from the committed CP4 specs (`scripts/rerun_specs.py`, committed now). **Running at the time of writing**; results arrive as one more commit | `data/output/theory_runs/cp5_reruns/` |
+| `fd57bee` + next | V4: T1–T5 rerun under the rule from the committed CP4 specs (`scripts/rerun_specs.py`). T1/T4 unchanged; T2/T3/T5 now show significant effects of 0.04–0.065 SD, all under the floor; T3 points against its theory | `data/output/theory_runs/cp5_reruns/` (+ `review.json`) |
 
 191 tests pass. `verify_outputs.py --panel` gives 6/6 on the rebuilt panel.
 
@@ -34,6 +34,8 @@ All my items (V1–V3, V5, V6) are done and committed, and the V7 review tool is
    - **Positive controls:** `pos_income_fundraising_share` and `pos_poor_health_programs` are out; `pos_unemployment_margin` and `pos_poverty_leverage` are in.
    - Every literature entry now has `source` and `claim` fields.
 6. **I couldn't push.** My clone has no credentials for github.gatech.edu, and there's no `gatech` remote. Vien pushes these commits from their own terminal. If you see nothing after `466f21a`, ask Vien.
+
+7. **Set `OPENBLAS_NUM_THREADS=1` (and `OMP_NUM_THREADS=1`) before any long run, the benchmark especially.** On a many-core machine OpenBLAS spreads the gate's small matrix products over every core and the threads fight. My V4 rerun didn't finish in 5 h 51 min multi-threaded, and took **9 min** single-threaded with the 5 theories in parallel. One T1 run used 60 CPU-minutes against 2. `rerun_specs.py` sets this itself; `run_benchmark.py` and `run_sweep.py` don't. On Windows (PowerShell): `$env:OPENBLAS_NUM_THREADS=1; $env:OMP_NUM_THREADS=1`. Your laptop has fewer cores, so the gain may be smaller, but it won't hurt. Put it in the README's failure points.
 
 ## 3. What's left, in order
 
@@ -85,9 +87,9 @@ git add data/output/theory_runs/cp5/review.json && git commit -m "Review the CP5
   → verify_outputs.py --panel
   → python scripts/rerun_specs.py --only distressed_county_rating_penalty --to quickstart --permutations 199 --no-by-year
   ```
-  The last step is one replayed evidence row: T1 under the CP5 gate, no key. I tested it and got `distressed_county_rating_penalty unsupported`, `rule applied False`, in 6.4 min with another job running on the machine. Time it on yours and paste the verdict line into the README. The script refuses `--to cp4`, but `--to cp5_reruns` would overwrite the committed V4 run, so keep `quickstart`, and git-ignore it or don't commit it.
+  The last step is one replayed evidence row: T1 under the CP5 gate, no key. I tested it and got `distressed_county_rating_penalty unsupported`, `rule applied False`, in 2.0 min with BLAS on one thread (6.4 min multi-threaded; see section 2.7). Time it on yours and paste the verdict line into the README. The script refuses `--to cp4`, but `--to cp5_reruns` would overwrite the committed V4 run, so keep `quickstart`, and git-ignore it or don't commit it.
 - **Tested on:** Arch Linux x86-64, Python 3.12.16, the exact pins. The panel matched the CP4 hash `3dfa5eb1…` on Linux before V3. That makes a third OS after Windows and macOS.
-- **Failure points to list:** the stale LLM cache (section 2.2); the panel hash after any change to `panel.py` or `need.py`; and, for runtime, the controls scripts take ~35–60 min, slower when several run at once (BLAS threads; set `OMP_NUM_THREADS=4`).
+- **Failure points to list:** the stale LLM cache (section 2.2); the panel hash after any change to `panel.py` or `need.py`; and, for runtime, BLAS thread contention (section 2.7; set `OPENBLAS_NUM_THREADS=1`).
 - **Data provenance:** the multi-year crime source is not in the repo (needs an openICPSR account; D9).
 - **Last:** run the clean-clone test in an empty folder after everything above is committed, and paste the actual outputs.
 
@@ -95,7 +97,7 @@ git add data/output/theory_runs/cp5/review.json && git commit -m "Review the CP5
 - **Changes table:** take my rows from `CP5_REPORT_VIEN.md` → "Changes".
 - **Plus your own rows:** two BH families, run errors count as invalid plans, recovery needs gold, the README workflow, and the drop order (the plan's section 7).
 - **AI usage:** built on `ai-suggestions/cp5` @ `f825052`. My AI usage paragraph is in my sections.
-- **F3 (commit split):** 8 of my commits after `f825052` so far, plus the V4 results commit.
+- **F3 (commit split):** 9 of my commits after `f825052`.
 
 ## 4. If you're short on time
 Cut in the plan's section-7 order: the paraphrase run first, then drill-down on survivors. Never cut A1's first pass, the benchmark, or the clean-clone README test.
