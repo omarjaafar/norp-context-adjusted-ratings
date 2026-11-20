@@ -187,3 +187,20 @@ def test_controls_do_not_loosen_the_literature_family():
     assert fam["pos0"]["H1"]["family_q_value"] == pytest.approx(0.001)  # 10 equal p-values
     assert fam["pos0"]["verdict"] == "supported"
     assert set(fam) == set(reports)
+
+
+def test_by_year_runs_for_literature_entries_only(monkeypatch):
+    # CP3 feedback: per-year results and a trend test for every theory. The benchmark adds them
+    # for literature entries after the families are set; controls are pooled by construction.
+    import theorylab.benchmark_run as br
+    calls = []
+    monkeypatch.setattr(br, "_run_one", lambda e, s, p, n: _gate_report(e["id"], 0.5, 0.0, False))
+    monkeypatch.setattr(br, "run_by_year", lambda panel, spec, n_permutations=None:
+                        calls.append((spec["theory_id"], n_permutations)) or {"stub": True})
+    planned = [({"id": i, "kind": k}, {"theory_id": i, "expected_sign": -1})
+               for i, k in (("lit", "literature"), ("pos", "positive_control"), ("neg", "negative_control"))]
+    run = br.run_planned(planned, pd.DataFrame(), screen_permutations=199, by_year=True, drill_by=None)
+    assert calls == [("lit", 199)]
+    assert run["reports"]["lit"]["by_year"] == {"stub": True}
+    assert "by_year" not in run["reports"]["pos"] and set(run["by_year_seconds"]) == {"lit"}
+    assert br.run_planned(planned, pd.DataFrame(), drill_by=None)["by_year_seconds"] == {}

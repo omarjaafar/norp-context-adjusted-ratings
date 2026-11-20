@@ -46,9 +46,11 @@ from theorylab.catalog import REPO_ROOT
 from theorylab.drilldown import SURVIVOR_VERDICTS, drill_down
 from theorylab.executor import to_float, to_jsonable
 from theorylab.gate import apply_family
+from theorylab.orchestrator import _trend_summary
 from theorylab.outcomes import apply_outcome_rule
 from theorylab.spec import spec_columns
 from theorylab.theory_run import add_derived, run_spec, select_population
+from theorylab.trends import run_by_year
 from theorylab.validator import UnitPermuter
 
 ENTRIES_PATH = REPO_ROOT / "benchmark" / "cp5_theories.json"
@@ -158,8 +160,10 @@ def _near_miss(report: dict, q: float) -> bool:
 
 def run_planned(planned: list, panel: pd.DataFrame, *, n_permutations: int | None = None,
                 screen_permutations: int | None = None, rerun_q: float = 0.25,
-                drill_by: str | None = "state") -> dict:
-    """Run every planned entry, apply one family, optionally screen then rerun near-misses."""
+                drill_by: str | None = "state", by_year: bool = False) -> dict:
+    """Run every planned entry, apply one family, optionally screen then rerun near-misses.
+    by_year: per-year H1/H2 and the trend test for literature entries (CP3 feedback: a main
+    output for every theory). Controls are left out: planting and shuffling are pooled."""
     errors, reports, entries_by_id = [], {}, {}
     n_first = screen_permutations or n_permutations
     seconds = {}
@@ -192,8 +196,16 @@ def run_planned(planned: list, panel: pd.DataFrame, *, n_permutations: int | Non
         if drill_by and entry["kind"] == "literature" and r["verdict"] in SURVIVOR_VERDICTS:
             r["drill_down"] = drill_down(panel, spec, r, drill_by, n_permutations=n_permutations)
             survivors.append(i)
+    by_year_seconds = {}
+    if by_year:
+        for i, r in family.items():
+            entry, spec = entries_by_id[i]
+            if entry["kind"] == "literature":
+                t0 = time.time()
+                r["by_year"] = run_by_year(panel, spec, n_permutations=n_first)
+                by_year_seconds[i] = time.time() - t0
     return {"reports": family, "run_errors": errors, "rerun_at_full_permutations": rerun,
-            "drilled": survivors, "seconds": seconds,
+            "drilled": survivors, "seconds": seconds, "by_year_seconds": by_year_seconds,
             "kinds": {i: entries_by_id[i][0]["kind"] for i in family}}
 
 
@@ -238,7 +250,7 @@ def metrics(entries: list, reviews: dict, plan_failures: list, run: dict) -> dic
 def run_benchmark(orch, panel: pd.DataFrame | None = None, entries: list | None = None, *,
                   variant: str = "text",
                   n_permutations: int | None = None, screen_permutations: int | None = None,
-                  rerun_q: float = 0.25, out_dir: Path | None = None) -> dict:
+                  rerun_q: float = 0.25, out_dir: Path | None = None, by_year: bool = False) -> dict:
     """Plan and run the whole benchmark; write one report (and each entry's report) when out_dir is given."""
     entries = entries if entries is not None else load_entries()
     t0 = time.time()
@@ -248,7 +260,7 @@ def run_benchmark(orch, panel: pd.DataFrame | None = None, entries: list | None 
     if panel is None and planned:  # load once, only the columns every planned spec needs
         panel = orch.panel_for([spec for _, spec in planned])
     run = run_planned(planned, panel, n_permutations=n_permutations,
-                      screen_permutations=screen_permutations, rerun_q=rerun_q)
+                      screen_permutations=screen_permutations, rerun_q=rerun_q, by_year=by_year)
     result = to_jsonable({
         "generated_at": datetime.datetime.now().isoformat(timespec="seconds"),
         "variant": variant,
@@ -262,6 +274,7 @@ def run_benchmark(orch, panel: pd.DataFrame | None = None, entries: list | None 
         "drilled": run["drilled"],
         "seconds_per_entry": run["seconds"],
         "planning_seconds": planning_seconds,
+        "by_year_seconds": run["by_year_seconds"],
         "llm_usage": vars(orch.llm.usage).copy(),
         "table": [{"id": i, "kind": run["kinds"][i], "family": r["validator"].get("family"),
                    "verdict": r["verdict"],
@@ -269,7 +282,8 @@ def run_benchmark(orch, panel: pd.DataFrame | None = None, entries: list | None 
                    "H1_std": r["H1"]["standardized_effect"], "H1_family_q": r["H1"]["family_q_value"],
                    "H2_std": r["H2"]["fit"]["standardized_effect"], "H2_family_q": r["H2"]["family_q_value"],
                    "replicated": r["replication"]["replicated"],
-                   "outcome_rule_applied": r["population"]["outcome_rule"]["applied"]}
+                   "outcome_rule_applied": r["population"]["outcome_rule"]["applied"],
+                   **_trend_summary(r.get("by_year"))}
                   for i, r in run["reports"].items()],
     })
     if out_dir is not None:

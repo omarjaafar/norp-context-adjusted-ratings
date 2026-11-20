@@ -31,6 +31,8 @@ def main() -> int:
                     help="first pass at this many permutations; near-misses rerun at the full count")
     ap.add_argument("--rerun-q", type=float, default=0.25)
     ap.add_argument("--only", default=None, help="comma-separated entry ids")
+    ap.add_argument("--by-year", action="store_true",
+                    help="per-year results and trend test for literature entries (at the screen count)")
     args = ap.parse_args()
 
     entries = load_entries()
@@ -41,7 +43,7 @@ def main() -> int:
                         n_permutations=args.permutations)
     result = run_benchmark(orch, None, entries, variant=args.variant, n_permutations=args.permutations,
                            screen_permutations=args.screen, rerun_q=args.rerun_q,
-                           out_dir=RUNS_DIR / "cp5")
+                           out_dir=RUNS_DIR / "cp5", by_year=args.by_year)
     OUT_PATH.write_text(json.dumps(result, indent=2), encoding="utf-8")
     print(json.dumps(result["metrics"], indent=2))
     for row in result["table"]:
