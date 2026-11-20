@@ -1,34 +1,34 @@
 # CP5 report sections: Vien Tran (outcome rule, theories, controls, reruns)
 
-Commits after the TA import `f825052`: `0ab388e` (V1), `1dc763e` (V3), `b287b40` (V7 review tool), `c2bed6f` (V2), `4e67642` (V5), `c9c5a8e` (V6), `fd57bee` (report, handoff, V4 script), V4 results in the commit after it.
-Environment: Arch Linux (kernel 7.2), x86-64, 22 cores, 30 GB RAM, Python 3.12.16 (uv venv), packages exactly as pinned in `requirements.txt` (pandas 3.1.1, numpy 2.5.4, scipy 1.18.1, statsmodels 0.15.0). 191 tests pass (185 at `466f21a`). The panel was rebuilt from a clean clone on Linux and matched the CP4 reference hash `3dfa5eb1…` before V3 changed it.
+Commits after the TA import `f825052`: `970907b` (V1), `3c76453` (V3), `0eaed99` (V7 review tool), `6e3116a` (V2), `3059286` (V5), `747f8ad` (V6), `3792229` (report, handoff, V4 script), `53860c5` (V4).
+Environment: Arch Linux (kernel 7.2), x86-64, 22 cores, 30 GB RAM, Python 3.12.16 (uv venv), packages exactly as pinned in `requirements.txt` (pandas 3.1.1, numpy 2.5.4, scipy 1.18.1, statsmodels 0.15.0). 192 tests pass (185 at `466f21a`). The panel was rebuilt from a clean clone on Linux and matched the CP4 reference hash `3dfa5eb1…` before V3 changed it.
 
 ## Match items (CP4 feedback → what was done)
 
 | # | Feedback | Done | Evidence |
 |---|---|---|---|
-| F1 | Name the ~10 literature theories with source, outcome, exposure, sign | 10 literature entries, each with a full citation (`source`) and what the source argues versus our inference (`claim`), checked against the paper or its abstract on 2026-11-19. File frozen before any Planner run | `benchmark/cp5_theories.json` @ `1dc763e` |
-| F2 | Crime is one 2014/2016 snapshot; find a multi-year source | Source chosen (Kaplan, UCR Return A, openICPSR 100707). It needs an account, so it is a documented roadblock; L9 swapped for a spare before the freeze. T4 proxy check run anyway | `docs/data_decisions.md` D9 @ `4e67642`; `data/output/t4_followup.json` |
-| F3 | Fair share of the CP5 analysis | 7 commits after `f825052` (V1–V7); the outcome rule, theories, controls, reruns and crime are mine | `git log 466f21a..` |
-| F4 | Plant a positive control in a heavy-tailed ratio | Two positive controls on `operating_margin` and `liabilities_to_assets`, planted in the raw outcome before the rule. Missed without the rule, recovered with it | `data/output/controls_heavy_tail.json` @ `c2bed6f` |
-| X3 | Control planted after winsorizing | Planted raw at 0.25 × the post-rule SD; the rule is applied once afterwards (the TA code applied it twice) | `theorylab/benchmark_run.py` `prepare_population` @ `c2bed6f` |
-| X4 | The rule clips bounded shares; some outcomes stay above 3 | D-a (bounded outcomes exempt), D-b (pooled clip), D-c (one clip, logged). Measured on all 10 outcomes | `data/output/outcome_rule_check.json` @ `0ab388e`; `docs/validator.md` 2.8 |
-| X7 | One placebo draw per negative control | 8-placebo families on both heavy-tailed outcomes under the rule: 0 false positives | `data/output/controls_family_heavy_tail.json` @ `c9c5a8e` |
+| F1 | Name the ~10 literature theories with source, outcome, exposure, sign | 10 literature entries, each with a full citation (`source`) and what the source argues versus our inference (`claim`), checked against the paper or its abstract on 2026-11-19. File frozen before any Planner run | `benchmark/cp5_theories.json` @ `3c76453` |
+| F2 | Crime is one 2014/2016 snapshot; find a multi-year source | Source chosen (Kaplan, UCR Return A, openICPSR 100707). It needs an account, so it is a documented roadblock; L9 swapped for a spare before the freeze. T4 proxy check run anyway | `docs/data_decisions.md` D9 @ `3059286`; `data/output/t4_followup.json` |
+| F3 | Fair share of the CP5 analysis | 9 commits after `f825052` (V1–V7, report, V4 results); the outcome rule, theories, controls, reruns and crime are mine | `git log --author=Vien f825052..` |
+| F4 | Plant a positive control in a heavy-tailed ratio | Two positive controls on `operating_margin` and `liabilities_to_assets`, planted in the raw outcome before the rule. Missed without the rule, recovered with it | `data/output/controls_heavy_tail.json` @ `6e3116a` |
+| X3 | Control planted after winsorizing | Planted raw at 0.25 × the post-rule SD; the rule is applied once afterwards (the TA code applied it twice) | `theorylab/benchmark_run.py` `prepare_population` @ `6e3116a` |
+| X4 | The rule clips bounded shares; some outcomes stay above 3 | D-a (bounded outcomes exempt), D-b (pooled clip), D-c (one clip, logged). Measured on all 10 outcomes | `data/output/outcome_rule_check.json` @ `970907b`; `docs/validator.md` 2.8 |
+| X7 | One placebo draw per negative control | 8-placebo families on both heavy-tailed outcomes under the rule: 0 false positives | `data/output/controls_family_heavy_tail.json` @ `747f8ad` |
 | X8, X9 | Sources do not support their claims; theories repeat CP4 | Sources replaced or dropped; new sector-side exposure `nonprofit_density` (L6) | `benchmark/cp5_theories.json`; `docs/data_decisions.md` D9 |
 
 ## Evidence rows
 
 | Claim | Number | Path @ commit |
 |---|---|---|
-| Spread (SD / robust SD) before → after the rule, 990 filers pooled | `revenue_growth` 265,883 → 4.03; `equity_ratio` 68,191 → 4.95; `operating_margin` 12,697 → 3.68; `fundraising_efficiency` 1,268 → 3.96; `liabilities_to_assets` 780 → 2.08 | `data/output/outcome_rule_check.json` @ `0ab388e` |
+| Spread (SD / robust SD) before → after the rule, 990 filers pooled | `revenue_growth` 265,883 → 4.03; `equity_ratio` 68,191 → 4.95; `operating_margin` 12,697 → 3.68; `fundraising_efficiency` 1,268 → 3.96; `liabilities_to_assets` 780 → 2.08 | `data/output/outcome_rule_check.json` @ `970907b` |
 | Outcomes still above 3 after one clip (D-c) | 4 of 5 clipped outcomes (3.68–4.95); logged as `still_above_threshold_after` | same |
 | Bounded shares exempt (D-a) | fundraising share: spread 4.94, 63.2% zeros. The TA rule would clip it at 0.313 (13,400 rows); now untouched. Program 1.38, admin 1.58, concentration 0.70, rating 0.90: untouched | same, `without_exemption` |
-| Panel with `nonprofit_density` | 2,390,744 rows, 54 columns, sha256_csv `334951b1…`; county median 6.9 (2018) → 9.0 (2022) full-990 filers per 10,000 residents | `data/output/panel_join_log.json` @ `1dc763e` |
-| Heavy-tail control, margin × unemployment, 0.25 SD | rule on: **supported**, H1 −0.253 SD; rule off: unsupported, −0.001 SD (raw SD 2,502 vs 0.72 after the rule); no effect: unsupported (−0.016 SD, under the floor) | `data/output/controls_heavy_tail.json` @ `c2bed6f` |
+| Panel with `nonprofit_density` | 2,390,744 rows, 54 columns, sha256_csv `334951b1…`; county median 6.9 (2018) → 9.0 (2022) full-990 filers per 10,000 residents | `data/output/panel_join_log.json` @ `3c76453` |
+| Heavy-tail control, margin × unemployment, 0.25 SD | rule on: **supported**, H1 −0.253 SD; rule off: unsupported, −0.001 SD (raw SD 2,502 vs 0.72 after the rule); no effect: unsupported (−0.016 SD, under the floor) | `data/output/controls_heavy_tail.json` @ `6e3116a` |
 | Heavy-tail control, leverage × poverty, 0.25 SD | rule on: **supported**, +0.274 SD; rule off: unsupported, +0.002 SD (raw SD 154 vs 0.47); no effect: unsupported (+0.038 SD, under the floor) | same |
-| Placebo families under the rule | 0 of 8 placebos not unsupported on either outcome (largest placebo H1 0.006 and 0.010 SD); planted control supported after the family correction on both (q 0.045) | `data/output/controls_family_heavy_tail.json` @ `c9c5a8e` |
-| T4 is not a proxy | H2 +0.035 SD as run; +0.032 SD with poverty, income, population and need index together (90% kept); p 0.001 and 5/5 folds in every variant; under the 0.1 SD floor | `data/output/t4_followup.json` @ `4e67642` |
-| T1, T4 do not move under the rule | T1 rating H1 −0.022 / H2 −0.012 SD, T4 admin share +0.027 / +0.035 SD: identical to CP4 (rule not applied, SD 2.15 and 0.202 unchanged) | `data/output/theory_runs/cp5_reruns/review.json` @ V4 commit |
+| Placebo families under the rule | 0 of 8 placebos not unsupported on either outcome (largest placebo H1 0.006 and 0.010 SD); planted control supported after the family correction on both (q 0.045) | `data/output/controls_family_heavy_tail.json` @ `747f8ad` |
+| T4 is not a proxy | H2 +0.035 SD as run; +0.032 SD with poverty, income, population and need index together (90% kept); p 0.001 and 5/5 folds in every variant; under the 0.1 SD floor | `data/output/t4_followup.json` @ `3059286` |
+| T1, T4 do not move under the rule | T1 rating H1 −0.022 / H2 −0.012 SD, T4 admin share +0.027 / +0.035 SD: identical to CP4 (rule not applied, SD 2.15 and 0.202 unchanged) | `data/output/theory_runs/cp5_reruns/review.json` @ `53860c5` |
 | T2, T3, T5 under the rule (CP4 → CP5) | outcome SD 2,510 → 0.72 (T2), 43.9 → 0.139 (T3), 154 → 0.475 (T5). H1 / H2: T2 −0.000 / +0.006 → −0.013 / +0.048 SD; T3 −0.000 / −0.001 → **+0.065 / +0.055** SD (expected −); T5 +0.001 / +0.001 → +0.045 / +0.037 SD (5/5 folds). All five unsupported; every verdict follows from its numbers (family of 10 hypotheses) | same |
 | Rerun time | 9.0 min wall for all five at 999 permutations with per-year results (5 processes, BLAS on one thread); the same job multi-threaded had not finished after 5 h 51 min | `cp5_reruns/summary.json` → `seconds_per_theory`, `seconds_wall` |
 

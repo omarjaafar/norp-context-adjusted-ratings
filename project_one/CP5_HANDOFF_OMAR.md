@@ -2,19 +2,19 @@
 
 All my items (V1–V6) are done and committed, and the V7 review tool is ready. V7's last step needs your benchmark run. What's left is your O-items plus pasting the V7 review lines. This file lists them in the order to run them, with the commands. My report sections are in `project_one/CP5_REPORT_VIEN.md`.
 
-## 1. What I committed (after `466f21a`)
+## 1. What I committed (rebased onto your O5 commit `b8316a6`)
 
 | Commit | Item | Output |
 |---|---|---|
-| `0ab388e` | V1 outcome rule: D-a bounded shares exempt (read from `bounded: [0, 1]` in `panel_columns.yaml`), D-b pooled clip, D-c one clip + `still_above_threshold_after` | `data/output/outcome_rule_check.json` |
-| `1dc763e` | V3 theory file **frozen** with checked sources; new column `nonprofit_density`; panel rebuilt | `benchmark/cp5_theories.json`, `panel_join_log.json` |
-| `b287b40` | V7 tool: `review_theory_runs.py` reviews a benchmark folder in two families | - |
-| `c2bed6f` | V2: `prepare_population` plants raw at 0.25 × post-rule SD; heavy-tail controls | `data/output/controls_heavy_tail.json` |
-| `4e67642` | V5: crime roadblock (D9) + T4 proxy check | `data/output/t4_followup.json` |
-| `c9c5a8e` | V6: placebo families on two heavy-tailed outcomes | `data/output/controls_family_heavy_tail.json` |
-| `fd57bee` + next | V4: T1–T5 rerun under the rule from the committed CP4 specs (`scripts/rerun_specs.py`). T1/T4 unchanged; T2/T3/T5 now show significant effects of 0.04–0.065 SD, all under the floor; T3 points against its theory | `data/output/theory_runs/cp5_reruns/` (+ `review.json`) |
+| `970907b` | V1 outcome rule: D-a bounded shares exempt (read from `bounded: [0, 1]` in `panel_columns.yaml`), D-b pooled clip, D-c one clip + `still_above_threshold_after` | `data/output/outcome_rule_check.json` |
+| `3c76453` | V3 theory file **frozen** with checked sources; new column `nonprofit_density`; panel rebuilt | `benchmark/cp5_theories.json`, `panel_join_log.json` |
+| `0eaed99` | V7 tool: `review_theory_runs.py` reviews a benchmark folder in two families | - |
+| `6e3116a` | V2: `prepare_population` plants raw at 0.25 × post-rule SD; heavy-tail controls | `data/output/controls_heavy_tail.json` |
+| `3059286` | V5: crime roadblock (D9) + T4 proxy check | `data/output/t4_followup.json` |
+| `747f8ad` | V6: placebo families on two heavy-tailed outcomes | `data/output/controls_family_heavy_tail.json` |
+| `3792229`, `53860c5` | V4: T1–T5 rerun under the rule from the committed CP4 specs (`scripts/rerun_specs.py`). T1/T4 unchanged; T2/T3/T5 now show significant effects of 0.04–0.065 SD, all under the floor; T3 points against its theory | `data/output/theory_runs/cp5_reruns/` (+ `review.json`) |
 
-191 tests pass. `verify_outputs.py --panel` gives 6/6 on the rebuilt panel.
+192 tests pass (including your O5). `verify_outputs.py --panel` gives 6/6 on the rebuilt panel.
 
 ## 2. Things that changed under you: read before running anything
 
@@ -33,7 +33,7 @@ All my items (V1–V6) are done and committed, and the V7 review tool is ready. 
    - **L6 sign confirmed +** from Thornton (2008, JLEO).
    - **Positive controls:** `pos_income_fundraising_share` and `pos_poor_health_programs` are out; `pos_unemployment_margin` and `pos_poverty_leverage` are in.
    - Every literature entry now has `source` and `claim` fields.
-6. **I couldn't push.** My clone has no credentials for github.gatech.edu, and there's no `gatech` remote. Vien pushes these commits from their own terminal. If you see nothing after `466f21a`, ask Vien.
+6. **Pushed to `origin` only.** My clone has no `gatech` remote. If that remote is still in use, push there from your clone.
 
 7. **Set `OPENBLAS_NUM_THREADS=1` (and `OMP_NUM_THREADS=1`) before any long run, the benchmark especially.** On a many-core machine OpenBLAS spreads the gate's small matrix products over every core and the threads fight. My V4 rerun didn't finish in 5 h 51 min multi-threaded, and took **9 min** single-threaded with the 5 theories in parallel. One T1 run used 60 CPU-minutes against 2. `rerun_specs.py` sets this itself; `run_benchmark.py` and `run_sweep.py` don't. On Windows (PowerShell): `$env:OPENBLAS_NUM_THREADS=1; $env:OMP_NUM_THREADS=1`. Your laptop has fewer cores, so the gain may be smaller, but it won't hurt. Put it in the README's failure points.
 
@@ -42,7 +42,7 @@ All my items (V1–V6) are done and committed, and the V7 review tool is ready. 
 ### Step 1: O3, A1 on the 40 unseen texts (needs `ANTHROPIC_API_KEY`)
 ```bash
 git pull && python scripts/build_panel.py && python scripts/check_panel_hash.py
-python -m pytest -q                                   # expect 191 passed
+python -m pytest -q                                   # expect 192 passed
 python scripts/measure_assumption1_benchmark.py       # live; first pass is the number
 git add data/output/assumption_1_unseen.json data/llm_cache && git commit -m "A1 on unseen theories, first pass (O3)"
 ```
@@ -83,7 +83,7 @@ git add data/output/theory_runs/cp5/review.json && git commit -m "Review the CP5
   - `theory_runs/cp5/review.json`: `all_follow` and `all_in_own_family`.
 - **README quickstart (clean clone):**
   ```
-  pip install -r requirements.txt → pytest (191) → build_panel.py (~5–10 min) → check_panel_hash.py
+  pip install -r requirements.txt → pytest (192) → build_panel.py (~5–10 min) → check_panel_hash.py
   → verify_outputs.py --panel
   → python scripts/rerun_specs.py --only distressed_county_rating_penalty --to quickstart --permutations 199 --no-by-year
   ```
