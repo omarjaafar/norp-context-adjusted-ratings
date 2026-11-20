@@ -227,6 +227,41 @@ def check_a1_unseen_replays() -> str:
     return f"{again['usage']['cache_hits']} cache hits, 0 calls, rows identical"
 
 
+def check_benchmark_metrics() -> str:
+    """CP5 benchmark (first pass, 2387c33): the three metrics recomputed from the per-entry table,
+    run errors, plan failures and gold reviews in benchmark_cp5.json. A run error or a plan that
+    disagrees with gold is an invalid plan; a positive control counts only if supported AND on
+    gold; a negative control that did not run is left out of the false-positive rate."""
+    d = _load("data/output/benchmark_cp5.json")
+    m = d["metrics"]
+    kinds = {r["id"]: r["kind"] for r in d["table"]}
+    kinds |= {e["id"]: e["kind"] for e in d["run_errors"] + d["plan_failures"]}
+    bad = {e["id"] for e in d["run_errors"] + d["plan_failures"]} | {i for i, v in d["reviews"].items() if v}
+    valid = len(kinds) - len(bad)
+    rows = {r["id"]: r for r in d["table"]}
+    pos = [i for i, k in kinds.items() if k == "positive_control"]
+    neg_run = [i for i, k in kinds.items() if k == "negative_control" and i in rows]
+    recovered = sum(rows.get(i, {}).get("verdict") == "supported" and not d["reviews"].get(i) for i in pos)
+    fps = sum(rows[i]["verdict"] != "unsupported" for i in neg_run)
+    assert len(kinds) == d["entries"] == 20, f"{len(kinds)} entries"
+    assert (valid, recovered, fps, len(neg_run)) == (m["plan_validity"]["valid"], m["control_recovery"]["recovered"],
+            m["false_positive_rate"]["false_positives"], m["false_positive_rate"]["of"]), "a metric does not follow"
+    lit = [r for r in d["table"] if r["kind"] == "literature"]
+    return (f"plan validity {valid}/20, control recovery {recovered}/{len(pos)}, false positives {fps}/{len(neg_run)}; "
+            f"literature {sum(r['verdict'] == 'unsupported' for r in lit)}/{len(lit)} run unsupported")
+
+
+def check_benchmark_review() -> str:
+    """CP5 V7: every benchmark verdict and family q recomputed from its stored numbers, every
+    entry judged in its own BH family (literature or controls), matching the committed review.json."""
+    review = _script("review_theory_runs").review(OUT / "theory_runs" / "cp5")
+    assert review["all_follow"] and review["all_current_gate"] and review["all_in_own_family"], "review fails"
+    stored = {t["theory_id"]: t["verdict"] for t in _load("data/output/theory_runs/cp5/review.json")["theories"]}
+    now = {t["theory_id"]: t["verdict_recomputed"] for t in review["theories"]}
+    assert stored == now, "review.json differs from the recomputation"
+    return f"{len(now)} entries follow, each in its own family"
+
+
 def check_panel_hash() -> str:
     """The rebuilt panel's uncompressed CSV has the sha256 and row count in panel_join_log.json AS
     COMMITTED at HEAD. build_panel.py rewrites the working copy of the log, so reading that copy
@@ -254,6 +289,8 @@ CHECKS = {
     "cp5_reruns_follow": check_cp5_reruns,
     "a1_unseen": check_a1_unseen,
     "a1_unseen_replays": check_a1_unseen_replays,
+    "benchmark_metrics": check_benchmark_metrics,
+    "benchmark_review": check_benchmark_review,
 }
 SLOW = {"panel_hash": check_panel_hash}
 
