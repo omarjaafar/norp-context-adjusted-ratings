@@ -1,0 +1,119 @@
+{
+  "spec_version": 1,
+  "theory_id": "lit_housing_debt",
+  "theory": "Nonprofits in counties where families spend more of their income on housing carry more debt relative to what they own.",
+  "source": "scout mapping (housing burden and nonprofit leverage)",
+  "written_by": "Planner agent (claude-sonnet-5-5)",
+  "outcome": "liabilities_to_assets",
+  "exposure": "avg_housing_burden",
+  "exposure_type": "continuous",
+  "expected_sign": 1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": [
+      "990"
+    ],
+    "require_true": [
+      "has_county"
+    ],
+    "require_present": [
+      "liabilities_to_assets",
+      "avg_housing_burden",
+      "log_revenue",
+      "category",
+      "county_fips",
+      "state",
+      "tax_year",
+      "median_household_income",
+      "poverty_rate",
+      "unemployment_rate"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Liabilities-to-assets is positively correlated with county average housing burden.",
+      "method": "correlation"
+    },
+    {
+      "id": "H2",
+      "claim": "The positive association remains after controlling for organization size, county economic conditions (median household income, poverty rate, unemployment rate), and absorbing sector, state and tax year.",
+      "method": "fixed_effects",
+      "controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "unemployment_rate"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "unemployment_rate"
+      ],
+      "categorical": [
+        "category",
+        "state"
+      ],
+      "group": "county_fips",
+      "years": [
+        2022
+      ]
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "unemployment_rate"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "groups": [
+        "county_fips",
+        "tax_year"
+      ]
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {
+      "keep_paths": true,
+      "studentized": true
+    },
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year": 2022,
+    "outcome_rule": {
+      "heavy_tail_ratio": 3.0,
+      "winsorize": [
+        0.01,
+        0.99
+      ]
+    }
+  },
+  "gate_overrides": []
+}

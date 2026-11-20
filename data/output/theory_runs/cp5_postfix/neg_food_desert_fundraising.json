@@ -1,0 +1,924 @@
+{
+  "generated_at": "2026-11-19T23:18:25",
+  "theory_id": "neg_food_desert_fundraising",
+  "theory": "In counties with more residents in food deserts, nonprofits spend a larger share of their budget on fundraising.",
+  "exposure_type": "continuous",
+  "verdict": "unsupported",
+  "reasons": [
+    "H1 not significant after FDR (q = 0.9526)",
+    "H1 gap +0.001 SD is below the 0.1 SD floor"
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 199,
+    "seed": 6235,
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year_for_information": 2022,
+    "permutation_unit": "county_fips",
+    "permutation_within": "tax_year",
+    "permutation_keep_paths": true,
+    "permutation_studentized": true,
+    "fdr_family": "controls: 20 hypotheses (10 entries x H1, H2)",
+    "family_alpha": 0.05,
+    "family": "controls"
+  },
+  "rating": {
+    "anchors": {
+      "program_expense_ratio": [
+        0.65,
+        0.85
+      ],
+      "admin_expense_ratio": [
+        0.35,
+        0.15
+      ],
+      "fundraising_efficiency": [
+        0.35,
+        0.1
+      ],
+      "liabilities_to_assets": [
+        1.0,
+        0.0
+      ]
+    },
+    "min_components": 3,
+    "rescored": false
+  },
+  "population": {
+    "rows_in": 1289156,
+    "after_return_type": 1289156,
+    "after_fundraising_expense_ratio_present": 1289156,
+    "after_food_desert_share_present": 1289156,
+    "after_log_revenue_present": 1289156,
+    "after_category_present": 1289156,
+    "after_county_fips_present": 1289156,
+    "after_state_present": 1289156,
+    "after_tax_year_present": 1289156,
+    "after_control_poverty_rate_present": 1289156,
+    "after_control_median_household_income_present": 1289156,
+    "after_control_nonprofit_density_present": 1289156,
+    "after_control_population_present": 1289156,
+    "outcome_rule": {
+      "applied": false,
+      "reason": "bounded outcome [0, 1]: exempt (D-a)",
+      "bounded": [
+        0,
+        1
+      ]
+    },
+    "rows_out": 1289156,
+    "units": 3076,
+    "exposure_mean": 0.5760013736408387,
+    "exposure_sd": 0.298182166498387
+  },
+  "outcome_sd": 0.07219183978125207,
+  "H1": {
+    "claim": "Fundraising expense ratio is positively correlated with the county food-desert share.",
+    "method": "correlation",
+    "effect": 0.001251676179800541,
+    "standardized_effect": 0.001251676179800541,
+    "mean_exposed": null,
+    "mean_unexposed": null,
+    "n_exposed": null,
+    "n_unexposed": null,
+    "welch_t_p_value_rows_independent": null,
+    "permutation": {
+      "observed": 0.15161723662356372,
+      "p_value": 0.905,
+      "n_permutations": 199,
+      "units_permuted": 3076,
+      "null_mean": 0.13511498096944344,
+      "null_sd": 1.12527555425341,
+      "seed": 6235,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": 9.036080623017164e-05,
+        "p_value": 0.89,
+        "null_mean": 7.281309311728763e-05,
+        "null_sd": 0.000594400103209476
+      }
+    },
+    "q_value": 0.905,
+    "family_q_value": 0.9526315789473685
+  },
+  "H2": {
+    "claim": "The positive association remains after controlling for organization size, county economic conditions, donor competition and population, with sector, state and tax year fixed effects.",
+    "method": "fixed_effects",
+    "fit": {
+      "method": "fixed_effects",
+      "outcome": "fundraising_expense_ratio",
+      "exposure": "food_desert_share",
+      "effect": -8.596562362760517e-05,
+      "std_error": 0.00022756046396674612,
+      "p_value": 0.705627184761691,
+      "n_obs": 1289156,
+      "standardized_effect": -0.0011907941934724054,
+      "n_groups": 3076,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.0010798176052012193,
+            "std_error": 0.00010228805139573788,
+            "p_value": 1.2913850548967161e-25
+          },
+          "poverty_rate": {
+            "coef": 1.3254089088725525e-06,
+            "std_error": 2.699110302899527e-07,
+            "p_value": 9.556596846189815e-07
+          },
+          "median_household_income": {
+            "coef": 1.4811626253230356e-07,
+            "std_error": 1.4700896895633585e-08,
+            "p_value": 1.6386252944469633e-23
+          },
+          "nonprofit_density": {
+            "coef": 0.0004273308639582061,
+            "std_error": 5.3503309887426666e-05,
+            "p_value": 1.935816359353838e-15
+          },
+          "population": {
+            "coef": 1.2274827600753885e-09,
+            "std_error": 3.2755696322093254e-10,
+            "p_value": 0.00018197010525869807
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 5,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3075,
+        "outcome_sd": 0.07219183978125207
+      }
+    },
+    "permutation": {
+      "observed": -0.3753081869467893,
+      "p_value": 0.825,
+      "n_permutations": 199,
+      "units_permuted": 3076,
+      "null_mean": 0.14873745223940968,
+      "null_sd": 1.3185807045397373,
+      "seed": 6236,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": -8.595127265103421e-05,
+        "p_value": 0.83,
+        "null_mean": 3.440219588895724e-05,
+        "null_sd": 0.0003026401236034579
+      }
+    },
+    "q_value": 0.905,
+    "family_q_value": 0.9166666666666666
+  },
+  "replication": {
+    "by": "state",
+    "n_folds": 5,
+    "seed": 6237,
+    "rule": "expected sign in every held-out fold and inverse-variance-pooled held-out p < alpha",
+    "folds": [
+      {
+        "fold": 0,
+        "held_out": [
+          "DE",
+          "HI",
+          "ID",
+          "ME",
+          "MI",
+          "MN",
+          "RI",
+          "TN",
+          "UT",
+          "WI"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": -8.6319437174338e-05,
+          "std_error": 0.00024795706933538285,
+          "p_value": 0.7277759358703639,
+          "n_obs": 1127920,
+          "standardized_effect": -0.001196434692801391,
+          "n_groups": 2641,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0011105172617816262,
+                "std_error": 0.00011139547592534946,
+                "p_value": 5.276976164911629e-23
+              },
+              "poverty_rate": {
+                "coef": 1.2945309500538576e-06,
+                "std_error": 2.829141951906885e-07,
+                "p_value": 4.965593688677095e-06
+              },
+              "median_household_income": {
+                "coef": 1.4074869823651667e-07,
+                "std_error": 1.5202791720649884e-08,
+                "p_value": 4.178320759914834e-20
+              },
+              "nonprofit_density": {
+                "coef": 0.00040727312696362515,
+                "std_error": 5.9080578786330444e-05,
+                "p_value": 6.783258666441458e-12
+              },
+              "population": {
+                "coef": 1.1905872175483934e-09,
+                "std_error": 3.260025422738896e-10,
+                "p_value": 0.00026518147349609755
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2640,
+            "outcome_sd": 0.0721472201480763
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": -0.00012857239346175965,
+          "std_error": 0.0004845904176596158,
+          "p_value": 0.7908875619096081,
+          "n_obs": 161236,
+          "standardized_effect": -0.0017733300574061502,
+          "n_groups": 435,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0008287604001548824,
+                "std_error": 0.00022532422801425697,
+                "p_value": 0.0002645010884171069
+              },
+              "poverty_rate": {
+                "coef": -0.019651586265638038,
+                "std_error": 0.030249217980660374,
+                "p_value": 0.5162581308545415
+              },
+              "median_household_income": {
+                "coef": 1.9435862447650303e-07,
+                "std_error": 6.290850002071293e-08,
+                "p_value": 0.002133501593626112
+              },
+              "nonprofit_density": {
+                "coef": 0.0006987200056525126,
+                "std_error": 0.00011144593881503408,
+                "p_value": 8.750076412141128e-10
+              },
+              "population": {
+                "coef": 3.4260779697550173e-09,
+                "std_error": 1.7052152883863449e-09,
+                "p_value": 0.045137147477734375
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 434,
+            "outcome_sd": 0.07250336333317582
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 1,
+        "held_out": [
+          "AR",
+          "AZ",
+          "CA",
+          "GA",
+          "MA",
+          "MS",
+          "NC",
+          "OR",
+          "SC",
+          "TX"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": 0.0002760899523425506,
+          "std_error": 0.00025443970311397424,
+          "p_value": 0.27799767471405573,
+          "n_obs": 886279,
+          "standardized_effect": 0.0038181151277024445,
+          "n_groups": 2259,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0009620159147906677,
+                "std_error": 0.00012387295257098796,
+                "p_value": 1.2176767282983361e-14
+              },
+              "poverty_rate": {
+                "coef": 0.014155364427895459,
+                "std_error": 0.009501410780804565,
+                "p_value": 0.1364119899437133
+              },
+              "median_household_income": {
+                "coef": 1.5576573364288824e-07,
+                "std_error": 2.5880032167990937e-08,
+                "p_value": 2.0453246253617744e-09
+              },
+              "nonprofit_density": {
+                "coef": 0.0003655455672571014,
+                "std_error": 5.857239701556248e-05,
+                "p_value": 5.179503730060409e-10
+              },
+              "population": {
+                "coef": 2.979363587911231e-09,
+                "std_error": 3.6855959952879966e-10,
+                "p_value": 1.0125386816389009e-15
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2258,
+            "outcome_sd": 0.07231053624846773
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": -0.00012805651650567914,
+          "std_error": 0.0004386355897270589,
+          "p_value": 0.7704045383223664,
+          "n_obs": 402877,
+          "standardized_effect": -0.0017803206150585845,
+          "n_groups": 817,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.00121834886521965,
+                "std_error": 0.00017380829891149396,
+                "p_value": 5.006003068012181e-12
+              },
+              "poverty_rate": {
+                "coef": 1.3934727460192966e-06,
+                "std_error": 6.1279405668854e-07,
+                "p_value": 0.023226972049418874
+              },
+              "median_household_income": {
+                "coef": 1.5048044527222194e-07,
+                "std_error": 2.469192794878476e-08,
+                "p_value": 1.6932875550384596e-09
+              },
+              "nonprofit_density": {
+                "coef": 0.0005802442051699619,
+                "std_error": 8.211863220152133e-05,
+                "p_value": 3.4230144045378006e-12
+              },
+              "population": {
+                "coef": 9.060022990769763e-10,
+                "std_error": 1.8439961975575243e-10,
+                "p_value": 1.082600017371089e-06
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 9,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 816,
+            "outcome_sd": 0.07192890731171206
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 2,
+        "held_out": [
+          "AK",
+          "FL",
+          "IA",
+          "KY",
+          "MD",
+          "NH",
+          "NY",
+          "OK",
+          "SD",
+          "VA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": -0.00014649943842477738,
+          "std_error": 0.0002542864725306104,
+          "p_value": 0.5645883624082417,
+          "n_obs": 997725,
+          "standardized_effect": -0.002038616408732863,
+          "n_groups": 2399,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0010673464520008819,
+                "std_error": 0.00010955227254072114,
+                "p_value": 5.041691324046548e-22
+              },
+              "poverty_rate": {
+                "coef": 1.238802417223352e-06,
+                "std_error": 2.021150826179214e-07,
+                "p_value": 1.0295893429059565e-09
+              },
+              "median_household_income": {
+                "coef": 1.7143576969071281e-07,
+                "std_error": 1.7599806136356403e-08,
+                "p_value": 5.139486448091195e-22
+              },
+              "nonprofit_density": {
+                "coef": 0.0004665665356012629,
+                "std_error": 5.0935780342408935e-05,
+                "p_value": 1.0826271253500294e-19
+              },
+              "population": {
+                "coef": 1.2008861478753783e-09,
+                "std_error": 2.8939246700892603e-10,
+                "p_value": 3.445491510862799e-05
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 9,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2398,
+            "outcome_sd": 0.07186218937374128
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": 0.00026201873825058445,
+          "std_error": 0.0005134390732575101,
+          "p_value": 0.6099931847546651,
+          "n_obs": 291431,
+          "standardized_effect": 0.00357415454733693,
+          "n_groups": 677,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.001066920203853892,
+                "std_error": 0.00024213107836300847,
+                "p_value": 1.2221231831845693e-05
+              },
+              "poverty_rate": {
+                "coef": 0.0032734908247651906,
+                "std_error": 0.014251800534000682,
+                "p_value": 0.8184024322997143
+              },
+              "median_household_income": {
+                "coef": 9.126040025209273e-08,
+                "std_error": 3.6218932570772536e-08,
+                "p_value": 0.01197525013615306
+              },
+              "nonprofit_density": {
+                "coef": 0.0003962298281710497,
+                "std_error": 8.681481938757499e-05,
+                "p_value": 5.95940127876388e-06
+              },
+              "population": {
+                "coef": 3.2299988645071513e-09,
+                "std_error": 9.871419187199598e-10,
+                "p_value": 0.001121916512023857
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 10
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 676,
+            "outcome_sd": 0.07330929168852315
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 3,
+        "held_out": [
+          "IN",
+          "KS",
+          "MO",
+          "ND",
+          "NE",
+          "NV",
+          "OH",
+          "VT",
+          "WV",
+          "WY"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": -0.0002255271082201105,
+          "std_error": 0.0002474809752449064,
+          "p_value": 0.3622322872958755,
+          "n_obs": 1130426,
+          "standardized_effect": -0.003117114465276317,
+          "n_groups": 2440,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0011099941786938134,
+                "std_error": 0.00010941745846020535,
+                "p_value": 1.0279174668302295e-23
+              },
+              "poverty_rate": {
+                "coef": 1.552305642714119e-06,
+                "std_error": 3.412669075711201e-07,
+                "p_value": 5.663212506700143e-06
+              },
+              "median_household_income": {
+                "coef": 1.455655233813463e-07,
+                "std_error": 1.5040756974823614e-08,
+                "p_value": 9.151355258178318e-22
+              },
+              "nonprofit_density": {
+                "coef": 0.00044029776463572705,
+                "std_error": 5.5884803724004866e-05,
+                "p_value": 4.940507136782088e-15
+              },
+              "population": {
+                "coef": 1.1890021539252534e-09,
+                "std_error": 2.9980723619506703e-10,
+                "p_value": 7.522903712723344e-05
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2439,
+            "outcome_sd": 0.07235124366859548
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": 0.00034135260630227993,
+          "std_error": 0.00043002096543368415,
+          "p_value": 0.4276057429515107,
+          "n_obs": 158730,
+          "standardized_effect": 0.004809988701060443,
+          "n_groups": 636,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0007040861018852412,
+                "std_error": 0.00024470793819123053,
+                "p_value": 0.004146305781421717
+              },
+              "poverty_rate": {
+                "coef": 0.025477798323461573,
+                "std_error": 0.018580604202637727,
+                "p_value": 0.1707957532690404
+              },
+              "median_household_income": {
+                "coef": 2.0051770797817317e-07,
+                "std_error": 6.638918744874971e-08,
+                "p_value": 0.002626361742000436
+              },
+              "nonprofit_density": {
+                "coef": 0.00013947088336968653,
+                "std_error": 0.00011491260806008467,
+                "p_value": 0.22530871341875527
+              },
+              "population": {
+                "coef": 7.39090976830298e-09,
+                "std_error": 2.2949548692062377e-09,
+                "p_value": 0.0013449709882603546
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 635,
+            "outcome_sd": 0.07096744452373101
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 4,
+        "held_out": [
+          "AL",
+          "CO",
+          "DC",
+          "IL",
+          "LA",
+          "MT",
+          "NJ",
+          "NM",
+          "PA",
+          "WA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": 6.2722579667037e-05,
+          "std_error": 0.0002614962726118838,
+          "p_value": 0.8104577162801128,
+          "n_obs": 1014274,
+          "standardized_effect": 0.0008677628083601422,
+          "n_groups": 2565,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0010803715980945677,
+                "std_error": 0.00011565373198708756,
+                "p_value": 1.997304258735693e-20
+              },
+              "poverty_rate": {
+                "coef": 1.197371563865353e-06,
+                "std_error": 4.199184655973617e-07,
+                "p_value": 0.0043870139005014125
+              },
+              "median_household_income": {
+                "coef": 1.447959624172839e-07,
+                "std_error": 1.6037097423844247e-08,
+                "p_value": 3.3246238709447527e-19
+              },
+              "nonprofit_density": {
+                "coef": 0.00044770569444177536,
+                "std_error": 6.010549243441874e-05,
+                "p_value": 1.2810799114542227e-13
+              },
+              "population": {
+                "coef": 1.0074444034386863e-09,
+                "std_error": 2.6307144023430176e-10,
+                "p_value": 0.00013145582231258822
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2564,
+            "outcome_sd": 0.07228078809411896
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "fundraising_expense_ratio",
+          "exposure": "food_desert_share",
+          "effect": 0.0001957266741265401,
+          "std_error": 0.0004502147120933625,
+          "p_value": 0.6639345174747863,
+          "n_obs": 274882,
+          "standardized_effect": 0.0027241816785481573,
+          "n_groups": 511,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.0010379858680147312,
+                "std_error": 0.00020995201353683478,
+                "p_value": 1.0406674237013722e-06
+              },
+              "poverty_rate": {
+                "coef": 1.2545365178828296e-06,
+                "std_error": 1.575545131763391e-06,
+                "p_value": 0.42625401028558285
+              },
+              "median_household_income": {
+                "coef": 1.3586714436634315e-07,
+                "std_error": 2.9824853391784244e-08,
+                "p_value": 6.545706263435631e-06
+              },
+              "nonprofit_density": {
+                "coef": 0.0002696021666751288,
+                "std_error": 6.99556781438718e-05,
+                "p_value": 0.0001310886915003252
+              },
+              "population": {
+                "coef": 2.7848538391949085e-09,
+                "std_error": 3.63352315869297e-10,
+                "p_value": 9.137680553569704e-14
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 10
+            },
+            "demeaning_sweeps": 10,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 510,
+            "outcome_sd": 0.07184787845385257
+          }
+        },
+        "same_sign": true
+      }
+    ],
+    "folds_with_expected_sign": 1,
+    "pooled_effect": 0.00010989266752812702,
+    "pooled_std_error": 0.0002058876665234336,
+    "pooled_p_value": 0.593514089155588,
+    "heterogeneity": {
+      "cochran_q": 0.9502892654612541,
+      "p_value": 0.9172377310279451,
+      "i_squared": 0.0
+    },
+    "same_sign_in_every_fold": false,
+    "significant_pooled": false,
+    "replicated": false
+  },
+  "replication_year": {
+    "holdout_year": 2022,
+    "train_years": [
+      2018,
+      2019,
+      2020,
+      2021
+    ],
+    "train": {
+      "method": "fixed_effects",
+      "outcome": "fundraising_expense_ratio",
+      "exposure": "food_desert_share",
+      "effect": -3.644028712711779e-05,
+      "std_error": 0.0002348814577948742,
+      "p_value": 0.8767185370896529,
+      "n_obs": 1002604,
+      "standardized_effect": -0.0005044896396203058,
+      "n_groups": 3071,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.0010569269276264688,
+            "std_error": 0.00010392139901027333,
+            "p_value": 6.404693108864752e-24
+          },
+          "poverty_rate": {
+            "coef": 1.2997259008178632e-06,
+            "std_error": 2.773207606998297e-07,
+            "p_value": 2.896970963846082e-06
+          },
+          "median_household_income": {
+            "coef": 1.5427717009789738e-07,
+            "std_error": 1.570565374852274e-08,
+            "p_value": 1.9123290479481993e-22
+          },
+          "nonprofit_density": {
+            "coef": 0.00044192823953383007,
+            "std_error": 5.3659758081695605e-05,
+            "p_value": 2.609461212444339e-16
+          },
+          "population": {
+            "coef": 1.2312627172854348e-09,
+            "std_error": 3.2205319878052554e-10,
+            "p_value": 0.00013436581829316294
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 4,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3070,
+        "outcome_sd": 0.07223198310780743
+      }
+    },
+    "test": {
+      "method": "fixed_effects",
+      "outcome": "fundraising_expense_ratio",
+      "exposure": "food_desert_share",
+      "effect": -0.0002471708012387083,
+      "std_error": 0.00022374650198073244,
+      "p_value": 0.26938019639092226,
+      "n_obs": 286552,
+      "standardized_effect": -0.0034305078219016116,
+      "n_groups": 3063,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.0011584440983707772,
+            "std_error": 0.00011228368802233306,
+            "p_value": 1.4813736559763734e-24
+          },
+          "poverty_rate": {
+            "coef": 1.4703431718372948e-06,
+            "std_error": 2.793527760570787e-07,
+            "p_value": 1.511800113553583e-07
+          },
+          "median_household_income": {
+            "coef": 1.323886790515803e-07,
+            "std_error": 1.3265583700592654e-08,
+            "p_value": 4.1919762413539755e-23
+          },
+          "nonprofit_density": {
+            "coef": 0.0003985522150705873,
+            "std_error": 5.494724157815148e-05,
+            "p_value": 5.126515289139026e-13
+          },
+          "population": {
+            "coef": 1.219471447497424e-09,
+            "std_error": 3.480277792696533e-10,
+            "p_value": 0.00046498232985377663
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 1,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3062,
+        "outcome_sd": 0.07205079074901968
+      }
+    },
+    "same_sign": false,
+    "significant_in_holdout": false,
+    "replicated": false
+  },
+  "robustness": [],
+  "benchmark": {
+    "id": "neg_food_desert_fundraising",
+    "kind": "negative_control",
+    "preparation": {
+      "rows_in": 2390744,
+      "after_return_type": 1531303,
+      "after_fundraising_expense_ratio_present": 1339935,
+      "after_food_desert_share_present": 1300583,
+      "after_log_revenue_present": 1289176,
+      "after_category_present": 1289176,
+      "after_county_fips_present": 1289176,
+      "after_state_present": 1289176,
+      "after_tax_year_present": 1289176,
+      "after_control_poverty_rate_present": 1289161,
+      "after_control_median_household_income_present": 1289156,
+      "after_control_nonprofit_density_present": 1289156,
+      "after_control_population_present": 1289156,
+      "outcome_rule": {
+        "applied": false,
+        "reason": "no outcome rule in the spec"
+      },
+      "rows_out": 1289156,
+      "units": 3076,
+      "exposure_mean": 0.69269673537105,
+      "exposure_sd": 0.2386059781471989,
+      "placebo_seed": 3003
+    }
+  },
+  "verdict_within_theory": "unsupported"
+}

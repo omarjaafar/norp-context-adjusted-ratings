@@ -1,0 +1,119 @@
+{
+  "spec_version": 1,
+  "theory_id": "pos_unemployment_margin",
+  "theory": "When a county's jobless rate is high, the nonprofits based there end the year with thinner surpluses or deeper deficits relative to their revenue.",
+  "source": "scout mapping",
+  "written_by": "Planner agent (claude-sonnet-5-5)",
+  "outcome": "operating_margin",
+  "exposure": "unemployment_rate",
+  "exposure_type": "continuous",
+  "expected_sign": -1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": [
+      "990"
+    ],
+    "require_true": [
+      "has_county"
+    ],
+    "require_present": [
+      "operating_margin",
+      "unemployment_rate",
+      "log_revenue",
+      "category",
+      "state",
+      "tax_year",
+      "median_household_income",
+      "poverty_rate",
+      "nonprofit_density",
+      "county_fips"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Operating margin is negatively correlated with the county unemployment rate.",
+      "method": "correlation"
+    },
+    {
+      "id": "H2",
+      "claim": "The negative association remains after controlling for organization size, sector, state, tax year, county median household income, poverty rate and nonprofit density.",
+      "method": "fixed_effects",
+      "controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "nonprofit_density"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "nonprofit_density"
+      ],
+      "categorical": [
+        "category",
+        "state"
+      ],
+      "group": "county_fips",
+      "years": [
+        2022
+      ]
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "controls": [
+        "log_revenue",
+        "median_household_income",
+        "poverty_rate",
+        "nonprofit_density"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "groups": [
+        "county_fips",
+        "tax_year"
+      ]
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {
+      "keep_paths": true,
+      "studentized": true
+    },
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year": 2022,
+    "outcome_rule": {
+      "heavy_tail_ratio": 3.0,
+      "winsorize": [
+        0.01,
+        0.99
+      ]
+    }
+  },
+  "gate_overrides": []
+}

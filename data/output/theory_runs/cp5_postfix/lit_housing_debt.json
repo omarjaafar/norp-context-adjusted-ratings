@@ -1,0 +1,1080 @@
+{
+  "generated_at": "2026-11-19T23:34:44",
+  "theory_id": "lit_housing_debt",
+  "theory": "Nonprofits in counties where families spend more of their income on housing carry more debt relative to what they own.",
+  "exposure_type": "continuous",
+  "verdict": "unsupported",
+  "reasons": [
+    "H1 gap +0.048 SD is below the 0.1 SD floor"
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year_for_information": 2022,
+    "permutation_unit": "county_fips",
+    "permutation_within": "tax_year",
+    "permutation_keep_paths": true,
+    "permutation_studentized": true,
+    "fdr_family": "literature: 20 hypotheses (10 entries x H1, H2)",
+    "family_alpha": 0.05,
+    "family": "literature"
+  },
+  "rating": {
+    "anchors": {
+      "program_expense_ratio": [
+        0.65,
+        0.85
+      ],
+      "admin_expense_ratio": [
+        0.35,
+        0.15
+      ],
+      "fundraising_efficiency": [
+        0.35,
+        0.1
+      ],
+      "liabilities_to_assets": [
+        1.0,
+        0.0
+      ]
+    },
+    "min_components": 3,
+    "rescored": false
+  },
+  "population": {
+    "rows_in": 1441134,
+    "after_return_type": 1441134,
+    "after_has_county": 1441134,
+    "after_liabilities_to_assets_present": 1441134,
+    "after_avg_housing_burden_present": 1441134,
+    "after_log_revenue_present": 1441134,
+    "after_category_present": 1441134,
+    "after_county_fips_present": 1441134,
+    "after_state_present": 1441134,
+    "after_tax_year_present": 1441134,
+    "after_median_household_income_present": 1441134,
+    "after_poverty_rate_present": 1441134,
+    "after_unemployment_rate_present": 1441134,
+    "outcome_rule": {
+      "applied": true,
+      "sd_over_robust_sd": 669.6366163309776,
+      "threshold": 3.0,
+      "raw_sd": 155.44838192121298,
+      "raw_robust_sd": 0.23213841377571917,
+      "quantiles": [
+        0.01,
+        0.99
+      ],
+      "lower": 0.0,
+      "upper": 3.0772237499814152,
+      "rows_clipped": 14412,
+      "sd_after": 0.4751844500914533,
+      "sd_over_robust_sd_after": 2.0469875810840743,
+      "pooled_over_years": true,
+      "still_above_threshold_after": false
+    },
+    "rows_out": 1441134,
+    "units": 3091,
+    "exposure_mean": 29.632119063535537,
+    "exposure_sd": 3.0416189851901207
+  },
+  "outcome_sd": 0.4751844500914533,
+  "H1": {
+    "claim": "Liabilities-to-assets is positively correlated with county average housing burden.",
+    "method": "correlation",
+    "effect": 0.047648896180097364,
+    "standardized_effect": 0.047648896180097364,
+    "mean_exposed": null,
+    "mean_unexposed": null,
+    "n_exposed": null,
+    "n_unexposed": null,
+    "welch_t_p_value_rows_independent": null,
+    "permutation": {
+      "observed": 6.736864947707699,
+      "p_value": 0.001,
+      "n_permutations": 999,
+      "units_permuted": 3091,
+      "null_mean": 0.03501558301501238,
+      "null_sd": 1.0115145791918037,
+      "seed": 6235,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": 0.022642014528804433,
+        "p_value": 0.001,
+        "null_mean": 7.141823178155646e-05,
+        "null_sd": 0.0024304716560522026
+      }
+    },
+    "q_value": 0.001,
+    "family_q_value": 0.0015384615384615385
+  },
+  "H2": {
+    "claim": "The positive association remains after controlling for organization size, county economic conditions (median household income, poverty rate, unemployment rate), and absorbing sector, state and tax year.",
+    "method": "fixed_effects",
+    "fit": {
+      "method": "fixed_effects",
+      "outcome": "liabilities_to_assets",
+      "exposure": "avg_housing_burden",
+      "effect": 0.01331862616602548,
+      "std_error": 0.0026109206306354008,
+      "p_value": 3.5802504846197094e-07,
+      "n_obs": 1441134,
+      "standardized_effect": 0.028028329132954995,
+      "n_groups": 3091,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.03324534574942373,
+            "std_error": 0.0010334616494356353,
+            "p_value": 4.352446190951996e-196
+          },
+          "median_household_income": {
+            "coef": 8.527811716629356e-07,
+            "std_error": 1.462149784444904e-07,
+            "p_value": 6.028966741867012e-09
+          },
+          "poverty_rate": {
+            "coef": 0.2980152656614228,
+            "std_error": 0.07491599900330613,
+            "p_value": 7.109473976431729e-05
+          },
+          "unemployment_rate": {
+            "coef": 0.5243422808282155,
+            "std_error": 0.1381199315106051,
+            "p_value": 0.00014970364331537642
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 5,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3090,
+        "outcome_sd": 0.4751844500914533
+      }
+    },
+    "permutation": {
+      "observed": 5.012493401762311,
+      "p_value": 0.001,
+      "n_permutations": 999,
+      "units_permuted": 3091,
+      "null_mean": 0.018652699161613107,
+      "null_sd": 1.1442918768889132,
+      "seed": 6236,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": 0.01331862616654758,
+        "p_value": 0.001,
+        "null_mean": 1.980017320244555e-05,
+        "null_sd": 0.0016478500092539908
+      }
+    },
+    "q_value": 0.001,
+    "family_q_value": 0.0015384615384615385
+  },
+  "replication": {
+    "by": "state",
+    "n_folds": 5,
+    "seed": 6237,
+    "rule": "expected sign in every held-out fold and inverse-variance-pooled held-out p < alpha",
+    "folds": [
+      {
+        "fold": 0,
+        "held_out": [
+          "DE",
+          "HI",
+          "ID",
+          "ME",
+          "MI",
+          "MN",
+          "RI",
+          "TN",
+          "UT",
+          "WI"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.014021616572570122,
+          "std_error": 0.002804823665521135,
+          "p_value": 6.134485943283745e-07,
+          "n_obs": 1260880,
+          "standardized_effect": 0.029312883726495834,
+          "n_groups": 2656,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03275014882398543,
+                "std_error": 0.0011238084716715018,
+                "p_value": 3.095728418006367e-162
+              },
+              "median_household_income": {
+                "coef": 8.299046060147585e-07,
+                "std_error": 1.5395351727074074e-07,
+                "p_value": 7.639201472623664e-08
+              },
+              "poverty_rate": {
+                "coef": 0.3105750976393784,
+                "std_error": 0.08118074100240312,
+                "p_value": 0.00013339353052987813
+              },
+              "unemployment_rate": {
+                "coef": 0.4826837492589444,
+                "std_error": 0.1474960539894155,
+                "p_value": 0.0010795914313298976
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2655,
+            "outcome_sd": 0.47834313073387663
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.002165697842517425,
+          "std_error": 0.0041383660356404724,
+          "p_value": 0.6010173072302132,
+          "n_obs": 180254,
+          "standardized_effect": 0.0047869738849660795,
+          "n_groups": 435,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03663810759793112,
+                "std_error": 0.0018297987370854178,
+                "p_value": 1.2003977380614123e-63
+              },
+              "median_household_income": {
+                "coef": 1.556706716309231e-06,
+                "std_error": 3.8474823209205654e-07,
+                "p_value": 6.166559845545072e-05
+              },
+              "poverty_rate": {
+                "coef": 0.3426234171051701,
+                "std_error": 0.14047013609093384,
+                "p_value": 0.015122850778977057
+              },
+              "unemployment_rate": {
+                "coef": 0.9996045827500576,
+                "std_error": 0.33766441870150504,
+                "p_value": 0.003241334114989578
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 434,
+            "outcome_sd": 0.45241480203578993
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 1,
+        "held_out": [
+          "AR",
+          "AZ",
+          "CA",
+          "GA",
+          "MA",
+          "MS",
+          "NC",
+          "OR",
+          "SC",
+          "TX"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.014391990995659687,
+          "std_error": 0.003069705565602777,
+          "p_value": 2.917076678246499e-06,
+          "n_obs": 998569,
+          "standardized_effect": 0.03027242481312535,
+          "n_groups": 2268,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03422431408545267,
+                "std_error": 0.0013194355424258532,
+                "p_value": 4.0547707585287655e-130
+              },
+              "median_household_income": {
+                "coef": 9.58163292714083e-07,
+                "std_error": 1.385070231049477e-07,
+                "p_value": 5.9458267216936355e-12
+              },
+              "poverty_rate": {
+                "coef": 0.35814432484713077,
+                "std_error": 0.08814392098336812,
+                "p_value": 5.005688067433642e-05
+              },
+              "unemployment_rate": {
+                "coef": 0.536584899899858,
+                "std_error": 0.1818800677459847,
+                "p_value": 0.003208088393284761
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2267,
+            "outcome_sd": 0.4754158639257628
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.008196687877551031,
+          "std_error": 0.004091550170186765,
+          "p_value": 0.045470696620918884,
+          "n_obs": 442565,
+          "standardized_effect": 0.01726872719583591,
+          "n_groups": 823,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.030869499397933407,
+                "std_error": 0.001532732612669213,
+                "p_value": 1.2298694442628314e-73
+              },
+              "median_household_income": {
+                "coef": 4.0075617110871046e-07,
+                "std_error": 2.75575983893353e-07,
+                "p_value": 0.14625892258024353
+              },
+              "poverty_rate": {
+                "coef": 0.1202777012785183,
+                "std_error": 0.09742506753773346,
+                "p_value": 0.21734477425943696
+              },
+              "unemployment_rate": {
+                "coef": 0.382497870313515,
+                "std_error": 0.17085585080759205,
+                "p_value": 0.02544124057163735
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 822,
+            "outcome_sd": 0.47465500986821635
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 2,
+        "held_out": [
+          "AK",
+          "FL",
+          "IA",
+          "KY",
+          "MD",
+          "NH",
+          "NY",
+          "OK",
+          "SD",
+          "VA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.011955065375697316,
+          "std_error": 0.0024504728597784763,
+          "p_value": 1.1377259404086942e-06,
+          "n_obs": 1114936,
+          "standardized_effect": 0.0256773760796506,
+          "n_groups": 2410,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.034134178093272446,
+                "std_error": 0.0010576647064011605,
+                "p_value": 3.2033308696009294e-190
+              },
+              "median_household_income": {
+                "coef": 7.466800024485166e-07,
+                "std_error": 2.1468345609124655e-07,
+                "p_value": 0.0005140310025440764
+              },
+              "poverty_rate": {
+                "coef": 0.18022309182244983,
+                "std_error": 0.0834851033532668,
+                "p_value": 0.030968384225885125
+              },
+              "unemployment_rate": {
+                "coef": 0.7064880173308051,
+                "std_error": 0.1391308456715962,
+                "p_value": 4.109095818075071e-07
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2409,
+            "outcome_sd": 0.4655875015660865
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.01789975908727119,
+          "std_error": 0.006324800283295042,
+          "p_value": 0.00479079809616087,
+          "n_obs": 326198,
+          "standardized_effect": 0.03537420289041258,
+          "n_groups": 681,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.030445089627663704,
+                "std_error": 0.002450770296342452,
+                "p_value": 4.453469400078699e-32
+              },
+              "median_household_income": {
+                "coef": 1.0910613515057868e-06,
+                "std_error": 1.8508348284861324e-07,
+                "p_value": 5.900999162108892e-09
+              },
+              "poverty_rate": {
+                "coef": 0.5802784808050532,
+                "std_error": 0.1620283902746355,
+                "p_value": 0.00036620377140792344
+              },
+              "unemployment_rate": {
+                "coef": 0.054311601976804076,
+                "std_error": 0.3079104665583225,
+                "p_value": 0.8600419285167408
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 10
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 680,
+            "outcome_sd": 0.5060116589121091
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 3,
+        "held_out": [
+          "IN",
+          "KS",
+          "MO",
+          "ND",
+          "NE",
+          "NV",
+          "OH",
+          "VT",
+          "WV",
+          "WY"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.013470717607393006,
+          "std_error": 0.002927718229911127,
+          "p_value": 4.4168474343513845e-06,
+          "n_obs": 1261050,
+          "standardized_effect": 0.028239358009820727,
+          "n_groups": 2451,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03268130693559877,
+                "std_error": 0.0011078912757074722,
+                "p_value": 6.375467793316797e-164
+              },
+              "median_household_income": {
+                "coef": 8.252488037599849e-07,
+                "std_error": 1.4871593674970767e-07,
+                "p_value": 3.179035924033324e-08
+              },
+              "poverty_rate": {
+                "coef": 0.3171425645887089,
+                "std_error": 0.07800558696626654,
+                "p_value": 4.941162231787663e-05
+              },
+              "unemployment_rate": {
+                "coef": 0.4280761695772757,
+                "std_error": 0.14026655943688998,
+                "p_value": 0.0022985635801277284
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2450,
+            "outcome_sd": 0.47701925811161605
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.011097095392754065,
+          "std_error": 0.00432441740654102,
+          "p_value": 0.010510271541978958,
+          "n_obs": 180084,
+          "standardized_effect": 0.024034889914751497,
+          "n_groups": 640,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03758785103183204,
+                "std_error": 0.001974363862015535,
+                "p_value": 2.3761030572053463e-64
+              },
+              "median_household_income": {
+                "coef": 1.4095584080330323e-06,
+                "std_error": 6.717771049467185e-07,
+                "p_value": 0.03627481756199053
+              },
+              "poverty_rate": {
+                "coef": 0.266555980480002,
+                "std_error": 0.26224798235919333,
+                "p_value": 0.30981068899270287
+              },
+              "unemployment_rate": {
+                "coef": 1.088915447303332,
+                "std_error": 0.4365947556906738,
+                "p_value": 0.01287893294608422
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 639,
+            "outcome_sd": 0.4617077686693786
+          }
+        },
+        "same_sign": true
+      },
+      {
+        "fold": 4,
+        "held_out": [
+          "AL",
+          "CO",
+          "DC",
+          "IL",
+          "LA",
+          "MT",
+          "NJ",
+          "NM",
+          "PA",
+          "WA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.012555240312999476,
+          "std_error": 0.003113215767958179,
+          "p_value": 5.669622079677783e-05,
+          "n_obs": 1129101,
+          "standardized_effect": 0.026227720416048234,
+          "n_groups": 2579,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03268766066806754,
+                "std_error": 0.001156673413972957,
+                "p_value": 2.7358383254851357e-153
+              },
+              "median_household_income": {
+                "coef": 8.916509723653468e-07,
+                "std_error": 1.6172640658831975e-07,
+                "p_value": 3.8707768139295895e-08
+              },
+              "poverty_rate": {
+                "coef": 0.31119869126721444,
+                "std_error": 0.08597991023963288,
+                "p_value": 0.0003009289079877084
+              },
+              "unemployment_rate": {
+                "coef": 0.4880871067830264,
+                "std_error": 0.15954043125118153,
+                "p_value": 0.0022411372436679507
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2578,
+            "outcome_sd": 0.478701164791934
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "liabilities_to_assets",
+          "exposure": "avg_housing_burden",
+          "effect": 0.017012713135873016,
+          "std_error": 0.003337692597600689,
+          "p_value": 4.863209461313451e-07,
+          "n_obs": 312033,
+          "standardized_effect": 0.036807917138367334,
+          "n_groups": 512,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.03521122659538325,
+                "std_error": 0.0023210031982022076,
+                "p_value": 3.4685252630386515e-43
+              },
+              "median_household_income": {
+                "coef": 5.575890654234759e-07,
+                "std_error": 3.073074359190153e-07,
+                "p_value": 0.07019718781138536
+              },
+              "poverty_rate": {
+                "coef": 0.19959218050118613,
+                "std_error": 0.11165737885219447,
+                "p_value": 0.07444253725642679
+              },
+              "unemployment_rate": {
+                "coef": 0.6309567214733812,
+                "std_error": 0.20399386807070566,
+                "p_value": 0.0020896700217471614
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 10
+            },
+            "demeaning_sweeps": 10,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 511,
+            "outcome_sd": 0.462202549302621
+          }
+        },
+        "same_sign": true
+      }
+    ],
+    "folds_with_expected_sign": 5,
+    "pooled_effect": 0.011119117973718838,
+    "pooled_std_error": 0.001868710897603216,
+    "pooled_p_value": 2.6789000327631777e-09,
+    "heterogeneity": {
+      "cochran_q": 9.458273110933233,
+      "p_value": 0.05061173945820632,
+      "i_squared": 0.5770898182908014
+    },
+    "same_sign_in_every_fold": true,
+    "significant_pooled": true,
+    "replicated": true
+  },
+  "replication_year": {
+    "holdout_year": 2022,
+    "train_years": [
+      2018,
+      2019,
+      2020,
+      2021
+    ],
+    "train": {
+      "method": "fixed_effects",
+      "outcome": "liabilities_to_assets",
+      "exposure": "avg_housing_burden",
+      "effect": 0.012800179402758457,
+      "std_error": 0.0026330449405410337,
+      "p_value": 1.2241056407490441e-06,
+      "n_obs": 1121766,
+      "standardized_effect": 0.026783707116918753,
+      "n_groups": 3086,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.033156745078055695,
+            "std_error": 0.0010757954208425332,
+            "p_value": 4.4419439814230666e-182
+          },
+          "median_household_income": {
+            "coef": 8.74687597996579e-07,
+            "std_error": 1.5516454361131676e-07,
+            "p_value": 1.8846429657147586e-08
+          },
+          "poverty_rate": {
+            "coef": 0.303562774076992,
+            "std_error": 0.07640442740581878,
+            "p_value": 7.256514318309522e-05
+          },
+          "unemployment_rate": {
+            "coef": 0.480153624462622,
+            "std_error": 0.14260764179065927,
+            "p_value": 0.000769339903388947
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 4,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3085,
+        "outcome_sd": 0.4779091761600406
+      }
+    },
+    "test": {
+      "method": "fixed_effects",
+      "outcome": "liabilities_to_assets",
+      "exposure": "avg_housing_burden",
+      "effect": 0.014943731679047615,
+      "std_error": 0.002647420345575103,
+      "p_value": 1.8058496714732642e-08,
+      "n_obs": 319368,
+      "standardized_effect": 0.032119900811045675,
+      "n_groups": 3076,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.0335372120606121,
+            "std_error": 0.0009531889173690697,
+            "p_value": 3.3730738382939977e-228
+          },
+          "median_household_income": {
+            "coef": 8.245908409732626e-07,
+            "std_error": 1.4011670317051913e-07,
+            "p_value": 4.408656433639392e-09
+          },
+          "poverty_rate": {
+            "coef": 0.29662548755865475,
+            "std_error": 0.07657352867664914,
+            "p_value": 0.00010941437677070119
+          },
+          "unemployment_rate": {
+            "coef": 0.705298994527703,
+            "std_error": 0.1575041421495436,
+            "p_value": 7.809781947689846e-06
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 1,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3075,
+        "outcome_sd": 0.46524837567084365
+      }
+    },
+    "same_sign": true,
+    "significant_in_holdout": true,
+    "replicated": true
+  },
+  "robustness": [],
+  "benchmark": {
+    "id": "lit_housing_debt",
+    "kind": "literature",
+    "preparation": {
+      "rows_in": 2390744,
+      "after_return_type": 1531303,
+      "after_has_county": 1507855,
+      "after_liabilities_to_assets_present": 1478791,
+      "after_avg_housing_burden_present": 1456014,
+      "after_log_revenue_present": 1441156,
+      "after_category_present": 1441156,
+      "after_county_fips_present": 1441156,
+      "after_state_present": 1441156,
+      "after_tax_year_present": 1441156,
+      "after_median_household_income_present": 1441134,
+      "after_poverty_rate_present": 1441134,
+      "after_unemployment_rate_present": 1441134,
+      "outcome_rule": {
+        "applied": false,
+        "reason": "no outcome rule in the spec"
+      },
+      "rows_out": 1441134,
+      "units": 3091,
+      "exposure_mean": 29.632119063535537,
+      "exposure_sd": 3.0416189851901207
+    }
+  },
+  "verdict_within_theory": "unsupported",
+  "by_year": {
+    "generated_at": "2026-11-19T23:47:20",
+    "theory_id": "lit_housing_debt",
+    "exposure_type": "continuous",
+    "settings": {
+      "alpha": 0.05,
+      "effect_floor_sd": 0.1,
+      "n_permutations": 199,
+      "seed": 6235,
+      "expected_sign": 1,
+      "permutation_unit": "county_fips",
+      "fdr_families": [
+        "H1 over years",
+        "H2 over years"
+      ],
+      "trend_inference": "county-clustered SE (CR1); see module docstring"
+    },
+    "population": {
+      "rows_in": 2390744,
+      "after_return_type": 1531303,
+      "after_has_county": 1507855,
+      "after_liabilities_to_assets_present": 1478791,
+      "after_avg_housing_burden_present": 1456014,
+      "after_log_revenue_present": 1441156,
+      "after_category_present": 1441156,
+      "after_county_fips_present": 1441156,
+      "after_state_present": 1441156,
+      "after_tax_year_present": 1441156,
+      "after_median_household_income_present": 1441134,
+      "after_poverty_rate_present": 1441134,
+      "after_unemployment_rate_present": 1441134,
+      "outcome_rule": {
+        "applied": true,
+        "sd_over_robust_sd": 669.6366163309776,
+        "threshold": 3.0,
+        "raw_sd": 155.44838192121298,
+        "raw_robust_sd": 0.23213841377571917,
+        "quantiles": [
+          0.01,
+          0.99
+        ],
+        "lower": 0.0,
+        "upper": 3.0772237499814152,
+        "rows_clipped": 14412,
+        "sd_after": 0.4751844500914533,
+        "sd_over_robust_sd_after": 2.0469875810840743,
+        "pooled_over_years": true,
+        "still_above_threshold_after": false
+      },
+      "rows_out": 1441134,
+      "units": 3091,
+      "exposure_mean": 29.632119063535537,
+      "exposure_sd": 3.0416189851901207
+    },
+    "by_year": {
+      "2018": {
+        "rows": 249326,
+        "units": 3044,
+        "exposed_units": null,
+        "outcome_sd": 0.49481447146019436,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.0381738710963216,
+          "standardized_effect": 0.0381738710963216,
+          "p_value": 0.005,
+          "q_value": 0.005,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.01133647800750345,
+          "standardized_effect": 0.02291056276921242,
+          "std_error": 0.002745244460400316,
+          "clustered_p_value": 3.7333637369503486e-05,
+          "p_value": 0.005,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.005,
+          "holds": false
+        }
+      },
+      "2019": {
+        "rows": 265048,
+        "units": 3059,
+        "exposed_units": null,
+        "outcome_sd": 0.48910068257859535,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.041836873126566955,
+          "standardized_effect": 0.041836873126566955,
+          "p_value": 0.005,
+          "q_value": 0.005,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.012439442450555059,
+          "standardized_effect": 0.025433296034208908,
+          "std_error": 0.0028062744308365475,
+          "clustered_p_value": 9.632290667905478e-06,
+          "p_value": 0.005,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.005,
+          "holds": false
+        }
+      },
+      "2020": {
+        "rows": 296512,
+        "units": 3071,
+        "exposed_units": null,
+        "outcome_sd": 0.4736769108773065,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.051006395964396926,
+          "standardized_effect": 0.051006395964396926,
+          "p_value": 0.005,
+          "q_value": 0.005,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.013476160375281121,
+          "standardized_effect": 0.028450110330101704,
+          "std_error": 0.0027110770153054085,
+          "clustered_p_value": 7.034260336246169e-07,
+          "p_value": 0.005,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.005,
+          "holds": false
+        }
+      },
+      "2021": {
+        "rows": 310880,
+        "units": 3077,
+        "exposed_units": null,
+        "outcome_sd": 0.457147530185001,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.050382917195860875,
+          "standardized_effect": 0.050382917195860875,
+          "p_value": 0.005,
+          "q_value": 0.005,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.01312193343582213,
+          "standardized_effect": 0.028703935971199218,
+          "std_error": 0.002585413463082927,
+          "clustered_p_value": 4.0972677019036593e-07,
+          "p_value": 0.005,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.005,
+          "holds": false
+        }
+      },
+      "2022": {
+        "rows": 319368,
+        "units": 3076,
+        "exposed_units": null,
+        "outcome_sd": 0.46524837567084365,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.054550808866832175,
+          "standardized_effect": 0.054550808866832175,
+          "p_value": 0.005,
+          "q_value": 0.005,
+          "holds": false
+        },
+        "H2": {
+          "effect": 0.014943731679047561,
+          "standardized_effect": 0.032119900811045564,
+          "std_error": 0.0026474203455750986,
+          "clustered_p_value": 1.805849671473376e-08,
+          "p_value": 0.005,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.005,
+          "holds": false
+        }
+      }
+    },
+    "years_H1_holds": [],
+    "years_H2_holds": [],
+    "trend": {
+      "model": "liabilities_to_assets ~ avg_housing_burden + avg_housing_burden x (tax_year - 2020) + controls | absorb",
+      "center_year": 2020.0,
+      "gap_change_per_year": 0.0014100968932163741,
+      "gap_change_per_year_sd": 0.002967472721266424,
+      "std_error": 0.00035359498569037317,
+      "p_value": 6.820899095241498e-05,
+      "gap_at_center_year": 0.013101941771555941,
+      "gap_at_center_year_p_value": 4.980024726171229e-07,
+      "n_obs": 1441134,
+      "clusters": 3091,
+      "covariance": "cluster (CR1)"
+    },
+    "trend_meta_regression": {
+      "slope_per_year": 0.0007861640718909384,
+      "std_error": 0.00017217886802700766,
+      "p_value": 0.019703170037520416,
+      "years": 5
+    }
+  }
+}

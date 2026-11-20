@@ -1,0 +1,111 @@
+{
+  "spec_version": 1,
+  "theory_id": "lit_income_concentration",
+  "theory": "In wealthier counties nonprofits spread their revenue over more sources instead of leaning on one.",
+  "source": "scout mapping (CP4 Planner)",
+  "written_by": "Planner agent (claude-sonnet-5-5)",
+  "outcome": "revenue_concentration",
+  "exposure": "median_household_income",
+  "exposure_type": "continuous",
+  "expected_sign": -1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": [
+      "990"
+    ],
+    "require_true": [
+      "has_county"
+    ],
+    "require_present": [
+      "revenue_concentration",
+      "median_household_income",
+      "log_revenue",
+      "category",
+      "county_fips",
+      "state",
+      "tax_year",
+      "nonprofit_density"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Revenue concentration (Herfindahl index) is negatively correlated with county median household income.",
+      "method": "correlation"
+    },
+    {
+      "id": "H2",
+      "claim": "The negative association remains after controlling for organization size (log revenue), nonprofit density, sector (NORP category), state and tax year.",
+      "method": "fixed_effects",
+      "controls": [
+        "log_revenue",
+        "nonprofit_density"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "controls": [
+        "log_revenue",
+        "nonprofit_density"
+      ],
+      "categorical": [
+        "category",
+        "state"
+      ],
+      "group": "county_fips",
+      "years": [
+        2022
+      ]
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "controls": [
+        "log_revenue",
+        "nonprofit_density"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "groups": [
+        "county_fips",
+        "tax_year"
+      ]
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {
+      "keep_paths": true,
+      "studentized": true
+    },
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year": 2022,
+    "outcome_rule": {
+      "heavy_tail_ratio": 3.0,
+      "winsorize": [
+        0.01,
+        0.99
+      ]
+    }
+  },
+  "gate_overrides": []
+}

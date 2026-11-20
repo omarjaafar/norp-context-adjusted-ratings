@@ -1,0 +1,994 @@
+{
+  "generated_at": "2026-11-19T23:31:06",
+  "theory_id": "lit_uninsured_programs",
+  "theory": "Where more people lack health insurance, nonprofits put a larger share of their spending into programs.",
+  "exposure_type": "continuous",
+  "verdict": "unsupported",
+  "reasons": [
+    "H1 not significant after FDR (q = 0.3438)",
+    "H1 gap +0.007 SD is below the 0.1 SD floor"
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year_for_information": 2022,
+    "permutation_unit": "county_fips",
+    "permutation_within": "tax_year",
+    "permutation_keep_paths": true,
+    "permutation_studentized": true,
+    "fdr_family": "literature: 20 hypotheses (10 entries x H1, H2)",
+    "family_alpha": 0.05,
+    "family": "literature"
+  },
+  "rating": {
+    "anchors": {
+      "program_expense_ratio": [
+        0.65,
+        0.85
+      ],
+      "admin_expense_ratio": [
+        0.35,
+        0.15
+      ],
+      "fundraising_efficiency": [
+        0.35,
+        0.1
+      ],
+      "liabilities_to_assets": [
+        1.0,
+        0.0
+      ]
+    },
+    "min_components": 3,
+    "rescored": false
+  },
+  "population": {
+    "rows_in": 1293093,
+    "after_return_type": 1293093,
+    "after_has_county": 1293093,
+    "after_program_expense_ratio_present": 1293093,
+    "after_chr_uninsured_present": 1293093,
+    "after_log_revenue_present": 1293093,
+    "after_category_present": 1293093,
+    "after_state_present": 1293093,
+    "after_tax_year_present": 1293093,
+    "after_median_household_income_present": 1293093,
+    "after_revenue_concentration_present": 1293093,
+    "after_county_fips_present": 1293093,
+    "outcome_rule": {
+      "applied": false,
+      "reason": "bounded outcome [0, 1]: exempt (D-a)",
+      "bounded": [
+        0,
+        1
+      ]
+    },
+    "rows_out": 1293093,
+    "units": 3087,
+    "exposure_mean": 0.09333332725091552,
+    "exposure_sd": 0.045640504415514996
+  },
+  "outcome_sd": 0.2134752319423312,
+  "H1": {
+    "claim": "The program expense ratio is positively correlated with the county uninsured share.",
+    "method": "correlation",
+    "effect": 0.00657613500174865,
+    "standardized_effect": 0.00657613500174865,
+    "mean_exposed": null,
+    "mean_unexposed": null,
+    "n_exposed": null,
+    "n_unexposed": null,
+    "welch_t_p_value_rows_independent": null,
+    "permutation": {
+      "observed": 1.1624307092436375,
+      "p_value": 0.275,
+      "n_permutations": 999,
+      "units_permuted": 3087,
+      "null_mean": -0.10333975250049356,
+      "null_sd": 1.0472262259607874,
+      "seed": 6235,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": 0.001403841944782379,
+        "p_value": 0.165,
+        "null_mean": -0.00014297332199219518,
+        "null_sd": 0.0010009649619468115
+      }
+    },
+    "q_value": 0.275,
+    "family_q_value": 0.34375
+  },
+  "H2": {
+    "claim": "The positive association remains after controlling for organization size, revenue concentration, county median household income, sector, state and tax year.",
+    "method": "fixed_effects",
+    "fit": {
+      "method": "fixed_effects",
+      "outcome": "program_expense_ratio",
+      "exposure": "chr_uninsured",
+      "effect": -0.004080207662314533,
+      "std_error": 0.0016766547426325543,
+      "p_value": 0.015008352082230439,
+      "n_obs": 1293093,
+      "standardized_effect": -0.01911326023721933,
+      "n_groups": 3087,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.013062724427641798,
+            "std_error": 0.00031243060296702173,
+            "p_value": 4.1687371160582475e-303
+          },
+          "median_household_income": {
+            "coef": -2.86611924125576e-07,
+            "std_error": 5.433213368679899e-08,
+            "p_value": 1.4178358856067446e-07
+          },
+          "revenue_concentration": {
+            "coef": 0.05172588176705964,
+            "std_error": 0.00200301700954912,
+            "p_value": 2.6622287385163938e-133
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 5,
+          "category": 27,
+          "state": 51
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3086,
+        "outcome_sd": 0.2134752319423312
+      }
+    },
+    "permutation": {
+      "observed": -2.4025955345123564,
+      "p_value": 0.039,
+      "n_permutations": 999,
+      "units_permuted": 3087,
+      "null_mean": 0.08337265310154876,
+      "null_sd": 1.143119011027824,
+      "seed": 6236,
+      "alternative": "two-sided",
+      "statistic": "t, county jackknife SE (studentized)",
+      "coefficient": {
+        "observed": -0.004080207662089684,
+        "p_value": 0.001,
+        "null_mean": 4.893517257907873e-05,
+        "null_sd": 0.0008316503470217578
+      }
+    },
+    "q_value": 0.078,
+    "family_q_value": 0.055714285714285716
+  },
+  "replication": {
+    "by": "state",
+    "n_folds": 5,
+    "seed": 6237,
+    "rule": "expected sign in every held-out fold and inverse-variance-pooled held-out p < alpha",
+    "folds": [
+      {
+        "fold": 0,
+        "held_out": [
+          "DC",
+          "GA",
+          "IA",
+          "MD",
+          "ME",
+          "MI",
+          "MT",
+          "PA",
+          "TN",
+          "UT",
+          "WI"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": -0.004764552905037429,
+          "std_error": 0.0018330691501944364,
+          "p_value": 0.009400826748814865,
+          "n_obs": 1018253,
+          "standardized_effect": -0.02222841747994131,
+          "n_groups": 2399,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.013400743927868842,
+                "std_error": 0.0003568394160509275,
+                "p_value": 3.7118289201833565e-243
+              },
+              "median_household_income": {
+                "coef": -3.4322690352849755e-07,
+                "std_error": 5.974571346257054e-08,
+                "p_value": 1.036902477448436e-08
+              },
+              "revenue_concentration": {
+                "coef": 0.05382373497153816,
+                "std_error": 0.002279780719075608,
+                "p_value": 5.5579453936004665e-111
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 40
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2398,
+            "outcome_sd": 0.21434512417885399
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": -0.0013046001832336825,
+          "std_error": 0.003824601955146988,
+          "p_value": 0.733126995275461,
+          "n_obs": 274840,
+          "standardized_effect": -0.0062058394382002195,
+          "n_groups": 688,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.011787477187618559,
+                "std_error": 0.0006086495302550663,
+                "p_value": 5.2461676903070924e-67
+              },
+              "median_household_income": {
+                "coef": -4.003115916505296e-08,
+                "std_error": 1.2111593576319065e-07,
+                "p_value": 0.741108353435459
+              },
+              "revenue_concentration": {
+                "coef": 0.04455524754241234,
+                "std_error": 0.004107964220111917,
+                "p_value": 2.0808492914881683e-25
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 11
+            },
+            "demeaning_sweeps": 10,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 687,
+            "outcome_sd": 0.21022138845603697
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 1,
+        "held_out": [
+          "AK",
+          "AR",
+          "AZ",
+          "CA",
+          "FL",
+          "LA",
+          "MO",
+          "NV",
+          "OH",
+          "TX"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": -0.003020739090114283,
+          "std_error": 0.002243215106801393,
+          "p_value": 0.17823711943250523,
+          "n_obs": 881189,
+          "standardized_effect": -0.01436658665909106,
+          "n_groups": 2318,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.012795845610976823,
+                "std_error": 0.0003843738047930273,
+                "p_value": 6.203310705413745e-199
+              },
+              "median_household_income": {
+                "coef": -3.2911386458650737e-07,
+                "std_error": 6.14113494772938e-08,
+                "p_value": 9.187736280470758e-08
+              },
+              "revenue_concentration": {
+                "coef": 0.052316601430078644,
+                "std_error": 0.002401244020441914,
+                "p_value": 6.817655462702925e-96
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 41
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2317,
+            "outcome_sd": 0.21026143243306744
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": -0.003950103182767135,
+          "std_error": 0.002515626086764731,
+          "p_value": 0.11677426762562074,
+          "n_obs": 411904,
+          "standardized_effect": -0.017939250663736906,
+          "n_groups": 769,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.013621169244596196,
+                "std_error": 0.0005387075297285451,
+                "p_value": 4.215633319994852e-103
+              },
+              "median_household_income": {
+                "coef": -1.6093004463739955e-07,
+                "std_error": 1.0197084430122217e-07,
+                "p_value": 0.11493221392204277
+              },
+              "revenue_concentration": {
+                "coef": 0.05058486289418292,
+                "std_error": 0.0035366940517352393,
+                "p_value": 2.5841459653913263e-41
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 7,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 768,
+            "outcome_sd": 0.2201933211598423
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 2,
+        "held_out": [
+          "DE",
+          "HI",
+          "KS",
+          "MA",
+          "NE",
+          "OK",
+          "RI",
+          "SC",
+          "SD",
+          "VA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": -0.004489066165603195,
+          "std_error": 0.001778621442193155,
+          "p_value": 0.011665989533913745,
+          "n_obs": 1138699,
+          "standardized_effect": -0.02099608220851465,
+          "n_groups": 2564,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.012978717189657952,
+                "std_error": 0.0003414896380202045,
+                "p_value": 4.486441291481692e-251
+              },
+              "median_household_income": {
+                "coef": -2.6431611471816383e-07,
+                "std_error": 6.396021236122338e-08,
+                "p_value": 3.7033695900001364e-05
+              },
+              "revenue_concentration": {
+                "coef": 0.052292984579895674,
+                "std_error": 0.0021558300590927707,
+                "p_value": 3.498066480122753e-117
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 41
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2563,
+            "outcome_sd": 0.21380494327568983
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": 0.0028962049815104522,
+          "std_error": 0.004404421907212921,
+          "p_value": 0.5111058899709756,
+          "n_obs": 154394,
+          "standardized_effect": 0.013727801869859798,
+          "n_groups": 523,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.013648897157357604,
+                "std_error": 0.0007300879841041125,
+                "p_value": 4.390843118803318e-60
+              },
+              "median_household_income": {
+                "coef": -3.439101451564219e-07,
+                "std_error": 8.83807799896267e-08,
+                "p_value": 0.00011264530755335579
+              },
+              "revenue_concentration": {
+                "coef": 0.047495475181231955,
+                "std_error": 0.005343649355880119,
+                "p_value": 1.0090645717903175e-17
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 522,
+            "outcome_sd": 0.21097368748227943
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 3,
+        "held_out": [
+          "IL",
+          "IN",
+          "MN",
+          "NC",
+          "ND",
+          "NM",
+          "NY",
+          "VT",
+          "WV",
+          "WY"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": -0.0028252248027539934,
+          "std_error": 0.0018213203237491201,
+          "p_value": 0.12098298799471996,
+          "n_obs": 1012651,
+          "standardized_effect": -0.013168056387758571,
+          "n_groups": 2468,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.012949048043349945,
+                "std_error": 0.0003251454428137824,
+                "p_value": 2.813148337230383e-268
+              },
+              "median_household_income": {
+                "coef": -2.298528372744053e-07,
+                "std_error": 5.983453626063921e-08,
+                "p_value": 0.0001253806384045805
+              },
+              "revenue_concentration": {
+                "coef": 0.05036941998013364,
+                "std_error": 0.002164687441943862,
+                "p_value": 1.929807778846577e-108
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 41
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2467,
+            "outcome_sd": 0.21455139008824484
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": -0.008061275238840817,
+          "std_error": 0.004236605585744482,
+          "p_value": 0.0575353756347001,
+          "n_obs": 280442,
+          "standardized_effect": -0.038470737105005995,
+          "n_groups": 619,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.013585006186265609,
+                "std_error": 0.0007948096482320918,
+                "p_value": 6.343448210793851e-54
+              },
+              "median_household_income": {
+                "coef": -4.584553202622841e-07,
+                "std_error": 1.1716491096048561e-07,
+                "p_value": 0.00010131488195048416
+              },
+              "revenue_concentration": {
+                "coef": 0.057446773489837955,
+                "std_error": 0.004738201811122273,
+                "p_value": 1.68417601025004e-30
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 10
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 618,
+            "outcome_sd": 0.20954304090502712
+          }
+        },
+        "same_sign": false
+      },
+      {
+        "fold": 4,
+        "held_out": [
+          "AL",
+          "CO",
+          "CT",
+          "ID",
+          "KY",
+          "MS",
+          "NH",
+          "NJ",
+          "OR",
+          "WA"
+        ],
+        "train": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": -0.004501322071006806,
+          "std_error": 0.0017806240935912623,
+          "p_value": 0.01153199819047476,
+          "n_obs": 1121580,
+          "standardized_effect": -0.021046113806223423,
+          "n_groups": 2599,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.01315396178215019,
+                "std_error": 0.00033941709222910516,
+                "p_value": 1.0811646815351227e-259
+              },
+              "median_household_income": {
+                "coef": -2.6551610459386455e-07,
+                "std_error": 5.720156005459855e-08,
+                "p_value": 3.6261051440694837e-06
+              },
+              "revenue_concentration": {
+                "coef": 0.05012129532039902,
+                "std_error": 0.002195961309174876,
+                "p_value": 3.0329242274415706e-105
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 27,
+              "state": 41
+            },
+            "demeaning_sweeps": 8,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 2598,
+            "outcome_sd": 0.2138790140760213
+          }
+        },
+        "test": {
+          "method": "fixed_effects",
+          "outcome": "program_expense_ratio",
+          "exposure": "chr_uninsured",
+          "effect": -0.0021478130182919536,
+          "std_error": 0.004502603283372459,
+          "p_value": 0.6335648340650117,
+          "n_obs": 171513,
+          "standardized_effect": -0.01018934390782215,
+          "n_groups": 488,
+          "details": {
+            "controls": {
+              "log_revenue": {
+                "coef": 0.01237819947175553,
+                "std_error": 0.0006686558628388594,
+                "p_value": 2.5419672437709873e-58
+              },
+              "median_household_income": {
+                "coef": -4.3637323721957235e-07,
+                "std_error": 1.2925368999142095e-07,
+                "p_value": 0.0007940170580759072
+              },
+              "revenue_concentration": {
+                "coef": 0.06318739658276835,
+                "std_error": 0.004868304027309196,
+                "p_value": 2.71769105683972e-33
+              }
+            },
+            "absorbed_levels": {
+              "tax_year": 5,
+              "category": 26,
+              "state": 10
+            },
+            "demeaning_sweeps": 9,
+            "covariance": "cluster (CR1)",
+            "cluster": "county_fips",
+            "dof": 487,
+            "outcome_sd": 0.21079011933664557
+          }
+        },
+        "same_sign": false
+      }
+    ],
+    "folds_with_expected_sign": 0,
+    "pooled_effect": -0.002922275264482872,
+    "pooled_std_error": 0.0016159090068741209,
+    "pooled_p_value": 0.07053797207910305,
+    "heterogeneity": {
+      "cochran_q": 3.591972308005166,
+      "p_value": 0.4640322236170301,
+      "i_squared": 0.0
+    },
+    "same_sign_in_every_fold": false,
+    "significant_pooled": false,
+    "replicated": false
+  },
+  "replication_year": {
+    "holdout_year": 2022,
+    "train_years": [
+      2018,
+      2019,
+      2020,
+      2021
+    ],
+    "train": {
+      "method": "fixed_effects",
+      "outcome": "program_expense_ratio",
+      "exposure": "chr_uninsured",
+      "effect": -0.004381311386491598,
+      "std_error": 0.0016906680280850887,
+      "p_value": 0.009601992976310057,
+      "n_obs": 1002352,
+      "standardized_effect": -0.020534721374406394,
+      "n_groups": 3073,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.013216634551813804,
+            "std_error": 0.00031755803813205997,
+            "p_value": 1.2298141560737147e-300
+          },
+          "median_household_income": {
+            "coef": -3.1474515429003756e-07,
+            "std_error": 5.6610112591238736e-08,
+            "p_value": 2.930932053912903e-08
+          },
+          "revenue_concentration": {
+            "coef": 0.05374476959263553,
+            "std_error": 0.002105271340416761,
+            "p_value": 1.5687783891107442e-130
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 4,
+          "category": 27,
+          "state": 50
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3072,
+        "outcome_sd": 0.21336113145183838
+      }
+    },
+    "test": {
+      "method": "fixed_effects",
+      "outcome": "program_expense_ratio",
+      "exposure": "chr_uninsured",
+      "effect": -0.003964024938612852,
+      "std_error": 0.002088179070006205,
+      "p_value": 0.05774799875125664,
+      "n_obs": 290741,
+      "standardized_effect": -0.018536585942404166,
+      "n_groups": 3074,
+      "details": {
+        "controls": {
+          "log_revenue": {
+            "coef": 0.012508037193270788,
+            "std_error": 0.0003573602238815583,
+            "p_value": 3.493814640522072e-226
+          },
+          "median_household_income": {
+            "coef": -2.2630939040534357e-07,
+            "std_error": 5.3765526817482814e-08,
+            "p_value": 2.6363179581167948e-05
+          },
+          "revenue_concentration": {
+            "coef": 0.04479666566350406,
+            "std_error": 0.0023334520302259808,
+            "p_value": 1.14753928216094e-77
+          }
+        },
+        "absorbed_levels": {
+          "tax_year": 1,
+          "category": 27,
+          "state": 51
+        },
+        "demeaning_sweeps": 8,
+        "covariance": "cluster (CR1)",
+        "cluster": "county_fips",
+        "dof": 3073,
+        "outcome_sd": 0.2138487071421699
+      }
+    },
+    "same_sign": false,
+    "significant_in_holdout": false,
+    "replicated": false
+  },
+  "robustness": [],
+  "benchmark": {
+    "id": "lit_uninsured_programs",
+    "kind": "literature",
+    "preparation": {
+      "rows_in": 2390744,
+      "after_return_type": 1531303,
+      "after_has_county": 1507855,
+      "after_program_expense_ratio_present": 1320331,
+      "after_chr_uninsured_present": 1304554,
+      "after_log_revenue_present": 1293113,
+      "after_category_present": 1293113,
+      "after_state_present": 1293113,
+      "after_tax_year_present": 1293113,
+      "after_median_household_income_present": 1293093,
+      "after_revenue_concentration_present": 1293093,
+      "after_county_fips_present": 1293093,
+      "outcome_rule": {
+        "applied": false,
+        "reason": "no outcome rule in the spec"
+      },
+      "rows_out": 1293093,
+      "units": 3087,
+      "exposure_mean": 0.09333332725091552,
+      "exposure_sd": 0.045640504415514996
+    }
+  },
+  "verdict_within_theory": "unsupported",
+  "by_year": {
+    "generated_at": "2026-11-19T23:46:30",
+    "theory_id": "lit_uninsured_programs",
+    "exposure_type": "continuous",
+    "settings": {
+      "alpha": 0.05,
+      "effect_floor_sd": 0.1,
+      "n_permutations": 199,
+      "seed": 6235,
+      "expected_sign": 1,
+      "permutation_unit": "county_fips",
+      "fdr_families": [
+        "H1 over years",
+        "H2 over years"
+      ],
+      "trend_inference": "county-clustered SE (CR1); see module docstring"
+    },
+    "population": {
+      "rows_in": 2390744,
+      "after_return_type": 1531303,
+      "after_has_county": 1507855,
+      "after_program_expense_ratio_present": 1320331,
+      "after_chr_uninsured_present": 1304554,
+      "after_log_revenue_present": 1293113,
+      "after_category_present": 1293113,
+      "after_state_present": 1293113,
+      "after_tax_year_present": 1293113,
+      "after_median_household_income_present": 1293093,
+      "after_revenue_concentration_present": 1293093,
+      "after_county_fips_present": 1293093,
+      "outcome_rule": {
+        "applied": false,
+        "reason": "bounded outcome [0, 1]: exempt (D-a)",
+        "bounded": [
+          0,
+          1
+        ]
+      },
+      "rows_out": 1293093,
+      "units": 3087,
+      "exposure_mean": 0.09333332725091552,
+      "exposure_sd": 0.045640504415514996
+    },
+    "by_year": {
+      "2018": {
+        "rows": 222858,
+        "units": 3027,
+        "exposed_units": null,
+        "outcome_sd": 0.20361006862335626,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.00047128849478236817,
+          "standardized_effect": 0.00047128849478236817,
+          "p_value": 0.94,
+          "q_value": 0.9399999999999998,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.0075255333180874835,
+          "standardized_effect": -0.03696051658431701,
+          "std_error": 0.0018021327369784903,
+          "clustered_p_value": 3.051853428023924e-05,
+          "p_value": 0.01,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.025,
+          "holds": false
+        }
+      },
+      "2019": {
+        "rows": 237225,
+        "units": 3039,
+        "exposed_units": null,
+        "outcome_sd": 0.20641746417617599,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.002736568746898681,
+          "standardized_effect": 0.002736568746898681,
+          "p_value": 0.685,
+          "q_value": 0.8562500000000001,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.007035058990790143,
+          "standardized_effect": -0.034081704369673706,
+          "std_error": 0.0018084662945284686,
+          "clustered_p_value": 0.00010236426136254334,
+          "p_value": 0.005,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.025,
+          "holds": false
+        }
+      },
+      "2020": {
+        "rows": 264556,
+        "units": 3056,
+        "exposed_units": null,
+        "outcome_sd": 0.22176295764736864,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.014609802728938368,
+          "standardized_effect": 0.014609802728938368,
+          "p_value": 0.015,
+          "q_value": 0.075,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.0002559185354434483,
+          "standardized_effect": -0.0011540184084773589,
+          "std_error": 0.0018235741112893734,
+          "clustered_p_value": 0.8884014171547976,
+          "p_value": 0.895,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.8949999999999999,
+          "holds": false
+        }
+      },
+      "2021": {
+        "rows": 277713,
+        "units": 3066,
+        "exposed_units": null,
+        "outcome_sd": 0.21840130496144605,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.008476632556879696,
+          "standardized_effect": 0.008476632556879696,
+          "p_value": 0.18,
+          "q_value": 0.44999999999999996,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.0043927481192727255,
+          "standardized_effect": -0.020113195386118086,
+          "std_error": 0.0020404267770993928,
+          "clustered_p_value": 0.031407688811743044,
+          "p_value": 0.06,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.09999999999999999,
+          "holds": false
+        }
+      },
+      "2022": {
+        "rows": 290741,
+        "units": 3074,
+        "exposed_units": null,
+        "outcome_sd": 0.2138487071421699,
+        "H1": {
+          "method": "correlation",
+          "effect": 0.006057892052799469,
+          "standardized_effect": 0.006057892052799469,
+          "p_value": 0.34,
+          "q_value": 0.5666666666666668,
+          "holds": false
+        },
+        "H2": {
+          "effect": -0.003964024939009563,
+          "standardized_effect": -0.018536585944259266,
+          "std_error": 0.0020881790700132477,
+          "clustered_p_value": 0.057747998727078954,
+          "p_value": 0.125,
+          "absorb": [
+            "category",
+            "state"
+          ],
+          "q_value": 0.15625,
+          "holds": false
+        }
+      }
+    },
+    "years_H1_holds": [],
+    "years_H2_holds": [],
+    "trend": {
+      "model": "program_expense_ratio ~ chr_uninsured + chr_uninsured x (tax_year - 2020) + controls | absorb",
+      "center_year": 2020.0,
+      "gap_change_per_year": 0.00015829650069652563,
+      "gap_change_per_year_sd": 0.000741521624107139,
+      "std_error": 0.00019746645438527025,
+      "p_value": 0.4228244404034924,
+      "gap_at_center_year": -0.004059323745639545,
+      "gap_at_center_year_p_value": 0.01610327671091505,
+      "n_obs": 1293093,
+      "clusters": 3087,
+      "covariance": "cluster (CR1)"
+    },
+    "trend_meta_regression": {
+      "slope_per_year": 0.0010772730142304798,
+      "std_error": 0.0009451031137157731,
+      "p_value": 0.3371162834256349,
+      "years": 5
+    }
+  }
+}

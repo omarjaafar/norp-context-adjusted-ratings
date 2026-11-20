@@ -1,0 +1,117 @@
+{
+  "spec_version": 1,
+  "theory_id": "neg_food_desert_fundraising",
+  "theory": "In counties with more residents in food deserts, nonprofits spend a larger share of their budget on fundraising.",
+  "source": "scout mapping",
+  "written_by": "Planner agent (claude-sonnet-5-5)",
+  "outcome": "fundraising_expense_ratio",
+  "exposure": "food_desert_share",
+  "exposure_type": "continuous",
+  "expected_sign": 1,
+  "exposure_unit": "county_fips",
+  "exposure_varies_by": "tax_year",
+  "population": {
+    "return_type": [
+      "990"
+    ],
+    "require_true": [],
+    "require_present": [
+      "fundraising_expense_ratio",
+      "food_desert_share",
+      "log_revenue",
+      "category",
+      "county_fips",
+      "state",
+      "tax_year"
+    ]
+  },
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Fundraising expense ratio is positively correlated with the county food-desert share.",
+      "method": "correlation"
+    },
+    {
+      "id": "H2",
+      "claim": "The positive association remains after controlling for organization size, county economic conditions, donor competition and population, with sector, state and tax year fixed effects.",
+      "method": "fixed_effects",
+      "controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "nonprofit_density",
+        "population"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "cluster": "county_fips"
+    }
+  ],
+  "robustness": [
+    {
+      "id": "H2_multilevel_2022",
+      "method": "multilevel",
+      "controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "nonprofit_density",
+        "population"
+      ],
+      "categorical": [
+        "category",
+        "state"
+      ],
+      "group": "county_fips",
+      "years": [
+        2022
+      ]
+    },
+    {
+      "id": "H2_county_year_means",
+      "method": "two_stage_group_means",
+      "controls": [
+        "log_revenue",
+        "poverty_rate",
+        "median_household_income",
+        "nonprofit_density",
+        "population"
+      ],
+      "absorb": [
+        "tax_year",
+        "category",
+        "state"
+      ],
+      "groups": [
+        "county_fips",
+        "tax_year"
+      ]
+    }
+  ],
+  "validator": {
+    "alpha": 0.05,
+    "effect_floor_sd": 0.1,
+    "n_permutations": 999,
+    "seed": 6235,
+    "permutation": {
+      "keep_paths": true,
+      "studentized": true
+    },
+    "holdout": {
+      "by": "state",
+      "folds": 5
+    },
+    "holdout_year": 2022,
+    "outcome_rule": {
+      "heavy_tail_ratio": 3.0,
+      "winsorize": [
+        0.01,
+        0.99
+      ]
+    }
+  },
+  "gate_overrides": []
+}
