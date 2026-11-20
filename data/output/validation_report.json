@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-19T15:40:14",
-  "passed": 6,
-  "ran": 6,
+  "generated_at": "2026-11-20T07:20:45",
+  "passed": 15,
+  "ran": 15,
   "skipped": [],
   "checks": {
     "extracts_match_manifest": {
@@ -11,8 +11,8 @@
     },
     "llm_cache_intact": {
       "status": "PASS",
-      "detail": "40 entries, 0 bad",
-      "what": "Every cached LLM response matches its stored hashes, so --replay reproduces the specs (CP4)."
+      "detail": "142 entries, 0 bad",
+      "what": "Every cached LLM response matches its stored hashes. This does not show that a script's\n    prompts still hit the cache: CP4's run_cp4.py --replay misses since f825052 (the example spec\n    in every prompt changed), and CP5 replays are checked by a1_unseen_replays."
     },
     "cp4_verdicts_follow": {
       "status": "PASS",
@@ -33,6 +33,51 @@
       "status": "PASS",
       "detail": "14 unclipped cells identical to CP4; 14 clipped",
       "what": "CP5 sweep rerun under the outcome rule: the cells the rule did not clip have exactly\n    their CP4 effects (the rule leaves them alone), and only heavy-tailed outcomes were clipped."
+    },
+    "outcome_rule": {
+      "status": "PASS",
+      "detail": "5 clipped, 4 still above 3; fundraising share exempt",
+      "what": "CP5 outcome rule (docs/validator.md 2.8): bounded [0, 1] outcomes are exempt (D-a); an outcome\n    is clipped once at the pooled 1st/99th percentiles when SD > 3x robust SD (D-b); after one clip\n    4 outcomes stay above 3 and are logged, not clipped again (D-c)."
+    },
+    "heavy_tail_controls": {
+      "status": "PASS",
+      "detail": "2 heavy-tail controls recovered only with the rule (H1 -0.253, +0.274 SD)",
+      "what": "CP5 V2 (CP4 feedback F4): a 0.25 SD effect planted raw in operating margin and in liabilities\n    to assets is supported with the rule, unsupported without it, and the unplanted version is\n    unsupported."
+    },
+    "heavy_tail_placebos": {
+      "status": "PASS",
+      "detail": "2 outcomes x 8 placebos: 0 false positives; planted control survives",
+      "what": "CP5 V6: on both heavy-tailed outcomes, 0 of 8 placebos is called anything but unsupported\n    after the family correction, and the planted 0.25 SD control survives it."
+    },
+    "cp5_reruns_follow": {
+      "status": "PASS",
+      "detail": "5 reruns follow; unsupported",
+      "what": "CP5 V4: T1-T5 rerun under the rule; each verdict and family q follows from the stored\n    numbers, and T1/T4 (outcomes the rule does not clip) keep their CP4 effects."
+    },
+    "a1_unseen": {
+      "status": "PASS",
+      "detail": "39/40 pass (97.5%, needed 85%)",
+      "what": "CP5 O3: A1 on the 40 unseen benchmark texts, first pass. The rate is recomputed from the\n    rows, and the committed cache replays every row with no API call."
+    },
+    "a1_unseen_replays": {
+      "status": "PASS",
+      "detail": "102 cache hits, 0 calls, rows identical",
+      "what": "The committed LLM cache reproduces every A1 row offline (measure_assumption1_benchmark --replay)."
+    },
+    "benchmark_metrics": {
+      "status": "PASS",
+      "detail": "plan validity 17/20, control recovery 5/5, false positives 0/3; literature 9/9 run unsupported",
+      "what": "CP5 benchmark (first pass, 2387c33): the three metrics recomputed from the per-entry table,\n    run errors, plan failures and gold reviews in benchmark_cp5.json. A run error or a plan that\n    disagrees with gold is an invalid plan; a positive control counts only if supported AND on\n    gold; a negative control that did not run is left out of the false-positive rate."
+    },
+    "benchmark_review": {
+      "status": "PASS",
+      "detail": "17 entries follow, each in its own family",
+      "what": "CP5 V7: every benchmark verdict and family q recomputed from its stored numbers, every\n    entry judged in its own BH family (literature or controls), matching the committed review.json."
+    },
+    "benchmark_postfix": {
+      "status": "PASS",
+      "detail": "plan validity 20/20, control recovery 5/5, false positives 0/5; literature 10/10 run unsupported; 17 first-pass effects unchanged",
+      "what": "CP5 benchmark after the population fix (benchmark_cp5_postfix.json): metrics recomputed the same\n    way, every verdict follows in its own family, and the 17 entries that ran in the first pass have\n    exactly their first-pass effects (the fix only changes specs that crashed)."
     }
   }
 }
