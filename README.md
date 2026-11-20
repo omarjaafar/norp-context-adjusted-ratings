@@ -41,8 +41,10 @@ The LLM never computes a statistic and cannot override the Validator.
 
 ## Reproduce the reported results (README workflow)
 
-Everything below was run from a clean clone of the submission commit in an empty folder, with
-nothing installed beyond `requirements.txt`. The outputs quoted are from that run.
+Everything below was run on 2026-11-19/20 from a clean clone of commit `92411f4` in an empty folder outside
+any synced drive, with a fresh virtual environment, nothing installed beyond `requirements.txt`, and
+`ANTHROPIC_API_KEY` unset. The submission commit differs from `92411f4` only in this README's text
+(the outputs below were pasted in). The outputs quoted are from that run.
 
 ### Requirements for starting fresh
 
@@ -51,11 +53,11 @@ nothing installed beyond `requirements.txt`. The outputs quoted are from that ru
 | Python | 3.12 (checked: 3.12.10 on Windows, 3.12.16 on Linux). The pins below are the versions every reported result was produced with |
 | Packages | `pip install -r requirements.txt`: pandas 3.1.1, numpy 2.5.4, scipy 1.18.1, statsmodels 0.15.0, pyyaml 6.0.3, pytest 9.2.0, anthropic 2.5.0 (live LLM calls only) |
 | OS | Checked on Windows 11 (10.0.26200) for the clean-clone run below. The panel hash also matched on macOS (CP4) and Arch Linux (CP5). Plain Python, no OS-specific calls |
-| Hardware | Checked on an Intel i7-11800H laptop (8 cores, 16 GB RAM). The panel build peaks at ⟦TBD⟧ GB of memory |
+| Hardware | Checked on an Intel i7-11800H laptop (8 cores, 16 GB RAM). The panel build is the largest step: 3.42 GB peak resident memory (measured with psutil), so allow 4 GB free |
 | Disk | About 190 MB for the clone (every committed file is under 20 MB), plus about 400 MB for the rebuilt panel |
 | Accounts and keys | **None for the quickstart or any replay.** `ANTHROPIC_API_KEY` only for live Planner/Scout calls; `CENSUS_API_KEY` only to rebuild the need table from the Census API. Both names are in `.env.example`; never commit a key |
 | Git LFS | Not used: no committed file is over 50 MB |
-| Quickstart runtime | ⟦TBD⟧ |
+| Quickstart runtime | About 12 min on the checked laptop: Step 1 17 s, Step 2 4 s, Step 3 7.2 min + 11 s, Step 4 1.9 min + 4 s. Clone and install took another 2.5 min |
 
 Install, from a fresh clone:
 
@@ -78,8 +80,8 @@ high-need gap of −0.022 SD**, and every other committed number in the report i
 python -m pytest -q
 ```
 
-Expected last line: `⟦TBD⟧ passed in …s`. The tests use synthetic data and a fake LLM, so they
-need neither the panel nor a key.
+Expected last line: `203 passed in 15.46s` (17 s with start-up on the checked laptop). The tests use
+synthetic data and a fake LLM, so they need neither the panel nor a key.
 
 **Step 2. Recheck the committed results**
 
@@ -91,10 +93,17 @@ Each check recomputes something from committed files and compares it with what t
 claims, and prints `[PASS]`, `[FAIL]` or `[SKIP]`. Expected last line:
 
 ```
-⟦TBD⟧ checks passed -> <path to the clone>/data/output/validation_report.json
+[PASS] extracts_match_manifest: 15 extracts, sha256 match
+...
+[PASS] a1_unseen: 39/40 pass (97.5%, needed 85%)
+[PASS] a1_unseen_replays: 102 cache hits, 0 calls, rows identical
+[PASS] benchmark_metrics: plan validity 17/20, control recovery 5/5, false positives 0/3; literature 9/9 run unsupported
+[PASS] benchmark_review: 17 entries follow, each in its own family
+[PASS] benchmark_postfix: plan validity 20/20, control recovery 5/5, false positives 0/5; literature 10/10 run unsupported; 17 first-pass effects unchanged
+15/15 checks passed -> data/output/validation_report.json
 ```
 
-The part before the arrow is the match. The exit code is 0 only if every check that ran passed.
+`15/15 checks passed` is the match (about 4 s). Each check's line names the evidence-table numbers it recomputed. The exit code is 0 only if every check that ran passed.
 The slowest check (`a1_unseen_replays`) replays all 40 A1 texts from the committed LLM cache and
 fails if any of them would need a live call.
 
@@ -107,13 +116,15 @@ python scripts/verify_outputs.py --panel
 
 The panel (`data/derived/org_year_panel.csv.gz`, 2,390,744 organization-years × 54 columns,
 about 400 MB) is too large to commit and is never downloaded: it is rebuilt from the committed
-NCCS extracts, crosswalk and need table. `build_panel.py` rewrites
-`data/output/panel_join_log.json`; only `generated_at` should change (`git diff` shows it). The
+NCCS extracts, crosswalk and need table. `build_panel.py` takes about 7 min and
+rewrites `data/output/panel_join_log.json`; only `generated_at` should change (`git diff` shows it).
+`verify_outputs.py` also rewrites `data/output/validation_report.json` each time it runs. The
 second command adds a `panel_hash` check that hashes the uncompressed CSV and compares it with
 the log **as committed** (git `HEAD`). Expected:
 
 ```
 [PASS] panel_hash: 2,390,744 rows, sha256_csv 334951b1...
+16/16 checks passed -> data/output/validation_report.json
 ```
 
 Tolerance: none. The hash is of the exact CSV text, written with LF line endings on every OS.
@@ -130,8 +141,16 @@ studentized permutation test, effect floor, held-out states) with no LLM call, a
 `data/output/theory_runs/quickstart/` (git-ignored). Expected output:
 
 ```
-⟦TBD⟧
+distressed_county_rating_penalty   unsupported (106.6 s)
+distressed_county_rating_penalty   family verdict unsupported rule applied False
+...
+- **ratings_fairness** (`distressed_county_rating_penalty`): unsupported. Follows from the numbers. H1 -0.022 SD (family q 0.67), H2 -0.012 SD (q 0.67), replicated False (0/5 folds); years passing H1 none. Gate: n_permutations 199 (policy 999).
+
+all verdicts follow: True; all on the current gate: False
 ```
+
+`all on the current gate: False` is expected here and is not a failure: it flags that this run used
+199 permutations instead of the gate policy's 999, to keep the quickstart short.
 
 What must match: the verdict `unsupported`, `rule applied False` (the rating is not
 heavy-tailed), and the effects **H1 −0.022 SD and H2 −0.012 SD**, the same as the committed full
